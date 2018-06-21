@@ -32,20 +32,30 @@ func main() {
 	if fileExtension == ".wts" {
 		outputFilePath = fileName + ".json"
 
+		fmt.Println("Reading wts file...")
 		jsonObject := parsers.WtsToJson(b)
 
+		fmt.Println("Writing json file...")
 		err = ioutil.WriteFile(outputFilePath, jsonObject, 0644)
 		if err != nil {
 			fmt.Println(err)
+		} else {
+			fmt.Println("Successfully created a file called " + outputFilePath)
 		}
 	} else if fileExtension == ".json" {
 		outputFilePath = fileName + ".wts"
 
+		fmt.Println("Reading json file...")
 		wtsObject := parsers.JsonToWts(b)
 
+		fmt.Println("Writing wts file...")
 		err = ioutil.WriteFile(outputFilePath, wtsObject, 0644)
 		if err != nil {
 			fmt.Println(err)
+		} else {
+			fmt.Println("Successfully created a file called " + outputFilePath)
 		}
+	} else {
+		fmt.Errorf("expected .wts or .json, but got " + fileExtension)
 	}
 }
