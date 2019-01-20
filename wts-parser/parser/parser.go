@@ -1,16 +1,16 @@
-package parsers
+package parser
 
 import (
-	"regexp"
-	"fmt"
-	"strconv"
-	"encoding/json"
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"regexp"
+	"strconv"
 )
 
-var idRegex = regexp.MustCompile(`[0-9]+`) // Find string id
+var idRegex = regexp.MustCompile(`[0-9]+`)                  // Find string id
 var stringRegex = regexp.MustCompile(`STRING [0-9]*[^}]*}`) // Regex to find each string object
-var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`) // Regex to find the content container of each string object
+var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`)  // Regex to find the content container of each string object
 var contentStartRegex = regexp.MustCompile(`^[\r]*[\n]`)
 var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
 
@@ -29,7 +29,7 @@ func WtsToJson(input []byte) []byte {
 			fmt.Print(err)
 		}
 
-		removeBrackets := findContentContainer[1:len(findContentContainer) - 1]
+		removeBrackets := findContentContainer[1 : len(findContentContainer)-1]
 		length := len(contentStartRegex.FindString(removeBrackets))
 		parsedBeginning := removeBrackets[length:]
 		lengthToEnd := len(parsedBeginning) - len(contextEndRegex.FindString(parsedBeginning))
