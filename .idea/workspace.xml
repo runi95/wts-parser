@@ -2,83 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d5d11401-69e9-4834-8386-ce6a04eebdcf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/slk.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/AbilityBuffData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/AbilityBuffMetaData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/AbilityData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/AbilityMetaData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CampaignAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CampaignAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CampaignUnitFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CampaignUnitStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CampaignUpgradeFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CampaignUpgradeStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CommandFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CommandStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CommonAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/CommonAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/DestructableData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/DestructableMetaData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/DoodadMetaData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/Doodads.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/GlobalStrings.fdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/HumanAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/HumanAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/HumanUnitFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/HumanUnitStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/HumanUpgradeFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/HumanUpgradeStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/ItemAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/ItemAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/ItemData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/ItemFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/ItemStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/MiscData.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/MiscGame.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NeutralAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NeutralAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NeutralUnitFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NeutralUnitStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NeutralUpgradeFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NeutralUpgradeStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NightElfAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NightElfAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NightElfUnitFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NightElfUnitStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NightElfUpgradeFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/NightElfUpgradeStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/OrcAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/OrcAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/OrcUnitFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/OrcUnitStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/OrcUpgradeFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/OrcUpgradeStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/ROCGlobalStrings.fdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/TFTGlobalStrings.fdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UndeadAbilityFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UndeadAbilityStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UndeadUnitFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UndeadUnitStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UndeadUpgradeFunc.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UndeadUpgradeStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UnitAbilities.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UnitBalance.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UnitData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UnitGlobalStrings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UnitMetaData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UnitUI.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UnitWeapons.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UpgradeData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/UpgradeMetaData.slk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/War3Skins.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitBalance.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitData.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitUI.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitWeapons.tmpl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/w3u.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/w3u.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/parser.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/parser.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -114,7 +39,7 @@
           <entry key="go" value="19" />
           <entry key="json" value="3" />
           <entry key="sedrf" value="2" />
-          <entry key="slk" value="44" />
+          <entry key="slk" value="47" />
           <entry key="tmpl" value="15" />
           <entry key="txt" value="4" />
           <entry key="wts" value="1" />
@@ -125,23 +50,23 @@
           <entry key="Go" value="19" />
           <entry key="Go template" value="14" />
           <entry key="JSON" value="3" />
-          <entry key="PLAIN_TEXT" value="52" />
+          <entry key="PLAIN_TEXT" value="55" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="go" value="28536" />
+          <entry key="go" value="28552" />
           <entry key="sedrf" value="24" />
           <entry key="slk" value="31" />
           <entry key="tmpl" value="633" />
-          <entry key="txt" value="79" />
+          <entry key="txt" value="306" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="28536" />
+          <entry key="Go" value="28552" />
           <entry key="Go template" value="570" />
-          <entry key="PLAIN_TEXT" value="197" />
+          <entry key="PLAIN_TEXT" value="424" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.go.postfix.template.usages.trigger">
@@ -153,11 +78,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
+            <state relative-caret-position="154">
+              <caret line="209" column="47" selection-start-line="209" selection-start-column="47" selection-end-line="209" selection-end-column="47" />
               <folding>
                 <element signature="e#14#106#0" expanded="true" />
               </folding>
@@ -177,7 +102,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/w3u.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-49">
@@ -195,6 +120,15 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/AbilityBuffData.slk">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="249" column="7" selection-start-line="249" selection-start-column="7" selection-end-line="249" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -206,7 +140,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>C;X([\d]{1,2});K&quot;([a-zA-Z]*)&quot;</find>
       <find>,</find>
       <find>&quot;</find>
       <find>.</find>
@@ -236,6 +169,7 @@
       <find>string</find>
       <find>headerMap</find>
       <find>C;X79;K24.7222222222222</find>
+      <find>o002</find>
     </findStrings>
     <replaceStrings>
       <replace>log</replace>
@@ -337,11 +271,6 @@
             <path>
               <item name="wts-parser" type="b2602c69:ProjectViewProjectNode" />
               <item name="wts-parser" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="wts-parser" type="b2602c69:ProjectViewProjectNode" />
-              <item name="wts-parser" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -417,13 +346,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1020" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2529412" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2529412" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32914287" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32914287" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -446,9 +376,15 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="Made it possible to convert .w3u files to JSON" />
     <MESSAGE value="Updated idea IDE settings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated idea IDE settings" />
+    <MESSAGE value="Added .slk and .txt resource files" />
+    <MESSAGE value="Added .slk and .txt basic units resource file" />
+    <MESSAGE value="Got the first working version of the SLK parser" />
+    <MESSAGE value="Removed the .slk output files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed the .slk output files" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/parser/justsomefilename.go">
@@ -490,9 +426,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/CampaignAbilityFunc.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/AbilityBuffData.slk">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/UnitMetaData.slk">
@@ -552,13 +485,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/sadf.go">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/slk.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="245" column="12" selection-start-line="245" selection-start-column="5" selection-end-line="245" selection-end-column="12" />
-        </state>
-      </provider>
     </entry>
     <entry file="file:///usr/lib/go/src/reflect/value.go">
       <provider selected="true" editor-type-id="text-editor">
@@ -640,27 +566,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/models/w3u.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-49">
+          <caret line="347" column="24" selection-start-line="347" selection-start-column="24" selection-end-line="347" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/slk.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="245" column="12" selection-start-line="245" selection-start-column="5" selection-end-line="245" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/UnitData.slk">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-570">
-          <caret line="13" column="15" lean-forward="true" selection-start-line="13" selection-start-column="15" selection-end-line="13" selection-end-column="15" />
+        <state relative-caret-position="1425">
+          <caret line="95" column="14" selection-start-line="95" selection-start-column="10" selection-end-line="95" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/AbilityBuffData.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="249" column="7" selection-start-line="249" selection-start-column="7" selection-end-line="249" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
+        <state relative-caret-position="154">
+          <caret line="209" column="47" selection-start-line="209" selection-start-column="47" selection-end-line="209" selection-end-column="47" />
           <folding>
             <element signature="e#14#106#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/w3u.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-49">
-          <caret line="347" column="24" selection-start-line="347" selection-start-column="24" selection-end-line="347" selection-end-column="24" />
         </state>
       </provider>
     </entry>

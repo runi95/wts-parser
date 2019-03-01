@@ -153,7 +153,7 @@ func main() {
 
 		log.Println("Writing to UnitData.slk...")
 
-		unitDataFile, err := os.Create("UnitData.slk")
+		unitDataFile, err := os.Create("out/UnitData.slk")
 		if err != nil {
 			log.Println(err)
 		}
@@ -171,7 +171,7 @@ func main() {
 
 		log.Println("Writing to UnitBalance.slk...")
 
-		unitBalanceFile, err := os.Create("UnitBalance.slk")
+		unitBalanceFile, err := os.Create("out/UnitBalance.slk")
 		if err != nil {
 			log.Println(err)
 		}
@@ -189,7 +189,7 @@ func main() {
 
 		log.Println("Writing to UnitUI.slk...")
 
-		unitUIFile, err := os.Create("UnitUI.slk")
+		unitUIFile, err := os.Create("out/UnitUI.slk")
 		if err != nil {
 			log.Println(err)
 		}
@@ -207,7 +207,7 @@ func main() {
 
 		log.Println("Writing to UnitWeapons.slk...")
 
-		unitWeaponsFile, err := os.Create("UnitWeapons.slk")
+		unitWeaponsFile, err := os.Create("out/UnitWeapons.slk")
 		if err != nil {
 			log.Println(err)
 		}
