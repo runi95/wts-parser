@@ -5,8 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	. "github.com/runi95/wts-parser/models"
+	"gopkg.in/volatiletech/null.v6"
+	"log"
+	"reflect"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 var idRegex = regexp.MustCompile(`[0-9]+`)                  // Find string id
@@ -14,6 +18,14 @@ var stringRegex = regexp.MustCompile(`STRING [0-9]*[^}]*}`) // Regex to find eac
 var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`)  // Regex to find the content container of each string object
 var contentStartRegex = regexp.MustCompile(`^[\r]*[\n]`)
 var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
+var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([-"\w]*)`)
+var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
+
+/*************************
+
+       WTS PARSERS
+
+*************************/
 
 func WtsToJson(input []byte) []byte {
 	str := string(input)
@@ -27,7 +39,7 @@ func WtsToJson(input []byte) []byte {
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			fmt.Print(err)
+			log.Println(err)
 		}
 
 		removeBrackets := findContentContainer[1 : len(findContentContainer)-1]
@@ -41,13 +53,42 @@ func WtsToJson(input []byte) []byte {
 
 	jsonObject, err := json.Marshal(m)
 	if err != nil {
-		fmt.Print(err)
+		log.Println(err)
 	}
 
 	return jsonObject
 }
 
-func W3uToJson(input []byte) []byte {
+/*************************
+
+      JSON PARSERS
+
+*************************/
+
+func JsonToWts(input []byte) []byte {
+	var m map[string]string
+
+	err := json.Unmarshal(input, &m)
+	if err != nil {
+		log.Println(err)
+	}
+
+	var buffer bytes.Buffer
+
+	for key := range m {
+		buffer.WriteString("STRING " + key + "\r\n{\r\n" + m[key] + "\r\n}\r\n\r\n")
+	}
+
+	return buffer.Bytes()
+}
+
+/*************************
+
+       W3U PARSERS
+
+*************************/
+
+func ReadW3uFile(input []byte) map[string]*W3uData {
 	var lastUnitId string
 	unitMap := make(map[string]*W3uData)
 
@@ -70,674 +111,29 @@ func W3uToJson(input []byte) []byte {
 			currentUnit := unitMap[lastUnitId]
 
 			i += 4
-			switch str {
-			case "unam":
-				unitUnam := ""
-				for input[i+1] > 31 {
-					i++
-					unitUnam += string(input[i])
+			value := ""
+			for input[i+1] > 31 {
+				i++
+				value += string(input[i])
+			}
+
+			if len(value) > 0 {
+				nullString := new(null.String)
+				nullString.SetValid(value)
+
+				err := reflectUpdateValueOnFieldNullString(currentUnit, *nullString, strings.Title(str))
+				if err != nil {
+					log.Println(err)
 				}
-				currentUnit.Unam = unitUnam
-				break
-			case "umvr":
-				unitUmvr := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmvr += string(input[i])
-				}
-				currentUnit.Umvr = unitUmvr
-				break
-			case "umas":
-				unitUmas := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmas += string(input[i])
-				}
-				currentUnit.Umas = unitUmas
-				break
-			case "umis":
-				unitUmis := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmis += string(input[i])
-				}
-				currentUnit.Umis = unitUmis
-				break
-			case "util":
-				unitUtil := ""
-				for input[i+1] > 31 {
-					i++
-					unitUtil += string(input[i])
-				}
-				currentUnit.Util = unitUtil
-				break
-			case "uine":
-				unitUine := ""
-				for input[i+1] > 31 {
-					i++
-					unitUine += string(input[i])
-				}
-				currentUnit.Uine = unitUine
-				break
-			case "udro":
-				unitUdro := ""
-				for input[i+1] > 31 {
-					i++
-					unitUdro += string(input[i])
-				}
-				currentUnit.Udro = unitUdro
-				break
-			case "uspa":
-				unitUspa := ""
-				for input[i+1] > 31 {
-					i++
-					unitUspa += string(input[i])
-				}
-				currentUnit.Uspa = unitUspa
-				break
-			case "ua1z":
-				unitUa1z := ""
-				for input[i+1] > 31 {
-					i++
-					unitUa1z += string(input[i])
-				}
-				currentUnit.Ua1z = unitUa1z
-				break
-			case "utc1":
-				unitUtc1 := ""
-				for input[i+1] > 31 {
-					i++
-					unitUtc1 += string(input[i])
-				}
-				currentUnit.Utc1 = unitUtc1
-				break
-			case "urb1":
-				unitUrb1 := ""
-				for input[i+1] > 31 {
-					i++
-					unitUrb1 += string(input[i])
-				}
-				currentUnit.Urb1 = unitUrb1
-				break
-			case "ucs1":
-				unitUcs1 := ""
-				for input[i+1] > 31 {
-					i++
-					unitUcs1 += string(input[i])
-				}
-				currentUnit.Ucs1 = unitUcs1
-				break
-			case "ua1w":
-				unitUa1w := ""
-				for input[i+1] > 31 {
-					i++
-					unitUa1w += string(input[i])
-				}
-				currentUnit.Ua1w = unitUa1w
-				break
-			case "umh1":
-				unitUmh1 := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmh1 += string(input[i])
-				}
-				currentUnit.Umh1 = unitUmh1
-				break
-			case "udef":
-				unitUdef := ""
-				for input[i+1] > 31 {
-					i++
-					unitUdef += string(input[i])
-				}
-				currentUnit.Udef = unitUdef
-				break
-			case "uarm":
-				unitUarm := ""
-				for input[i+1] > 31 {
-					i++
-					unitUarm += string(input[i])
-				}
-				currentUnit.Uarm = unitUarm
-				break
-			case "udty":
-				unitUdty := ""
-				for input[i+1] > 31 {
-					i++
-					unitUdty += string(input[i])
-				}
-				currentUnit.Udty = unitUdty
-				break
-			case "ides":
-				unitIdes := ""
-				for input[i+1] > 31 {
-					i++
-					unitIdes += string(input[i])
-				}
-				currentUnit.Ides = unitIdes
-				break
-			case "unsf":
-				unitUnsf := ""
-				for input[i+1] > 31 {
-					i++
-					unitUnsf += string(input[i])
-				}
-				currentUnit.Unsf = unitUnsf
-				break
-			case "utyp":
-				unitUtyp := ""
-				for input[i+1] > 31 {
-					i++
-					unitUtyp += string(input[i])
-				}
-				currentUnit.Utyp = unitUtyp
-				break
-			case "ufor":
-				unitUfor := ""
-				for input[i+1] > 31 {
-					i++
-					unitUfor += string(input[i])
-				}
-				currentUnit.Ufor = unitUfor
-				break
-			case "ulbd":
-				unitUlbd := ""
-				for input[i+1] > 31 {
-					i++
-					unitUlbd += string(input[i])
-				}
-				currentUnit.Ulbd = unitUlbd
-				break
-			case "ulba":
-				unitUlba := ""
-				for input[i+1] > 31 {
-					i++
-					unitUlba += string(input[i])
-				}
-				currentUnit.Ulba = unitUlba
-				break
-			case "ulbs":
-				unitUlbs := ""
-				for input[i+1] > 31 {
-					i++
-					unitUlbs += string(input[i])
-				}
-				currentUnit.Ulbs = unitUlbs
-				break
-			case "ubba":
-				unitUbba := ""
-				for input[i+1] > 31 {
-					i++
-					unitUbba += string(input[i])
-				}
-				currentUnit.Ubba = unitUbba
-				break
-			case "ubsi":
-				unitUbsi := ""
-				for input[i+1] > 31 {
-					i++
-					unitUbsi += string(input[i])
-				}
-				currentUnit.Ubsi = unitUbsi
-				break
-			case "ubdi":
-				unitUbdi := ""
-				for input[i+1] > 31 {
-					i++
-					unitUbdi += string(input[i])
-				}
-				currentUnit.Ubdi = unitUbdi
-				break
-			case "ugor":
-				unitUgor := ""
-				for input[i+1] > 31 {
-					i++
-					unitUgor += string(input[i])
-				}
-				currentUnit.Ugor = unitUgor
-				break
-			case "ulur":
-				unitUlur := ""
-				for input[i+1] > 31 {
-					i++
-					unitUlur += string(input[i])
-				}
-				currentUnit.Ulur = unitUlur
-				break
-			case "umpm":
-				unitUmpm := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmpm += string(input[i])
-				}
-				currentUnit.Umpm = unitUmpm
-				break
-			case "umpr":
-				unitUmpr := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmpr += string(input[i])
-				}
-				currentUnit.Umpr = unitUmpr
-				break
-			case "upri":
-				unitUpri := ""
-				for input[i+1] > 31 {
-					i++
-					unitUpri += string(input[i])
-				}
-				currentUnit.Upri = unitUpri
-				break
-			case "urtm":
-				unitUrtm := ""
-				for input[i+1] > 31 {
-					i++
-					unitUrtm += string(input[i])
-				}
-				currentUnit.Urtm = unitUrtm
-				break
-			case "usle":
-				unitUsle := ""
-				for input[i+1] > 31 {
-					i++
-					unitUsle += string(input[i])
-				}
-				currentUnit.Usle = unitUsle
-				break
-			case "usin":
-				unitUsin := ""
-				for input[i+1] > 31 {
-					i++
-					unitUsin += string(input[i])
-				}
-				currentUnit.Usin = unitUsin
-				break
-			case "usid":
-				unitUsid := ""
-				for input[i+1] > 31 {
-					i++
-					unitUsid += string(input[i])
-				}
-				currentUnit.Usid = unitUsid
-				break
-			case "ulev":
-				unitUlev := ""
-				for input[i+1] > 31 {
-					i++
-					unitUlev += string(input[i])
-				}
-				currentUnit.Ulev = unitUlev
-				break
-			case "ucar":
-				unitUcar := ""
-				for input[i+1] > 31 {
-					i++
-					unitUcar += string(input[i])
-				}
-				currentUnit.Ucar = unitUcar
-				break
-			case "uhpr":
-				unitUhpr := ""
-				for input[i+1] > 31 {
-					i++
-					unitUhpr += string(input[i])
-				}
-				currentUnit.Uhpr = unitUhpr
-				break
-			case "uhrt":
-				unitUhrt := ""
-				for input[i+1] > 31 {
-					i++
-					unitUhrt += string(input[i])
-				}
-				currentUnit.Uhrt = unitUhrt
-				break
-			case "umpi":
-				unitUmpi := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmpi += string(input[i])
-				}
-				currentUnit.Umpi = unitUmpi
-				break
-			case "usst":
-				unitUsst := ""
-				for input[i+1] > 31 {
-					i++
-					unitUsst += string(input[i])
-				}
-				currentUnit.Usst = unitUsst
-				break
-			case "usrg":
-				unitUsrg := ""
-				for input[i+1] > 31 {
-					i++
-					unitUsrg += string(input[i])
-				}
-				currentUnit.Usrg = unitUsrg
-				break
-			case "usma":
-				unitUsma := ""
-				for input[i+1] > 31 {
-					i++
-					unitUsma += string(input[i])
-				}
-				currentUnit.Usma = unitUsma
-				break
-			case "upgr":
-				unitUpgrade := ""
-				for input[i+1] > 31 {
-					i++
-					unitUpgrade += string(input[i])
-				}
-				currentUnit.Upgr = unitUpgrade
-				break
-			case "uabi":
-				unitUabi := ""
-				for input[i+1] > 31 {
-					i++
-					unitUabi += string(input[i])
-				}
-				currentUnit.Uabi = unitUabi
-				break
-			case "utip":
-				unitUtip := ""
-				for input[i+1] > 31 {
-					i++
-					unitUtip += string(input[i])
-				}
-				currentUnit.Utip = unitUtip
-				break
-			case "utub":
-				unitUtub := ""
-				for input[i+1] > 31 {
-					i++
-					unitUtub += string(input[i])
-				}
-				currentUnit.Utub = unitUtub
-				break
-			case "ugol":
-				unitUgol := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUgol += string(input[i])
-				}
-				currentUnit.Ugol = unitUgol
-				break
-			case "utar":
-				unitUtar := ""
-				for input[i+1] > 31 {
-					i++
-					unitUtar += string(input[i])
-				}
-				currentUnit.Utar = unitUtar
-				break
-			case "umvt":
-				unitUmvt := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmvt += string(input[i])
-				}
-				currentUnit.Umvt = unitUmvt
-				break
-			case "umvh":
-				unitUmvh := "" // Movement height?
-				for input[i+1] > 31 {
-					i++
-					unitUmvh += string(input[i])
-				}
-				currentUnit.Umvh = unitUmvh
-				break
-			case "ubld":
-				unitUbld := "" // ? It's not buildables as that's ubui
-				for input[i+1] > 31 {
-					i++
-					unitUbld += string(input[i])
-				}
-				currentUnit.Ubld = unitUbld
-				break
-			case "uhpm":
-				unitUhpm := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUhpm += string(input[i])
-				}
-				currentUnit.Uhpm = unitUhpm
-				break
-			case "umvs":
-				unitUmvs := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUmvs += string(input[i])
-				}
-				currentUnit.Umvs = unitUmvs
-				break
-			case "umdl":
-				unitUmdl := ""
-				for input[i+1] > 31 {
-					i++
-					unitUmdl += string(input[i])
-				}
-				currentUnit.Umdl = unitUmdl
-				break
-			case "uico":
-				unitUico := ""
-				for input[i+1] > 31 {
-					i++
-					unitUico += string(input[i])
-				}
-				currentUnit.Uico = unitUico
-				break
-			case "urac":
-				unitUrac := ""
-				for input[i+1] > 31 {
-					i++
-					unitUrac += string(input[i])
-				}
-				currentUnit.Urac = unitUrac
-				break
-			case "usnd":
-				unitUsnd := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUsnd += string(input[i])
-				}
-				currentUnit.Usnd = unitUsnd
-				break
-			case "usca":
-				unitUsca := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUsca += string(input[i])
-				}
-				currentUnit.Usca = unitUsca
-				break
-			case "uhot":
-				unitUhot := "" // Hotkey?
-				for input[i+1] > 31 {
-					i++
-					unitUhot += string(input[i])
-				}
-				currentUnit.Uhot = unitUhot
-				break
-			case "ubui":
-				unitUbui := ""
-				for input[i+1] > 31 {
-					i++
-					unitUbui += string(input[i])
-				}
-				currentUnit.Ubui = unitUbui
-				break
-			case "uclb":
-				unitUclb := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUclb += string(input[i])
-				}
-				currentUnit.Uclb = unitUclb
-				break
-			case "ufoo":
-				unitUfoo := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUfoo += string(input[i])
-				}
-				currentUnit.Ufoo = unitUfoo
-				break
-			case "ua1c":
-				unitUa1c := "" // ? Has something to do with attack 1
-				for input[i+1] > 31 {
-					i++
-					unitUa1c += string(input[i])
-				}
-				currentUnit.Ua1c = unitUa1c
-				break
-			case "ua1b":
-				unitUa1b := "" // ? Has something to do with attack 1
-				for input[i+1] > 31 {
-					i++
-					unitUa1b += string(input[i])
-				}
-				currentUnit.Ua1b = unitUa1b
-				break
-			case "ua1d":
-				unitUa1d := "" // ? Has something to do with attack 1
-				for input[i+1] > 31 {
-					i++
-					unitUa1d += string(input[i])
-				}
-				currentUnit.Ua1d = unitUa1d
-				break
-			case "ua1s":
-				unitUa1s := "" // ? Has something to do with attack 1
-				for input[i+1] > 31 {
-					i++
-					unitUa1s += string(input[i])
-				}
-				currentUnit.Ua1s = unitUa1s
-				break
-			case "ua1g":
-				unitUa1g := "" // ? Has something to do with attack 1
-				for input[i+1] > 31 {
-					i++
-					unitUa1g += string(input[i])
-				}
-				currentUnit.Ua1g = unitUa1g
-				break
-			case "ulum":
-				unitUlum := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUlum += string(input[i])
-				}
-				currentUnit.Ulum = unitUlum
-				break
-			case "upoi":
-				unitUpoi := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUpoi += string(input[i])
-				}
-				currentUnit.Upoi = unitUpoi
-				break
-			case "utra":
-				unitUtra := "" // Unit trains?
-				for input[i+1] > 31 {
-					i++
-					unitUtra += string(input[i])
-				}
-				currentUnit.Utra = unitUtra
-				break
-			case "upap":
-				unitUpap := "" // ? A unit had unbuilable as value here
-				for input[i+1] > 31 {
-					i++
-					unitUpap += string(input[i])
-				}
-				currentUnit.Upap = unitUpap
-				break
-			case "ubs1":
-				unitUbs1 := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUbs1 += string(input[i])
-				}
-				currentUnit.Ubs1 = unitUbs1
-				break
-			case "udp1":
-				unitUdp1 := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUdp1 += string(input[i])
-				}
-				currentUnit.Udp1 = unitUdp1
-				break
-			case "ubpy":
-				unitUbpy := "" // ?
-				for input[i+1] > 31 {
-					i++
-					unitUbpy += string(input[i])
-				}
-				currentUnit.Ubpy = unitUbpy
-				break
-			case "ua1t":
-				unitUa1t := ""
-				for input[i+1] > 31 {
-					i++
-					unitUa1t += string(input[i])
-				}
-				currentUnit.Ua1t = unitUa1t
-				break
-			case "utc2":
-				unitUtc2 := ""
-				for input[i+1] > 31 {
-					i++
-					unitUtc2 += string(input[i])
-				}
-				currentUnit.Utc2 = unitUtc2
-				break
-			case "ua1p":
-				unitUa1p := ""
-				for input[i+1] > 31 {
-					i++
-					unitUa1p += string(input[i])
-				}
-				currentUnit.Ua1p = unitUa1p
-				break
-			case "ubpx":
-				unitUbpx := ""
-				for input[i+1] > 31 {
-					i++
-					unitUbpx += string(input[i])
-				}
-				currentUnit.Ubpx = unitUbpx
-				break
-			case "uacq":
-				unitUacq := "" // Unit acquisition?
-				for input[i+1] > 31 {
-					i++
-					unitUacq += string(input[i])
-				}
-				currentUnit.Uacq = unitUacq
-				break
-			case "ua1r":
-				unitUa1r := ""
-				for input[i+1] > 31 {
-					i++
-					unitUa1r += string(input[i])
-				}
-				currentUnit.Ua1r = unitUa1r
-				break
-			case "ua1m":
-				unitUa1m := ""
-				for input[i+1] > 31 {
-					i++
-					unitUa1m += string(input[i])
-				}
-				currentUnit.Ua1m = unitUa1m
-				break
 			}
 		}
 	}
+
+	return unitMap
+}
+
+func W3uToJson(input []byte) []byte {
+	unitMap := ReadW3uFile(input)
 
 	mapValues := make([]*W3uData, len(unitMap))
 	index := 0
@@ -748,25 +144,297 @@ func W3uToJson(input []byte) []byte {
 
 	jsonObject, err := json.Marshal(mapValues)
 	if err != nil {
-		fmt.Print(err)
+		log.Println(err)
 	}
 
 	return jsonObject
 }
 
-func JsonToWts(input []byte) []byte {
-	var m map[string]string
+func W3uToSLKUnits(input []byte) []*SLKUnit {
+	unitMap := ReadW3uFile(input)
 
-	err := json.Unmarshal(input, &m)
+	slkUnits := make([]*SLKUnit, len(unitMap))
+	index := 0
+	for _, value := range unitMap {
+		slkUnit := new(SLKUnit)
+		value.TransformToSLKUnit(slkUnit)
+
+		slkUnits[index] = slkUnit
+		index++
+	}
+
+	return slkUnits
+}
+
+func W3uToSLKUnitsWithBaseSLK(baseSLKUnits map[string]*SLKUnit, input []byte) []*SLKUnit {
+	unitMap := ReadW3uFile(input)
+
+	slkUnits := make([]*SLKUnit, len(unitMap))
+	index := 0
+	for _, value := range unitMap {
+		var slkUnit SLKUnit
+		baseSLKUnit := baseSLKUnits["\"" + value.BaseUnitId + "\""]
+		slkUnit = *baseSLKUnit
+		value.TransformToSLKUnit(&slkUnit)
+
+		slkUnits[index] = &slkUnit
+		index++
+	}
+
+	return slkUnits
+}
+
+/*************************
+
+       SLK PARSERS
+
+*************************/
+
+type SLKInformation struct {
+	split          []string
+	headerMap      map[string]string
+	columnSize     int
+	headerEndIndex int
+}
+
+func GenericSLKReader(input []byte) (*SLKInformation, error) {
+	slkInformation := new(SLKInformation)
+	str := string(input)
+	split := strings.Split(str, "\n")
+
+	meta := split[1]
+	metaSubmatch := SLKMetaRegex.FindStringSubmatch(meta)
+	if !(len(metaSubmatch) > 0) {
+		return nil, fmt.Errorf("meta submatch is empty")
+	}
+
+	columnSize, err := strconv.Atoi(metaSubmatch[1])
 	if err != nil {
-		fmt.Print(err)
+		return nil, err
 	}
 
-	var buffer bytes.Buffer
+	headerMap := make(map[string]string)
 
-	for key := range m {
-		buffer.WriteString("STRING " + key + "\r\n{\r\n" + m[key] + "\r\n}\r\n\r\n")
+	headerLineIndex := 2
+	isNotAtEndOfHeader := true
+	for isNotAtEndOfHeader {
+		headerLineSubmatch := SLKRegex.FindStringSubmatch(split[headerLineIndex])
+		if len(headerLineSubmatch[2]) > 0 && headerLineSubmatch[2] != "1" {
+			isNotAtEndOfHeader = false
+		} else {
+			if len(headerLineSubmatch) > 1 {
+				headerMap[headerLineSubmatch[1]] = headerLineSubmatch[3]
+			}
+
+			headerLineIndex++
+		}
 	}
 
-	return buffer.Bytes()
+	slkInformation.split = split
+	slkInformation.headerMap = headerMap
+	slkInformation.columnSize = columnSize
+	slkInformation.headerEndIndex = headerLineIndex
+
+	return slkInformation, nil
+}
+
+func SLKToUnitData(input []byte) map[string]*UnitData {
+	unitDataMap := make(map[string]*UnitData)
+	var currentUnitData *UnitData
+	slkInformation, err := GenericSLKReader(input)
+	if err != nil {
+		log.Println(err)
+
+		return nil
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
+		if bodyLineSubmatch != nil {
+			if len(bodyLineSubmatch[2]) > 0 {
+				if currentUnitData != nil && currentUnitData.UnitID.Valid {
+					unitDataMap[currentUnitData.UnitID.String] = currentUnitData
+				}
+
+				currentUnitData = new(UnitData)
+			}
+
+			nullString := new(null.String)
+			nullString.SetValid(bodyLineSubmatch[3])
+
+			err = reflectUpdateValueOnFieldNullString(currentUnitData, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	return unitDataMap
+}
+
+func SLKToUnitUI(input []byte) map[string]*UnitUI {
+	unitUIMap := make(map[string]*UnitUI)
+	var currentUnitUI *UnitUI
+	slkInformation, err := GenericSLKReader(input)
+	if err != nil {
+		log.Println(err)
+
+		return nil
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
+		if bodyLineSubmatch != nil {
+			if len(bodyLineSubmatch[2]) > 0 {
+				if currentUnitUI != nil && currentUnitUI.UnitUIID.Valid {
+					unitUIMap[currentUnitUI.UnitUIID.String] = currentUnitUI
+				}
+
+				currentUnitUI = new(UnitUI)
+			}
+
+			nullString := new(null.String)
+			nullString.SetValid(bodyLineSubmatch[3])
+
+			err = reflectUpdateValueOnFieldNullString(currentUnitUI, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	return unitUIMap
+}
+
+func SLKToUnitWeapons(input []byte) map[string]*UnitWeapons {
+	unitWeaponsMap := make(map[string]*UnitWeapons)
+	var currentUnitWeapons *UnitWeapons
+	slkInformation, err := GenericSLKReader(input)
+	if err != nil {
+		log.Println(err)
+
+		return nil
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
+		if bodyLineSubmatch != nil {
+			if len(bodyLineSubmatch[2]) > 0 {
+				if currentUnitWeapons != nil && currentUnitWeapons.UnitWeapID.Valid {
+					unitWeaponsMap[currentUnitWeapons.UnitWeapID.String] = currentUnitWeapons
+				}
+
+				currentUnitWeapons = new(UnitWeapons)
+			}
+
+			nullString := new(null.String)
+			nullString.SetValid(bodyLineSubmatch[3])
+
+			err = reflectUpdateValueOnFieldNullString(currentUnitWeapons, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	return unitWeaponsMap
+}
+
+func SLKToUnitBalance(input []byte) map[string]*UnitBalance {
+	unitBalanceMap := make(map[string]*UnitBalance)
+	var currentUnitBalance *UnitBalance
+	slkInformation, err := GenericSLKReader(input)
+	if err != nil {
+		log.Println(err)
+
+		return nil
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
+		if bodyLineSubmatch != nil && bodyLineSubmatch[1] != "6" {
+			if len(bodyLineSubmatch[2]) > 0 {
+				if currentUnitBalance != nil && currentUnitBalance.UnitBalanceID.Valid {
+					unitBalanceMap[currentUnitBalance.UnitBalanceID.String] = currentUnitBalance
+				}
+
+				currentUnitBalance = new(UnitBalance)
+			}
+
+			nullString := new(null.String)
+			nullString.SetValid(bodyLineSubmatch[3])
+
+			err = reflectUpdateValueOnFieldNullString(currentUnitBalance, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	return unitBalanceMap
+}
+
+/*************************
+
+    PRIVATE FUNCTIONS
+
+*************************/
+
+func reflectUpdateValueOnFieldNullString(iface interface{}, fieldValue null.String, fieldName string) error {
+	fieldName = strings.Replace(fieldName, "\"", "", -1)
+	valueIface := reflect.ValueOf(iface)
+
+	// Check if the passed interface is a pointer
+	if valueIface.Type().Kind() != reflect.Ptr {
+		return fmt.Errorf("can't swap values if the reflected interface is not a pointer")
+	}
+
+	// 'dereference' with Elem() and get the field by name
+	field := valueIface.Elem().FieldByName(fieldName)
+	if !field.IsValid() {
+		return fmt.Errorf("interface `%s` does not have the field `%s`", valueIface.Type(), fieldName)
+	}
+
+	// A Value can be changed only if it is
+	// addressable and was not obtained by
+	// the use of unexported struct fields.
+	if field.CanSet() {
+		// change value of the field with name fieldName
+		if field.Kind() == reflect.Struct {
+			field.Set(reflect.ValueOf(fieldValue))
+		}
+	}
+
+	return nil
+}
+
+func reflectUpdateValueOnField(iface interface{}, fieldValue string, fieldName string) error {
+	valueIface := reflect.ValueOf(iface)
+
+	// Check if the passed interface is a pointer
+	if valueIface.Type().Kind() != reflect.Ptr {
+		return fmt.Errorf("can't swap values if the reflected interface is not a pointer")
+	}
+
+	// 'dereference' with Elem() and get the field by name
+	field := valueIface.Elem().FieldByName(fieldName)
+	if !field.IsValid() {
+		return fmt.Errorf("interface `%s` does not have the field `%s`", valueIface.Type(), fieldName)
+	}
+
+	// A Value can be changed only if it is
+	// addressable and was not obtained by
+	// the use of unexported struct fields.
+	if field.CanSet() {
+		// change value of the field with name fieldName
+		if field.Kind() == reflect.String {
+			field.SetString(fieldValue)
+		}
+	}
+
+	return nil
 }

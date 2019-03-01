@@ -3,9 +3,81 @@
   <component name="ChangeListManager">
     <list default="true" id="d5d11401-69e9-4834-8386-ce6a04eebdcf" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/models/slk.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/w3u.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/AbilityBuffData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/AbilityBuffMetaData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/AbilityData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/AbilityMetaData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CampaignAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CampaignAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CampaignUnitFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CampaignUnitStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CampaignUpgradeFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CampaignUpgradeStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CommandFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CommandStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CommonAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/CommonAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/DestructableData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/DestructableMetaData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/DoodadMetaData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/Doodads.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/GlobalStrings.fdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/HumanAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/HumanAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/HumanUnitFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/HumanUnitStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/HumanUpgradeFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/HumanUpgradeStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/ItemAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/ItemAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/ItemData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/ItemFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/ItemStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/MiscData.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/MiscGame.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NeutralAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NeutralAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NeutralUnitFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NeutralUnitStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NeutralUpgradeFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NeutralUpgradeStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NightElfAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NightElfAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NightElfUnitFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NightElfUnitStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NightElfUpgradeFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/NightElfUpgradeStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/OrcAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/OrcAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/OrcUnitFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/OrcUnitStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/OrcUpgradeFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/OrcUpgradeStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/ROCGlobalStrings.fdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/TFTGlobalStrings.fdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UndeadAbilityFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UndeadAbilityStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UndeadUnitFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UndeadUnitStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UndeadUpgradeFunc.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UndeadUpgradeStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UnitAbilities.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UnitBalance.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UnitData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UnitGlobalStrings.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UnitMetaData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UnitUI.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UnitWeapons.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UpgradeData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/UpgradeMetaData.slk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/War3Skins.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/UnitBalance.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/UnitData.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/UnitUI.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/UnitWeapons.tmpl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/w3u.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/w3u.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/parser.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/parser.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -13,6 +85,20 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="531097885">
@@ -25,37 +111,53 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="go" value="5" />
-          <entry key="json" value="1" />
+          <entry key="go" value="19" />
+          <entry key="json" value="3" />
+          <entry key="sedrf" value="2" />
+          <entry key="slk" value="44" />
+          <entry key="tmpl" value="15" />
+          <entry key="txt" value="4" />
           <entry key="wts" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Go" value="5" />
-          <entry key="JSON" value="1" />
-          <entry key="PLAIN_TEXT" value="1" />
+          <entry key="Go" value="19" />
+          <entry key="Go template" value="14" />
+          <entry key="JSON" value="3" />
+          <entry key="PLAIN_TEXT" value="52" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="go" value="10877" />
+          <entry key="go" value="28536" />
+          <entry key="sedrf" value="24" />
+          <entry key="slk" value="31" />
+          <entry key="tmpl" value="633" />
+          <entry key="txt" value="79" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="10877" />
+          <entry key="Go" value="28536" />
+          <entry key="Go template" value="570" />
+          <entry key="PLAIN_TEXT" value="197" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.go.postfix.template.usages.trigger">
+        <counts>
+          <entry key=".len" value="1" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="65" column="57" selection-start-line="65" selection-start-column="57" selection-end-line="65" selection-end-column="57" />
+            <state relative-caret-position="210">
+              <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
               <folding>
                 <element signature="e#14#106#0" expanded="true" />
               </folding>
@@ -66,11 +168,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/parser/parser.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="32" column="79" selection-start-line="32" selection-start-column="79" selection-end-line="32" selection-end-column="79" />
+            <state relative-caret-position="-1114">
+              <caret line="175" column="66" selection-start-line="175" selection-start-column="66" selection-end-line="175" selection-end-column="66" />
               <folding>
-                <element signature="e#16#80#0" expanded="true" />
+                <element signature="e#16#106#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/models/w3u.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-49">
+              <caret line="347" column="24" selection-start-line="347" selection-start-column="24" selection-end-line="347" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -78,26 +189,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/slk.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="499">
-              <caret line="165" column="1" selection-start-line="165" selection-start-column="1" selection-end-line="165" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/w3u.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="36" column="7" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Downloads/war3map.wts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="25280" column="1" lean-forward="true" selection-start-line="25280" selection-start-column="1" selection-end-line="25280" selection-end-column="1" />
+            <state relative-caret-position="334">
+              <caret line="245" column="12" selection-start-line="245" selection-start-column="5" selection-end-line="245" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -113,28 +206,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
+      <find>C;X([\d]{1,2});K&quot;([a-zA-Z]*)&quot;</find>
+      <find>,</find>
+      <find>&quot;</find>
+      <find>.</find>
+      <find>(&quot;_&quot;)</find>
+      <find>_</find>
+      <find>-</find>
+      <find>(&quot; - &quot;)</find>
+      <find>\(&quot;([a-zA-Z]+[0-9]*)&quot;\)</find>
+      <find>HeroAbilList</find>
+      <find>abil</find>
+      <find>heroAbilList</find>
+      <find>unitSound</find>
+      <find>f</find>
+      <find>NbmmIcon</find>
+      <find>C;X([\d]{1,2});K&quot;([a-zA-Z0-9]*)&quot;</find>
+      <find>Weaps</find>
+      <find>\{\{ \.([a-zA-Z0-9]*) \}\}</find>
+      <find>SLK</find>
+      <find>Json</find>
+      <find>log</find>
+      <find>Title</find>
+      <find>fmt.</find>
+      <find>fmt&quot;</find>
       <find>fmt</find>
-      <find>log.</find>
-      <find>Print(</find>
-      <find>input[</find>
-      <find>baseUnit[</find>
-      <find>baseUnit</find>
-      <find>base</find>
-      <find>unitBuild</find>
-      <find>&quot;ualc&quot;</find>
-      <find>upoi</find>
-      <find>&quot;upoi&quot;</find>
-      <find>unitBui</find>
-      <find>upgrade</find>
-      <find>STRING 9675</find>
-      <find>&quot;usid</find>
-      <find>u</find>
-      <find>currentUnit.u</find>
-      <find>ides</find>
-      <find>UlU</find>
-      <find>UtU</find>
-      <find>UbU</find>
-      <find>count</find>
+      <find>log.Pr</find>
+      <find>iface</find>
+      <find>string</find>
+      <find>headerMap</find>
+      <find>C;X79;K24.7222222222222</find>
     </findStrings>
     <replaceStrings>
       <replace>log</replace>
@@ -144,6 +245,25 @@
       <replace>baseUnitId</replace>
       <replace>U</replace>
       <replace>currentUnit.U</replace>
+      <replace>$1\tstring\n</replace>
+      <replace>\t\u$1</replace>
+      <replace>string\n</replace>
+      <replace>\u$1\tstring\t$2</replace>
+      <replace>\u$1\tstring\t$2</replace>
+      <replace>string //</replace>
+      <replace>null.String</replace>
+      <replace>// But really int, unless empty string</replace>
+      <replace>(&quot; - &quot;)</replace>
+      <replace>C;X$1;K</replace>
+      <replace>C;X$1;K&quot;$2&quot;</replace>
+      <replace>(&quot;\&quot;-\&quot;&quot;)</replace>
+      <replace>(&quot;\\&quot;$1\\&quot;&quot;)</replace>
+      <replace>UnitBalance</replace>
+      <replace>C;X$1;K{{ .\u$2 }}</replace>
+      <replace>{{ .$1.Value</replace>
+      <replace>{{ .$1.Value() }}</replace>
+      <replace>{{ .$1.String }}</replace>
+      <replace>null.String</replace>
     </replaceStrings>
   </component>
   <component name="GOROOT" path="/usr/lib/go" />
@@ -155,9 +275,26 @@
       <list>
         <option value="$PROJECT_DIR$/parser/myTest.go" />
         <option value="$PROJECT_DIR$/parser/justsomefilename.go" />
-        <option value="$PROJECT_DIR$/models/w3u.go" />
+        <option value="$PROJECT_DIR$/models/test.txt.go" />
+        <option value="$PROJECT_DIR$/models/sdfg.go" />
+        <option value="$PROJECT_DIR$/models/asdfg.go" />
+        <option value="$PROJECT_DIR$/models/asedfg.go" />
+        <option value="$PROJECT_DIR$/resources/UnitBalance.slk" />
+        <option value="$PROJECT_DIR$/models/sedrf" />
+        <option value="$PROJECT_DIR$/templates/UnitBalance.tmpl" />
+        <option value="$PROJECT_DIR$/templates/UnitUI.tmpl" />
+        <option value="$PROJECT_DIR$/UnitBalance.slk" />
+        <option value="$PROJECT_DIR$/UnitUI.slk" />
+        <option value="$PROJECT_DIR$/UnitData.slk" />
+        <option value="$PROJECT_DIR$/UnitWeapons.slk" />
         <option value="$PROJECT_DIR$/models/slk.go" />
+        <option value="$PROJECT_DIR$/models/sadf.go" />
+        <option value="$PROJECT_DIR$/models/w3u.go" />
+        <option value="$PROJECT_DIR$/resources/UnitData.slk" />
+        <option value="$PROJECT_DIR$/resources/UnitWeapons.slk" />
         <option value="$PROJECT_DIR$/parser/parser.go" />
+        <option value="$PROJECT_DIR$/templates/UnitData.tmpl" />
+        <option value="$PROJECT_DIR$/templates/UnitWeapons.tmpl" />
         <option value="$PROJECT_DIR$/main.go" />
       </list>
     </option>
@@ -197,6 +334,16 @@
               <item name="wts-parser" type="462c0819:PsiDirectoryNode" />
               <item name="parser" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="wts-parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wts-parser" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wts-parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wts-parser" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -205,13 +352,18 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
-    <property name="GO_FMT" value="true" />
+    <property name="GO_FMT" value="false" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -265,14 +417,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1020" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2529412" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2529412" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32914287" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32914287" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -285,7 +436,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32994652" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,6 +444,11 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Made it possible to convert .w3u files to JSON" />
+    <MESSAGE value="Updated idea IDE settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated idea IDE settings" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/parser/justsomefilename.go">
@@ -302,49 +458,226 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/slk.go">
+    <entry file="file://$USER_HOME$/Downloads/war3map.wts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="165" column="1" selection-start-line="165" selection-start-column="1" selection-end-line="165" selection-end-column="1" />
+        <state relative-caret-position="453">
+          <caret line="25280" column="1" selection-start-line="25280" selection-start-column="1" selection-end-line="25280" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/w3u.go">
+    <entry file="file://$USER_HOME$/Downloads/war3map.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="36" column="7" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
+        <state>
+          <caret column="42" selection-start-column="38" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/test.txt.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/sdfg.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="439">
+          <caret line="231" column="18" selection-end-line="231" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/asdfg.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/CampaignAbilityFunc.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/AbilityBuffData.slk">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitMetaData.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4495">
+          <caret line="1607" column="8" lean-forward="true" selection-start-line="1607" selection-start-column="8" selection-end-line="1607" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/asedfg.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitAbilities.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/go/src/text/template/exec.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="159" selection-start-line="159" selection-end-line="159" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/sedrf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="20" selection-end-line="75" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../gopkg.in/volatiletech/null.v6/string.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="12" column="10" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitUI.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-313">
+          <caret line="83232" column="9" selection-start-line="83232" selection-start-column="9" selection-end-line="83232" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitWeapons.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1322">
+          <caret line="64607" lean-forward="true" selection-start-line="64607" selection-end-line="64607" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitGlobalStrings.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/sadf.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/slk.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="245" column="12" selection-start-line="245" selection-start-column="5" selection-end-line="245" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/go/src/reflect/value.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="206" selection-start-line="206" selection-end-line="206" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitWeapons.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitData.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="15" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitBalance.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/UnitData.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-536">
+          <caret column="23" selection-start-column="23" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/UnitUI.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1121">
+          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/UnitWeapons.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="156" column="27" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitUI.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-621538">
+          <caret line="153" column="8" selection-start-line="153" selection-start-column="8" selection-end-line="153" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/UnitBalance.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-750">
+          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/parser/parser.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="32" column="79" selection-start-line="32" selection-start-column="79" selection-end-line="32" selection-end-column="79" />
+        <state relative-caret-position="-1114">
+          <caret line="175" column="66" selection-start-line="175" selection-start-column="66" selection-end-line="175" selection-end-column="66" />
           <folding>
-            <element signature="e#16#80#0" expanded="true" />
+            <element signature="e#16#106#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/war3map.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/war3map.wts">
+    <entry file="file://$PROJECT_DIR$/UnitBalance.slk">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="25280" column="1" lean-forward="true" selection-start-line="25280" selection-start-column="1" selection-end-line="25280" selection-end-column="1" />
+        <state relative-caret-position="-462463">
+          <caret line="55" column="11" selection-start-line="55" selection-start-column="11" selection-end-line="55" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitData.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-570">
+          <caret line="13" column="15" lean-forward="true" selection-start-line="13" selection-start-column="15" selection-end-line="13" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="65" column="57" selection-start-line="65" selection-start-column="57" selection-end-line="65" selection-end-column="57" />
+        <state relative-caret-position="210">
+          <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
           <folding>
             <element signature="e#14#106#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/models/w3u.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-49">
+          <caret line="347" column="24" selection-start-line="347" selection-start-column="24" selection-end-line="347" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
