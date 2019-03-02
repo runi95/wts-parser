@@ -4,24 +4,24 @@ import (
 	"fmt"
 	"github.com/runi95/wts-parser/models"
 	"github.com/runi95/wts-parser/parser"
-	"text/template"
 	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
+	"text/template"
 )
 
 var fileNameRegex = regexp.MustCompile("[^.]*")
 var fileExtensionRegex = regexp.MustCompile("\\.[^.]+$") // Find file extension
 
 type UnitBalanceTemplate struct {
-	RowCount int
+	RowCount    int
 	UnitBalance []*models.UnitBalance
 }
 
 type UnitUITemplate struct {
 	RowCount int
-	UnitUI []*models.UnitUI
+	UnitUI   []*models.UnitUI
 }
 
 type UnitDataTemplate struct {
@@ -30,7 +30,7 @@ type UnitDataTemplate struct {
 }
 
 type UnitWeaponsTemplate struct {
-	RowCount int
+	RowCount    int
 	UnitWeapons []*models.UnitWeapons
 }
 
@@ -126,11 +126,13 @@ func main() {
 			slkUnit.UnitUI = unitUIMap[k]
 			slkUnit.UnitWeapons = unitWeaponsMap[k]
 			slkUnit.UnitBalance = unitBalanceMap[k]
+			slkUnit.UnitAbilities = new(models.UnitAbilities)
 
 			baseUnitMap[k] = slkUnit
 		}
 
 		log.Println("Reading .w3u file...")
+
 		parsedSLKUnits := parser.W3uToSLKUnitsWithBaseSLK(baseUnitMap, b)
 
 		parsedSLKUnitsData := make([]*models.UnitData, len(parsedSLKUnits))

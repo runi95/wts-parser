@@ -18,7 +18,7 @@ var stringRegex = regexp.MustCompile(`STRING [0-9]*[^}]*}`) // Regex to find eac
 var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`)  // Regex to find the content container of each string object
 var contentStartRegex = regexp.MustCompile(`^[\r]*[\n]`)
 var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
-var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([-"\w]*)`)
+var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([-"\\\w]*)`)
 var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
 
 /*************************
@@ -172,12 +172,28 @@ func W3uToSLKUnitsWithBaseSLK(baseSLKUnits map[string]*SLKUnit, input []byte) []
 	slkUnits := make([]*SLKUnit, len(unitMap))
 	index := 0
 	for _, value := range unitMap {
-		var slkUnit SLKUnit
-		baseSLKUnit := baseSLKUnits["\"" + value.BaseUnitId + "\""]
-		slkUnit = *baseSLKUnit
-		value.TransformToSLKUnit(&slkUnit)
+		slkUnit := new(SLKUnit)
+		baseSLKUnit := *baseSLKUnits["\"" + value.BaseUnitId + "\""]
+		var unitUI UnitUI
+		var unitData UnitData
+		var unitWeapons UnitWeapons
+		var unitBalance UnitBalance
+		var unitAbilities UnitAbilities
+		unitUI = *baseSLKUnit.UnitUI
+		unitData = *baseSLKUnit.UnitData
+		unitWeapons = *baseSLKUnit.UnitWeapons
+		unitBalance = *baseSLKUnit.UnitBalance
+		unitAbilities = *baseSLKUnit.UnitAbilities
 
-		slkUnits[index] = &slkUnit
+		slkUnit.UnitUI = &unitUI
+		slkUnit.UnitData = &unitData
+		slkUnit.UnitWeapons = &unitWeapons
+		slkUnit.UnitBalance = &unitBalance
+		slkUnit.UnitAbilities = &unitAbilities
+
+		value.TransformToSLKUnit(slkUnit)
+		slkUnits[index] = slkUnit
+
 		index++
 	}
 

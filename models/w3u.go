@@ -1,6 +1,8 @@
 package models
 
-import "gopkg.in/volatiletech/null.v6"
+import (
+	"gopkg.in/volatiletech/null.v6"
+)
 
 // Unit data
 type W3uData struct {
@@ -346,16 +348,18 @@ type W3dData struct {
 }
 
 func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
-	unitData := new(UnitData)
-	unitUI := new(UnitUI)
-	unitBalance := new(UnitBalance)
-	unitWeapons := new(UnitWeapons)
-	unitAbilities := new(UnitAbilities)
+	unitData := SLKUnit.UnitData
+	unitUI := SLKUnit.UnitUI
+	unitBalance := SLKUnit.UnitBalance
+	unitWeapons := SLKUnit.UnitWeapons
+	unitAbilities := SLKUnit.UnitAbilities
 
 	unitData.UnitID.SetValid("\"" + w3uData.CustomUnitId + "\"")
 	unitData.Sort.SetValid("\"a1\"") // TODO: Figure this out
 	unitData.Comment.SetValid("") // TODO: Figure this out
-	unitData.Race.SetValid("\"human\"") // TODO: Set this value correctly!
+	if w3uData.Urac.Valid {
+		unitData.Race.SetValid("\"" + w3uData.Urac.String + "\"")
+	}
 	unitData.Prio.SetValid("9") // TODO: Figure this out
 	unitData.Threat.SetValid("1") // TODO: Figure this out
 	unitData.Valid.SetValid("1") // ?
@@ -363,14 +367,20 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	unitData.Death.SetValid("3") // ?
 	unitData.CanSleep.SetValid("0")
 	unitData.CargoSize.SetValid("1")
-	unitData.Movetp.SetValid("\"foot\"") // TODO: Set this value correctly!
+	if w3uData.Umvt.Valid {
+		unitData.Movetp.SetValid("\"" + w3uData.Umvt.String + "\"")
+	}
 	unitData.MoveHeight.SetValid("0") // TODO: Set this value correctly!
 	unitData.MoveFloor.SetValid("0") // ?
-	unitData.TurnRate.SetValid("0.5") // TODO: Set this value correctly!
+	if w3uData.Umvr.Valid {
+		unitData.TurnRate.SetValid(w3uData.Umvr.String)
+	}
 	unitData.PropWin.SetValid("60") // ?
 	unitData.OrientInterp.SetValid("4") // ?
 	unitData.Formation.SetValid("2") // ?
-	unitData.TargType.SetValid("\"ground\"") // TODO: Set this value correctly!
+	if w3uData.Utar.Valid {
+		unitData.TargType.SetValid("\"" + w3uData.Utar.String + "\"")
+	}
 	unitData.PathTex.SetValid("\"_\"") // ?
 	unitData.FatLOS.SetValid("0") // ?
 	unitData.Points.SetValid("100") // TODO: Set this value correctly!
@@ -601,10 +611,4 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	} else {
 		unitAbilities.AbilList.SetValid("\"_\"")
 	}
-
-	SLKUnit.UnitData = unitData
-	SLKUnit.UnitUI = unitUI
-	SLKUnit.UnitBalance = unitBalance
-	SLKUnit.UnitWeapons = unitWeapons
-	SLKUnit.UnitAbilities = unitAbilities
 }
