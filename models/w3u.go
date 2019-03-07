@@ -37,6 +37,7 @@ type W3uData struct {
 	Uisz null.String // Swim Projectile ImpactZ
 	Uimz null.String // Projectile ImpactZ
 	Ulpx null.String // Projectile LaunchX
+	Ulpy null.String // Projectile LaunchY
 	Ulsz null.String // Swim Projectile LaunchZ
 	Ulpz null.String // Projectile LaunchZ
 	Uprw null.String // Propulsion Window
@@ -355,260 +356,696 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	unitAbilities := SLKUnit.UnitAbilities
 
 	unitData.UnitID.SetValid("\"" + w3uData.CustomUnitId + "\"")
-	unitData.Sort.SetValid("\"a1\"") // TODO: Figure this out
-	unitData.Comment.SetValid("") // TODO: Figure this out
+	// unitData.Sort.SetValid("\"a1\"") // TODO: Figure this out
+	// unitData.Comment.SetValid("")    // TODO: Figure this out
 	if w3uData.Urac.Valid {
 		unitData.Race.SetValid("\"" + w3uData.Urac.String + "\"")
 	}
-	unitData.Prio.SetValid("9") // TODO: Figure this out
-	unitData.Threat.SetValid("1") // TODO: Figure this out
-	unitData.Valid.SetValid("1") // ?
-	unitData.DeathType.SetValid("2") // ?
-	unitData.Death.SetValid("3") // ?
-	unitData.CanSleep.SetValid("0")
-	unitData.CargoSize.SetValid("1")
+	// unitData.Prio.SetValid("9")      // TODO: Figure this out
+	// unitData.Threat.SetValid("1")    // TODO: Figure this out
+	if w3uData.Unbr.Valid { // Here I assume unitData.Valid = valid as random neutral unit
+		unitData.Valid.SetValid(w3uData.Unbr.String)
+	}
+	if w3uData.Udea.Valid {
+		unitData.DeathType.SetValid(w3uData.Udea.String)
+	}
+	if w3uData.Udtm.Valid { // Here I assume unitData.Death = death time
+		unitData.Death.SetValid(w3uData.Udtm.String)
+	}
+	if w3uData.Usle.Valid {
+		unitData.CanSleep.SetValid(w3uData.Usle.String)
+	}
+	if w3uData.Ucar.Valid {
+		unitData.CargoSize.SetValid(w3uData.Ucar.String)
+	}
 	if w3uData.Umvt.Valid {
 		unitData.Movetp.SetValid("\"" + w3uData.Umvt.String + "\"")
 	}
-	unitData.MoveHeight.SetValid("0") // TODO: Set this value correctly!
-	unitData.MoveFloor.SetValid("0") // ?
+	if w3uData.Umvh.Valid {
+		unitData.MoveHeight.SetValid(w3uData.Umvh.String)
+	}
+	if w3uData.Umvf.Valid {
+		unitData.MoveFloor.SetValid(w3uData.Umvf.String)
+	}
 	if w3uData.Umvr.Valid {
 		unitData.TurnRate.SetValid(w3uData.Umvr.String)
 	}
-	unitData.PropWin.SetValid("60") // ?
-	unitData.OrientInterp.SetValid("4") // ?
-	unitData.Formation.SetValid("2") // ?
+	if w3uData.Uprw.Valid {
+		unitData.PropWin.SetValid(w3uData.Uprw.String)
+	}
+	if w3uData.Uori.Valid {
+		unitData.OrientInterp.SetValid(w3uData.Uori.String)
+	}
+	if w3uData.Ufor.Valid {
+		unitData.Formation.SetValid(w3uData.Ufor.String)
+	}
 	if w3uData.Utar.Valid {
 		unitData.TargType.SetValid("\"" + w3uData.Utar.String + "\"")
 	}
-	unitData.PathTex.SetValid("\"_\"") // ?
-	unitData.FatLOS.SetValid("0") // ?
-	unitData.Points.SetValid("100") // TODO: Set this value correctly!
-	unitData.BuffType.SetValid("\"_\"") // ?
-	unitData.BuffRadius.SetValid("\"-\"") // ?
-	unitData.NameCount.SetValid("\"-\"") // ?
-	unitData.CanFlee.SetValid("1") // TODO: Set this value correctly!
-	unitData.RequireWaterRadius.SetValid("0")
-	unitData.IsBuildOn.SetValid("0") // // TODO: Set this value correctly!
-	unitData.CanBuildOn.SetValid("0") // TODO: Set this value correctly!
-	unitData.InBeta.SetValid("0") // ?
-	unitData.Version.SetValid("0") // ?
+	// unitData.PathTex.SetValid("\"_\"")    // TODO: Set this value correctly!
+	// unitData.FatLOS.SetValid("0")         // TODO: Set this value correctly!
+	if w3uData.Upoi.Valid {
+		unitData.Points.SetValid(w3uData.Upoi.String)
+	}
+	// unitData.BuffType.SetValid("\"_\"")   // TODO: Set this value correctly!
+	// unitData.BuffRadius.SetValid("\"-\"") // TODO: Set this value correctly!
+	// unitData.NameCount.SetValid("\"-\"")  // TODO: Set this value correctly!
+	if w3uData.Ufle.Valid {
+		unitData.CanFlee.SetValid(w3uData.Ufle.String)
+	}
+	if w3uData.Upaw.Valid {
+		unitData.RequireWaterRadius.SetValid(w3uData.Upaw.String)
+	}
+	if w3uData.Uibo.Valid {
+		unitData.IsBuildOn.SetValid(w3uData.Uibo.String)
+	}
+	if w3uData.Ucbo.Valid {
+		unitData.CanBuildOn.SetValid(w3uData.Ucbo.String)
+	}
+	// unitData.InBeta.SetValid("0")  // TODO: Set this value correctly!
+	// unitData.Version.SetValid("0") // TODO: Set this value correctly!
 
 	unitUI.UnitUIID.SetValid("\"" + w3uData.CustomUnitId + "\"")
-	unitUI.SortUI.SetValid("\"a1\"") // TODO: Figure this out
+	// unitUI.SortUI.SetValid("\"a1\"") // TODO: Figure this out
 	if w3uData.Umdl.Valid {
-		unitUI.File.SetValid(w3uData.Umdl.String)
+		unitUI.File.SetValid("\"" + w3uData.Umdl.String + "\"")
 	}
-	unitUI.FileVerFlags.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.TilesetSpecific.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.UnitClass.SetValid("\"UUnit03\"") // TODO: Figure out what this is supposed to be!
-	unitUI.Special.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.Campaign.SetValid("0") // Doesn't really matter much
-	unitUI.InEditor.SetValid("") // Doesn't really matter much
-	unitUI.HiddenInEditor.SetValid("") // Doesn't really matter much
-	unitUI.HostilePal.SetValid("\"-\"")// Don't know what this is, defaults to -
-	unitUI.DropItems.SetValid("1") // // Don't know what this is, defaults to 1
-	unitUI.NbmmIcon.SetValid("\"-\"") // Don't know what this is, defaults to -
-	unitUI.UseClickHelper.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.HideHeroBar.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.HideHeroMinimap.SetValid("0") // Doesn't really matter much
-	unitUI.HideHeroDeathMsg.SetValid("0") // Doesn't really matter much
-	unitUI.Blend.SetValid("0,15") // Don't know what this is, defaults to 0,15
-	unitUI.Scale.SetValid("1") // TODO: Set this value correctly!
-	unitUI.ScaleBull.SetValid("1") // Don't know what this is, defaults to 1
-	unitUI.MaxPitch.SetValid("45") // TODO: Figure this one out
-	unitUI.MaxRoll.SetValid("10") // TODO: Figure this one out
-	unitUI.ElevPts.SetValid("\"-\"") // Don't know what this is, defaults to -
-	unitUI.ElevRad.SetValid("30") // Don't know what this is, defaults to 30
-	unitUI.FogRad.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.Walk.SetValid("260") // TODO: Set this value correctly!
-	unitUI.Run.SetValid("260") // TODO: Set this value correctly!
-	unitUI.SelZ.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.Weap1.SetValid("\"_\"") // Doesn't really matter much
-	unitUI.Weap2.SetValid("\"_\"") // Doesn't really matter much
-	unitUI.TeamColor.SetValid("-1") // Don't know what this is, defaults to -1
-	unitUI.Armor.SetValid("\"Flesh\"") // TODO: Set this value correctly!
-	unitUI.ModelScale.SetValid("1") // TODO: Set this value correctly!
-	unitUI.Red.SetValid("255") // TODO: Set this value correctly!
-	unitUI.Green.SetValid("255") // TODO: Set this value correctly!
-	unitUI.Blue.SetValid("255") // TODO: Set this value correctly!
-	unitUI.UberSplat.SetValid("\"_\"") // Don't know what this is, defaults to _
-	unitUI.UnitShadow.SetValid("\"_\"") // TODO: Set this value correctly (it can be _, Shadow, ShadowFlyer...)
-	unitUI.BuildingShadow.SetValid("\"_\"") // TODO: Set this value correctly!
-	unitUI.ShadowW.SetValid("190") // TODO: Set this value correctly!
-	unitUI.ShadowH.SetValid("190") // TODO: Set this value correctly!
-	unitUI.ShadowX.SetValid("75") // TODO: Set this value correctly!
-	unitUI.ShadowY.SetValid("75") // TODO: Set this value correctly!
-	unitUI.ShadowOnWater.SetValid("1") // TODO: Set this value correctly!
-	unitUI.OccH.SetValid("0") // Don't know what this is, defaults to 0
-	unitUI.InBeta.SetValid("") // Don't know what this is, defaults to empty string
-
+	// unitUI.FileVerFlags.SetValid("0")        // TODO: Set this value correctly!
+	if w3uData.Utss.Valid {
+		unitUI.TilesetSpecific.SetValid(w3uData.Utss.String)
+	}
+	// unitUI.UnitClass.SetValid("\"UUnit03\"") // TODO: Set this value correctly!
+	if w3uData.Uspe.Valid {
+		unitUI.Special.SetValid(w3uData.Uspe.String)
+	}
+	/*
+	if w3uData.Ucam.Valid {
+		unitUI.Campaign.SetValid(w3uData.Ucam.String)
+	}
+	*/
+	unitUI.Campaign.SetValid("1") // This is permanently set to 1 because we want everything to be campaign
+	// unitUI.InEditor.SetValid("")             // TODO: Set this value correctly!
+	// unitUI.HiddenInEditor.SetValid("")       // TODO: Set this value correctly!
+	// unitUI.HostilePal.SetValid("\"-\"")      // TODO: Set this value correctly!
+	if w3uData.Udro.Valid {
+		unitUI.DropItems.SetValid(w3uData.Udro.String)
+	}
+	// unitUI.NbmmIcon.SetValid("\"-\"")        // TODO: Set this value correctly!
+	// unitUI.UseClickHelper.SetValid("0")      // TODO: Set this value correctly!
+	// unitUI.HideHeroBar.SetValid("0")         // TODO: Set this value correctly!
+	if w3uData.Uhhm.Valid {
+		unitUI.HideHeroMinimap.SetValid(w3uData.Uhhm.String)
+	}
+	if w3uData.Uhhd.Valid {
+		unitUI.HideHeroDeathMsg.SetValid(w3uData.Uhhd.String)
+	}
+	// unitUI.Blend.SetValid("0,15")            // TODO: Set this value correctly!
+	if w3uData.Ussc.Valid {
+		unitUI.Scale.SetValid(w3uData.Ussc.String)
+	}
+	// unitUI.ScaleBull.SetValid("1")   // TODO: Set this value correctly!
+	if w3uData.Umxp.Valid {
+		unitUI.MaxPitch.SetValid(w3uData.Umxp.String)
+	}
+	if w3uData.Umxr.Valid {
+		unitUI.MaxRoll.SetValid(w3uData.Umxr.String)
+	}
+	if w3uData.Uept.Valid {
+		unitUI.ElevPts.SetValid(w3uData.Uept.String)
+	}
+	if w3uData.Uerd.Valid {
+		unitUI.ElevRad.SetValid(w3uData.Uerd.String)
+	}
+	if w3uData.Ufrd.Valid {
+		unitUI.FogRad.SetValid(w3uData.Ufrd.String)
+	}
+	if w3uData.Uwal.Valid {
+		unitUI.Walk.SetValid(w3uData.Uwal.String)
+	}
+	if w3uData.Urun.Valid {
+		unitUI.Run.SetValid(w3uData.Urun.String)
+	}
+	// unitUI.SelZ.SetValid("0")        // TODO: Set this value correctly!
+	// unitUI.Weap1.SetValid("\"_\"")   // TODO: Set this value correctly! This can be _ or MetalLightChop etc...
+	// unitUI.Weap2.SetValid("\"_\"")   // TODO: Set this value correctly! This can be _ or MetalLightChop etc...
+	if w3uData.Utco.Valid {
+		unitUI.TeamColor.SetValid(w3uData.Utco.String)
+	}
+	if w3uData.Uarm.Valid {
+		unitUI.Armor.SetValid(w3uData.Uarm.String)
+	}
+	if w3uData.Usca.Valid {
+		unitUI.ModelScale.SetValid(w3uData.Usca.String)
+	}
+	if w3uData.Uclr.Valid {
+		unitUI.Red.SetValid(w3uData.Uclr.String)
+	}
+	if w3uData.Uclg.Valid {
+		unitUI.Green.SetValid(w3uData.Uclg.String)
+	}
+	if w3uData.Uclb.Valid {
+		unitUI.Blue.SetValid(w3uData.Uclb.String)
+	}
+	// unitUI.UberSplat.SetValid("\"_\"")      // TODO: Set this value correctly!
+	if w3uData.Ushu.Valid {
+		unitUI.UnitShadow.SetValid(w3uData.Ushu.String)
+	}
+	if w3uData.Ushb.Valid {
+		unitUI.BuildingShadow.SetValid(w3uData.Ushb.String)
+	}
+	if w3uData.Ushw.Valid {
+		unitUI.ShadowW.SetValid(w3uData.Ushw.String)
+	}
+	if w3uData.Ushh.Valid {
+		unitUI.ShadowH.SetValid(w3uData.Ushh.String)
+	}
+	if w3uData.Ushx.Valid {
+		unitUI.ShadowX.SetValid(w3uData.Ushx.String)
+	}
+	if w3uData.Ushy.Valid {
+		unitUI.ShadowY.SetValid(w3uData.Ushy.String)
+	}
+	if w3uData.Ushr.Valid {
+		unitUI.ShadowOnWater.SetValid(w3uData.Ushr.String)
+	}
+	// unitUI.OccH.SetValid("0")               // TODO: Set this value correctly!
+	// unitUI.InBeta.SetValid("")              // TODO: Set this value correctly!
 	if w3uData.Usnd.Valid {
 		unitUI.UnitSound.SetValid("\"" + w3uData.Usnd.String + "\"") // Simple default for now
-	} else {
-		unitUI.UnitSound.SetValid("\"HeroArchMage\"") // Simple default for now
 	}
-
 	if w3uData.Unam.Valid {
 		unitUI.Name.SetValid("\"" + w3uData.Unam.String + "\"")
-	} else {
-		unitUI.Name.SetValid("\"archmage\"")
 	}
 
 	unitBalance.UnitBalanceID.SetValid("\"" + w3uData.CustomUnitId + "\"")
-	unitBalance.SortBalance.SetValid("\"a1\"")
-	unitBalance.Sort2.SetValid("\"uher\"")
-	unitBalance.Comment.SetValid("")
-	unitBalance.Level.SetValid("5")
-	unitBalance.Type.SetValid("\"_\"")
-	unitBalance.Goldcost.SetValid("425")
-	unitBalance.Lumbercost.SetValid("0")
-	unitBalance.GoldRep.SetValid("425")
-	unitBalance.LumberRep.SetValid("0")
-	unitBalance.Fmade.SetValid("\"-\"")
-	unitBalance.Fused.SetValid("0")
-	unitBalance.Bountydice.SetValid("8")
-	unitBalance.Bountysides.SetValid("3")
-	unitBalance.Bountyplus.SetValid("30")
-	unitBalance.Lumberbountydice.SetValid("0")
-	unitBalance.Lumberbountysides.SetValid("0")
-	unitBalance.Lumberbountyplus.SetValid("0")
-	unitBalance.StockMax.SetValid("3")
-	unitBalance.StockRegen.SetValid("30")
-	unitBalance.StockStart.SetValid("0")
-	unitBalance.HP.SetValid("100")
-	unitBalance.RealHP.SetValid("450")
-	unitBalance.RegenHP.SetValid("0,25")
-	unitBalance.RegenType.SetValid("\"always\"")
-	unitBalance.ManaN.SetValid("0")
-	unitBalance.RealM.SetValid("285")
-	unitBalance.Mana0.SetValid("100")
-	unitBalance.RegenMana.SetValid("0,01")
-	unitBalance.Def.SetValid("0")
-	unitBalance.DefUp.SetValid("0")
-	unitBalance.Realdef.SetValid("3,1")
-	unitBalance.DefType.SetValid("\"hero\"")
-	unitBalance.Spd.SetValid("320")
-	unitBalance.MinSpd.SetValid("0")
-	unitBalance.MaxSpd.SetValid("0")
-	unitBalance.Bldtm.SetValid("55")
-	unitBalance.Reptm.SetValid("55")
-	unitBalance.Sight.SetValid("1800")
-	unitBalance.Nsight.SetValid("800")
-	unitBalance.STR.SetValid("\"-\"")
-	unitBalance.INT.SetValid("\"-\"")
-	unitBalance.AGI.SetValid("\"-\"")
-	unitBalance.STRplus.SetValid("\"-\"")
-	unitBalance.INTplus.SetValid("\"-\"")
-	unitBalance.AGIplus.SetValid("\"-\"")
-	unitBalance.AbilTest.SetValid("\"-\"")
-	unitBalance.Primary.SetValid("\"_\"")
-	unitBalance.Upgrades.SetValid("\"_\"")
-	unitBalance.Tilesets.SetValid("*")
-	unitBalance.Nbrandom.SetValid("\"-\"")
-	unitBalance.Isbldg.SetValid("0")
-	unitBalance.PreventPlace.SetValid("\"_\"")
-	unitBalance.RequirePlace.SetValid("\"_\"")
-	unitBalance.Repulse.SetValid("0")
-	unitBalance.RepulseParam.SetValid("0")
-	unitBalance.RepulseGroup.SetValid("0")
-	unitBalance.RepulsePrio.SetValid("0")
-	unitBalance.Collision.SetValid("32")
-	unitBalance.InBeta.SetValid("0")
-
+	// unitBalance.SortBalance.SetValid("\"a1\"") // TODO: Set this value correctly!
+	// unitBalance.Sort2.SetValid("\"uher\"") // TODO: Set this value correctly!
+	// unitBalance.Comment.SetValid("") // TODO: Set this value correctly!
+	if w3uData.Ulev.Valid {
+		unitBalance.Level.SetValid(w3uData.Ulev.String)
+	}
+	// unitBalance.Type.SetValid("\"_\"") // TODO: Set this value correctly!
+	if w3uData.Ugol.Valid {
+		unitBalance.Goldcost.SetValid(w3uData.Ugol.String)
+	}
+	if w3uData.Ulum.Valid {
+		unitBalance.Lumbercost.SetValid(w3uData.Ulum.String)
+	}
+	if w3uData.Ugor.Valid {
+		unitBalance.GoldRep.SetValid(w3uData.Ugor.String)
+	}
+	if w3uData.Ulur.Valid {
+		unitBalance.LumberRep.SetValid(w3uData.Ulur.String)
+	}
+	if w3uData.Ufma.Valid {
+		unitBalance.Fmade.SetValid(w3uData.Ufma.String)
+	}
+	if w3uData.Ufoo.Valid {
+		unitBalance.Fused.SetValid(w3uData.Ufoo.String)
+	}
+	if w3uData.Ubdi.Valid {
+		unitBalance.Bountydice.SetValid(w3uData.Ubdi.String)
+	}
+	if w3uData.Ubsi.Valid {
+		unitBalance.Bountysides.SetValid(w3uData.Ubsi.String)
+	}
+	if w3uData.Ubba.Valid {
+		unitBalance.Bountyplus.SetValid(w3uData.Ubba.String)
+	}
+	if w3uData.Ulbd.Valid {
+		unitBalance.Lumberbountydice.SetValid(w3uData.Ulbd.String)
+	}
+	if w3uData.Ulbs.Valid {
+		unitBalance.Lumberbountysides.SetValid(w3uData.Ulbs.String)
+	}
+	if w3uData.Ulba.Valid {
+		unitBalance.Lumberbountyplus.SetValid(w3uData.Ulba.String)
+	}
+	if w3uData.Usma.Valid {
+		unitBalance.StockMax.SetValid(w3uData.Usma.String)
+	}
+	if w3uData.Usrg.Valid {
+		unitBalance.StockRegen.SetValid(w3uData.Usrg.String)
+	}
+	if w3uData.Usst.Valid {
+		unitBalance.StockStart.SetValid(w3uData.Usst.String)
+	}
+	if w3uData.Uhpm.Valid {
+		unitBalance.HP.SetValid(w3uData.Uhpm.String)
+		unitBalance.RealHP.SetValid(w3uData.Uhpm.String) // TODO: This needs be HP + 25 * STR
+	}
+	// unitBalance.RealHP.SetValid("450") // TODO: Set this value correctly!
+	if w3uData.Uhpr.Valid {
+		unitBalance.RegenHP.SetValid(w3uData.Uhpr.String)
+	}
+	if w3uData.Uhrt.Valid {
+		unitBalance.RegenType.SetValid(w3uData.Uhrt.String)
+	}
+	if w3uData.Umpm.Valid {
+		unitBalance.ManaN.SetValid(w3uData.Umpm.String)
+	}
+	// unitBalance.RealM.SetValid("285") // TODO: Calculate this mana amount
+	if w3uData.Umpi.Valid {
+		unitBalance.Mana0.SetValid(w3uData.Umpi.String)
+	}
+	if w3uData.Umpr.Valid {
+		unitBalance.RegenMana.SetValid(w3uData.Umpr.String)
+	}
+	if w3uData.Udef.Valid {
+		unitBalance.Def.SetValid(w3uData.Udef.String)
+		unitBalance.Realdef.SetValid(w3uData.Udef.String) // TODO: Calculate this value by putting base defense + some% * AGI
+	}
+	// unitBalance.DefUp.SetValid("0") // TODO: Set this value correctly!
+	// unitBalance.Realdef.SetValid("3,1") // TODO: Set this value correctly!
+	if w3uData.Udty.Valid {
+		unitBalance.DefType.SetValid(w3uData.Udty.String)
+	}
+	if w3uData.Umvs.Valid {
+		unitBalance.Spd.SetValid(w3uData.Umvs.String)
+	}
+	if w3uData.Umis.Valid {
+		unitBalance.MinSpd.SetValid(w3uData.Umis.String)
+	}
+	if w3uData.Umas.Valid {
+		unitBalance.MaxSpd.SetValid(w3uData.Umas.String)
+	}
+	if w3uData.Ubld.Valid {
+		unitBalance.Bldtm.SetValid(w3uData.Ubld.String)
+	}
+	if w3uData.Urtm.Valid {
+		unitBalance.Reptm.SetValid(w3uData.Urtm.String)
+	}
+	if w3uData.Usid.Valid {
+		unitBalance.Sight.SetValid(w3uData.Usid.String)
+	}
+	if w3uData.Usin.Valid {
+		unitBalance.Nsight.SetValid(w3uData.Usin.String)
+	}
+	if w3uData.Ustr.Valid {
+		unitBalance.STR.SetValid(w3uData.Ustr.String)
+	}
+	if w3uData.Uint.Valid {
+		unitBalance.INT.SetValid(w3uData.Uint.String)
+	}
+	if w3uData.Uagi.Valid {
+		unitBalance.AGI.SetValid(w3uData.Uagi.String)
+	}
+	if w3uData.Ustp.Valid {
+		unitBalance.STRplus.SetValid(w3uData.Ustp.String)
+	}
+	if w3uData.Uinp.Valid {
+		unitBalance.INTplus.SetValid(w3uData.Uinp.String)
+	}
+	if w3uData.Uagp.Valid {
+		unitBalance.AGIplus.SetValid(w3uData.Uagp.String)
+	}
+	// unitBalance.AbilTest.SetValid("\"-\"") // TODO: Set this value correctly!
+	if w3uData.Upra.Valid {
+		unitBalance.Primary.SetValid(w3uData.Upra.String)
+	}
+	// unitBalance.Upgrades.SetValid("\"_\"") // TODO: Set this value correctly!
+	if w3uData.Util.Valid {
+		unitBalance.Tilesets.SetValid(w3uData.Util.String)
+	}
+	// unitBalance.Nbrandom.SetValid("\"-\"") // TODO: Set this value correctly!
+	if w3uData.Ubdg.Valid {
+		unitBalance.Isbldg.SetValid(w3uData.Ubdg.String)
+	}
+	/*
+	TODO: Figure this out, the base SLK files are inverted on this!
+	if w3uData.Upar.Valid {
+		unitBalance.PreventPlace.SetValid(w3uData.Upar.String)
+	}
+	if w3uData.Upap.Valid {
+		unitBalance.RequirePlace.SetValid(w3uData.Upap.String)
+	}
+	*/
+	// unitBalance.Repulse.SetValid("0") // TODO: Set this value correctly!
+	// unitBalance.RepulseParam.SetValid("0") // TODO: Set this value correctly!
+	// unitBalance.RepulseGroup.SetValid("0") // TODO: Set this value correctly!
+	// unitBalance.RepulsePrio.SetValid("0") // TODO: Set this value correctly!
+	if w3uData.Ucol.Valid {
+		unitBalance.Collision.SetValid(w3uData.Ucol.String)
+	}
+	// unitBalance.InBeta.SetValid("0") // TODO: Set this value correctly!
 	unitWeapons.UnitWeapID.SetValid("\"" + w3uData.CustomUnitId + "\"")
-	unitWeapons.SortWeap.SetValid("\"a1\"") // ?
-	unitWeapons.Sort2.SetValid("\"uher\"") // ?
-	unitWeapons.Comment.SetValid("") // ?
-	unitWeapons.WeapsOn.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.Acquire.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.MinRange.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Castpt.SetValid("\"-\"") // ?
-	unitWeapons.Castbsw.SetValid("0.51") // ?
-	unitWeapons.LaunchX.SetValid("0") // ?
-	unitWeapons.LaunchY.SetValid("0") // ?
-	unitWeapons.LaunchZ.SetValid("60") // ?
-	unitWeapons.LaunchSwimZ.SetValid("0") // ?
-	unitWeapons.ImpactZ.SetValid("120") // ?
-	unitWeapons.ImpactSwimZ.SetValid("0") // ?
-	unitWeapons.WeapType1.SetValid("\"_\"") // TODO: Set this value correctly!
-	unitWeapons.Targs1.SetValid("\"_\"") // TODO: Set this value correctly!
-	unitWeapons.ShowUI1.SetValid("1") // ?
-	unitWeapons.RangeN1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.RngTst.SetValid("\"-\"") // ?
-	unitWeapons.RngBuff1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.AtkType1.SetValid("\"normal\"") // TODO: Set this value correctly!
-	unitWeapons.WeapTp1.SetValid("\"missile\"") // TODO: Set this value correctly!
-	unitWeapons.Cool1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Mincool1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Dice1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Sides1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Dmgplus1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.DmgUp1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Mindmg1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Avgdmg1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Maxdmg1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Dmgpt1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.BackSw1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Farea1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Harea1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Qarea1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Hfact1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Qfact1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.SplashTargs1.SetValid("\"_\"") // TODO: Set this value correctly!
-	unitWeapons.TargCount1.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.DamageLoss1.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.SpillDist1.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.SpillRadius1.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.DmgUp1.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.Dmod1.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.DPS.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.WeapType2.SetValid("\"_\"") // TODO: Set this value correctly!
-	unitWeapons.Targs2.SetValid("\"_\"") // TODO: Set this value correctly!
-	unitWeapons.ShowUI2.SetValid("1") // ?
-	unitWeapons.RangeN2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.RngTst2.SetValid("\"-\"") // ?
-	unitWeapons.RngBuff2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.AtkType2.SetValid("\"normal\"") // TODO: Set this value correctly!
-	unitWeapons.WeapTp2.SetValid("\"missile\"") // TODO: Set this value correctly!
-	unitWeapons.Cool2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Mincool2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Dice2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Sides2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Dmgplus2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.DmgUp2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Mindmg2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Avgdmg2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Maxdmg2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Dmgpt2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.BackSw2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Farea2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Harea2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Qarea2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Hfact2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.Qfact2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.SplashTargs2.SetValid("\"_\"") // TODO: Set this value correctly!
-	unitWeapons.TargCount2.SetValid("\"-\"") // TODO: Set this value correctly!
-	unitWeapons.DamageLoss2.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.SpillDist2.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.SpillRadius2.SetValid("0") // TODO: Set this value correctly!
-	unitWeapons.InBeta.SetValid("0") // ?
+	// unitWeapons.SortWeap.SetValid("\"a1\"") // TODO: Set this value correctly!
+	// unitWeapons.Sort2.SetValid("\"uher\"") // TODO: Set this value correctly!
+	// unitWeapons.Comment.SetValid("") // TODO: Set this value correctly!
+	if w3uData.Uaen.Valid {
+		unitWeapons.WeapsOn.SetValid(w3uData.Uaen.String)
+	}
+	if w3uData.Uacq.Valid {
+		unitWeapons.Acquire.SetValid(w3uData.Uacq.String)
+	}
+	if w3uData.Uamn.Valid {
+		unitWeapons.MinRange.SetValid(w3uData.Uamn.String)
+	}
+	if w3uData.Ucpt.Valid {
+		unitWeapons.Castpt.SetValid(w3uData.Ucpt.String)
+	}
+	if w3uData.Ucbs.Valid {
+		unitWeapons.Castbsw.SetValid(w3uData.Ucbs.String)
+	}
+	if w3uData.Ulpx.Valid {
+		unitWeapons.LaunchX.SetValid(w3uData.Ulpx.String)
+	}
+	if w3uData.Ulpy.Valid {
+		unitWeapons.LaunchY.SetValid(w3uData.Ulpy.String)
+	}
+	if w3uData.Ulpz.Valid {
+		unitWeapons.LaunchZ.SetValid(w3uData.Ulpz.String)
+	}
+	if w3uData.Ulsz.Valid {
+		unitWeapons.LaunchSwimZ.SetValid(w3uData.Ulsz.String)
+	}
+	if w3uData.Uimz.Valid {
+		unitWeapons.ImpactZ.SetValid(w3uData.Uimz.String)
+	}
+	if w3uData.Uisz.Valid {
+		unitWeapons.ImpactSwimZ.SetValid(w3uData.Uisz.String)
+	}
+	if w3uData.Ucs1.Valid {
+		unitWeapons.WeapType1.SetValid(w3uData.Ucs1.String)
+	}
+	if w3uData.Ua1g.Valid {
+		unitWeapons.Targs1.SetValid("\"" + w3uData.Ua1g.String + "\"")
+	}
+	if w3uData.Uwu1.Valid {
+		unitWeapons.ShowUI1.SetValid(w3uData.Uwu1.String)
+	}
+	if w3uData.Ua1r.Valid {
+		unitWeapons.RangeN1.SetValid(w3uData.Ua1r.String)
+	}
+	// unitWeapons.RngTst.SetValid("\"-\"") // TODO: Set this value correctly!
+	if w3uData.Urb1.Valid {
+		unitWeapons.RngBuff1.SetValid(w3uData.Urb1.String)
+	}
+	if w3uData.Ua1t.Valid {
+		unitWeapons.AtkType1.SetValid("\"" + w3uData.Ua1t.String + "\"")
+	}
+	if w3uData.Ua1w.Valid {
+		unitWeapons.WeapTp1.SetValid("\"" + w3uData.Ua1w.String + "\"")
+	}
+	if w3uData.Ua1c.Valid {
+		unitWeapons.Cool1.SetValid(w3uData.Ua1c.String)
+	}
+	// unitWeapons.Mincool1.SetValid("\"-\"")      // TODO: Set this value correctly! (seems like it's always equal to -)
+	if w3uData.Ua1d.Valid {
+		unitWeapons.Dice1.SetValid(w3uData.Ua1d.String)
+	}
+	if w3uData.Ua1s.Valid {
+		unitWeapons.Sides1.SetValid(w3uData.Ua1s.String)
+	}
+	if w3uData.Ua1b.Valid {
+		unitWeapons.Dmgplus1.SetValid(w3uData.Ua1b.String)
+	}
+	// unitWeapons.DmgUp1.SetValid("\"-\"")  // TODO: Set this value correctly! (seems like it's always equal to -)
+	// unitWeapons.Mindmg1.SetValid("\"-\"") // TODO: Set this value correctly!
+	// unitWeapons.Avgdmg1.SetValid("\"-\"") // TODO: Set this value correctly!
+	// unitWeapons.Maxdmg1.SetValid("\"-\"") // TODO: Set this value correctly!
+	// unitWeapons.Dmgpt1.SetValid("\"-\"")  // TODO: Set this value correctly!
+	if w3uData.Ubs1.Valid {
+		unitWeapons.BackSw1.SetValid(w3uData.Ubs1.String)
+	}
+	if w3uData.Ua1f.Valid {
+		unitWeapons.Farea1.SetValid(w3uData.Ua1f.String)
+	}
+	if w3uData.Ua1h.Valid {
+		unitWeapons.Harea1.SetValid(w3uData.Ua1h.String)
+	}
+	if w3uData.Ua1q.Valid {
+		unitWeapons.Qarea1.SetValid(w3uData.Ua1q.String)
+	}
+	if w3uData.Uhd1.Valid {
+		unitWeapons.Hfact1.SetValid(w3uData.Uhd1.String)
+	}
+	if w3uData.Uqd1.Valid {
+		unitWeapons.Qfact1.SetValid(w3uData.Uqd1.String)
+	}
+	if w3uData.Ua1p.Valid {
+		unitWeapons.SplashTargs1.SetValid("\"" + w3uData.Ua1p.String + "\"")
+	}
+	if w3uData.Utc1.Valid {
+		unitWeapons.TargCount1.SetValid(w3uData.Utc1.String)
+	}
+	if w3uData.Udl1.Valid {
+		unitWeapons.DamageLoss1.SetValid(w3uData.Udl1.String)
+	}
+	if w3uData.Usd1.Valid {
+		unitWeapons.SpillDist1.SetValid(w3uData.Usd1.String)
+	}
+	if w3uData.Usr1.Valid {
+		unitWeapons.SpillRadius1.SetValid(w3uData.Usr1.String)
+	}
+	// unitWeapons.DmgUp1.SetValid("0")            // TODO: Set this value correctly!
+	// unitWeapons.Dmod1.SetValid("0")             // TODO: Set this value correctly!
+	// unitWeapons.DPS.SetValid("0")               // TODO: Set this value correctly!
+	if w3uData.Ucs2.Valid {
+		unitWeapons.WeapType2.SetValid(w3uData.Ucs2.String)
+	}
+	if w3uData.Ua2g.Valid {
+		unitWeapons.Targs2.SetValid("\"" + w3uData.Ua2g.String + "\"")
+	}
+	if w3uData.Uwu2.Valid {
+		unitWeapons.ShowUI2.SetValid(w3uData.Uwu2.String)
+	}
+	if w3uData.Ua2r.Valid {
+		unitWeapons.RangeN2.SetValid(w3uData.Ua2r.String)
+	}
+	// unitWeapons.RngTst2.SetValid("\"-\"")       // TODO: Set this value correctly!
+	if w3uData.Urb2.Valid {
+		unitWeapons.RngBuff2.SetValid(w3uData.Urb2.String)
+	}
+	if w3uData.Ua2t.Valid {
+		unitWeapons.AtkType2.SetValid("\"" + w3uData.Ua2t.String + "\"")
+	}
+	if w3uData.Ua2w.Valid {
+		unitWeapons.WeapTp2.SetValid(w3uData.Ua2w.String)
+	}
+	if w3uData.Ua2c.Valid {
+		unitWeapons.Cool2.SetValid(w3uData.Ua2c.String)
+	}
+	// unitWeapons.Mincool2.SetValid("\"-\"")      // TODO: Set this value correctly! (seems like it's always equal to -)
+	if w3uData.Ua2d.Valid {
+		unitWeapons.Dice2.SetValid(w3uData.Ua2d.String)
+	}
+	if w3uData.Ua2s.Valid {
+		unitWeapons.Sides2.SetValid(w3uData.Ua2s.String)
+	}
+	if w3uData.Ua2b.Valid {
+		unitWeapons.Dmgplus2.SetValid(w3uData.Ua2b.String)
+	}
+	// unitWeapons.DmgUp2.SetValid("\"-\"")        // TODO: Set this value correctly! (seems like it's always equal to -)
+	// unitWeapons.Mindmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
+	// unitWeapons.Avgdmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
+	// unitWeapons.Maxdmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
+	// unitWeapons.Dmgpt2.SetValid("\"-\"")        // TODO: Set this value correctly!
+	if w3uData.Ubs2.Valid {
+		unitWeapons.BackSw2.SetValid(w3uData.Ubs2.String)
+	}
+	if w3uData.Ua2f.Valid {
+		unitWeapons.Farea2.SetValid(w3uData.Ua2f.String)
+	}
+	if w3uData.Ua2h.Valid {
+		unitWeapons.Harea2.SetValid(w3uData.Ua2h.String)
+	}
+	if w3uData.Ua2q.Valid {
+		unitWeapons.Qarea2.SetValid(w3uData.Ua2q.String)
+	}
+	if w3uData.Uhd2.Valid {
+		unitWeapons.Hfact2.SetValid(w3uData.Uhd2.String)
+	}
+	if w3uData.Uqd2.Valid {
+		unitWeapons.Qfact2.SetValid(w3uData.Uqd2.String)
+	}
+	if w3uData.Ua2p.Valid {
+		unitWeapons.SplashTargs2.SetValid("\"" + w3uData.Ua2p.String + "\"")
+	}
+	if w3uData.Utc2.Valid {
+		unitWeapons.TargCount2.SetValid(w3uData.Utc2.String)
+	}
+	if w3uData.Udl2.Valid {
+		unitWeapons.DamageLoss2.SetValid(w3uData.Udl2.String)
+	}
+	if w3uData.Usd2.Valid {
+		unitWeapons.SpillDist2.SetValid(w3uData.Usd2.String)
+	}
+	if w3uData.Usr2.Valid {
+		unitWeapons.SpillRadius2.SetValid(w3uData.Usr2.String)
+	}
+	// unitWeapons.InBeta.SetValid("0")            // TODO: Set this value correctly!
 
 	unitAbilities.UnitAbilID.SetValid("\"" + w3uData.CustomUnitId + "\"")
-	unitAbilities.SortAbil.SetValid("")
-	unitAbilities.Comment.SetValid("")
-	unitAbilities.Auto.SetValid("\"_\"") // We never want to enable auto
-	unitAbilities.InBeta.SetValid("")
-
+	// unitAbilities.SortAbil.SetValid("") // TODO: Set this value correctly!
+	// unitAbilities.Comment.SetValid("") // TODO: Set this value correctly!
+	// unitAbilities.Auto.SetValid("\"_\"") // TODO: Set this value correctly!
+	// unitAbilities.InBeta.SetValid("") // TODO: Set this value correctly!
 	if w3uData.Uhab.Valid {
 		unitAbilities.HeroAbilList.SetValid("\"" + w3uData.Uhab.String + "\"")
-	} else {
-		unitAbilities.HeroAbilList.SetValid("") // Our map doesn't have any heroes
 	}
-
 	if w3uData.Uabi.Valid {
 		unitAbilities.AbilList.SetValid("\"" + w3uData.Uabi.String + "\"")
-	} else {
-		unitAbilities.AbilList.SetValid("\"_\"")
 	}
+}
+
+func (w3uData *W3uData) TransformToUnitFunc(unitFunc *UnitFunc) {
+	unitFunc.UnitId = w3uData.CustomUnitId
+
+	if w3uData.Uma1.Valid || w3uData.Uma2.Valid {
+		if w3uData.Uma1.Valid && w3uData.Uma2.Valid {
+			unitFunc.Missilearc.SetValid(w3uData.Uma1.String + "," + w3uData.Uma2.String)
+		} else if w3uData.Uma1.Valid {
+			unitFunc.Missilearc.SetValid(w3uData.Uma1.String)
+		} else if w3uData.Uma2.Valid {
+			unitFunc.Missilearc.SetValid(w3uData.Uma2.String)
+		}
+	}
+	if w3uData.Ua1m.Valid || w3uData.Ua2m.Valid {
+		if w3uData.Ua1m.Valid && w3uData.Ua2m.Valid {
+			unitFunc.Missileart.SetValid(w3uData.Ua1m.String + "," + w3uData.Ua2m.String)
+		} else if w3uData.Ua1m.Valid {
+			unitFunc.Missileart.SetValid(w3uData.Ua1m.String)
+		} else if w3uData.Ua2m.Valid {
+			unitFunc.Missileart.SetValid(w3uData.Ua2m.String)
+		}
+	}
+	if w3uData.Umh1.Valid || w3uData.Umh2.Valid {
+		if w3uData.Umh1.Valid && w3uData.Umh2.Valid {
+			unitFunc.Missilehoming.SetValid(w3uData.Umh1.String + "," + w3uData.Umh2.String)
+		} else if w3uData.Umh1.Valid {
+			unitFunc.Missilehoming.SetValid(w3uData.Umh1.String)
+		} else if w3uData.Umh2.Valid {
+			unitFunc.Missilehoming.SetValid(w3uData.Umh2.String)
+		}
+	}
+	if w3uData.Ua1z.Valid || w3uData.Ua2z.Valid {
+		if w3uData.Ua1z.Valid && w3uData.Ua2z.Valid {
+			unitFunc.Missilespeed.SetValid(w3uData.Ua1z.String + "," + w3uData.Ua2z.String)
+		} else if w3uData.Ua1z.Valid {
+			unitFunc.Missilespeed.SetValid(w3uData.Ua1z.String)
+		} else if w3uData.Ua2z.Valid {
+			unitFunc.Missilespeed.SetValid(w3uData.Ua2z.String)
+		}
+	}
+	if w3uData.Uico.Valid {
+		unitFunc.Art.SetValid(w3uData.Uico.String)
+	}
+	if w3uData.Uspa.Valid {
+		unitFunc.Specialart.SetValid(w3uData.Uspa.String)
+	}
+	// unitFunc.Casterupgradeart.SetValid("?") // TODO: Set the correct value
+	if w3uData.Utaa.Valid {
+		unitFunc.Targetart.SetValid(w3uData.Utaa.String)
+	}
+	if w3uData.Ussi.Valid {
+		unitFunc.Scorescreenicon.SetValid(w3uData.Ussi.String)
+	}
+	if w3uData.Ubpx.Valid {
+		unitFunc.ButtonposX.SetValid(w3uData.Ubpx.String)
+	}
+	if w3uData.Ubpy.Valid {
+		unitFunc.ButtonposY.SetValid(w3uData.Ubpy.String)
+	}
+	if w3uData.Utra.Valid {
+		unitFunc.Trains.SetValid(w3uData.Utra.String)
+	}
+	if w3uData.Ubui.Valid {
+		unitFunc.Builds.SetValid(w3uData.Ubui.String)
+	}
+	if w3uData.Ures.Valid {
+		unitFunc.Researches.SetValid(w3uData.Ures.String)
+	}
+	if w3uData.Uupt.Valid {
+		unitFunc.Upgrade.SetValid(w3uData.Uupt.String)
+	}
+	if w3uData.Useu.Valid {
+		unitFunc.Sellunits.SetValid(w3uData.Useu.String)
+	}
+	// unitFunc.Requires.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Requires1.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Requires2.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Requirescount.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Buildingsoundlabel.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Movementsoundlabel.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Loopingsoundfadein.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Loopingsoundfadeout.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Revive.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Animprops.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Attachmentanimprops.SetValid("?") // TODO: Set the correct value
+	// unitFunc.Dependencyor.SetValid("?") // TODO: Set the correct value
+	// TODO: I'm not sure this is correct, but it seems to work...
+	if w3uData.Usei.Valid || w3uData.Umki.Valid {
+		if w3uData.Umki.Valid {
+			unitFunc.Makeitems.SetValid(w3uData.Umki.String)
+		}
+		if w3uData.Usei.Valid {
+			unitFunc.Makeitems.SetValid(w3uData.Usei.String)
+		}
+	}
+	if w3uData.Unam.Valid {
+		unitFunc.Name.SetValid(w3uData.Unam.String)
+	}
+	if w3uData.Uhot.Valid {
+		unitFunc.Hotkey.SetValid(w3uData.Uhot.String)
+	}
+	if w3uData.Ides.Valid {
+		unitFunc.Description.SetValid(w3uData.Ides.String)
+	}
+	if w3uData.Utip.Valid {
+		unitFunc.Tip.SetValid(w3uData.Utip.String)
+	}
+	if w3uData.Utub.Valid {
+		unitFunc.Ubertip.SetValid(w3uData.Utub.String)
+	}
+	if w3uData.Unsf.Valid {
+		unitFunc.Editorsuffix.SetValid(w3uData.Unsf.String)
+	}
+	if w3uData.Upro.Valid {
+		unitFunc.Propernames.SetValid(w3uData.Upro.String)
+	}
+	if w3uData.Utpr.Valid {
+		unitFunc.Revivetip.SetValid(w3uData.Utpr.String)
+	}
+	if w3uData.Uawt.Valid {
+		unitFunc.Awakentip.SetValid(w3uData.Uawt.String)
+	}
+	// unitString.Casterupgradeart.SetValid(?) // TODO: Set the correct value
+	// unitString.Casterupgradetip.SetValid(?) // TODO: Set the correct value
+	// unitString.Dependencyor.SetValid(?) // TODO: Set the correct value
+}
+
+func (w3uData *W3uData) TransformToUnitString(unitString *UnitString) {
+	unitString.UnitId = w3uData.CustomUnitId
+
+	if w3uData.Unam.Valid {
+		unitString.Name.SetValid(w3uData.Unam.String)
+	}
+	if w3uData.Uhot.Valid {
+		unitString.Hotkey.SetValid(w3uData.Uhot.String)
+	}
+	if w3uData.Ides.Valid {
+		unitString.Description.SetValid(w3uData.Ides.String)
+	}
+	if w3uData.Utip.Valid {
+		unitString.Tip.SetValid(w3uData.Utip.String)
+	}
+	if w3uData.Utub.Valid {
+		unitString.Ubertip.SetValid(w3uData.Utub.String)
+	}
+	if w3uData.Unsf.Valid {
+		unitString.Editorsuffix.SetValid(w3uData.Unsf.String)
+	}
+	if w3uData.Upro.Valid {
+		unitString.Propernames.SetValid(w3uData.Upro.String)
+	}
+	if w3uData.Utpr.Valid {
+		unitString.Revivetip.SetValid(w3uData.Utpr.String)
+	}
+	if w3uData.Uawt.Valid {
+		unitString.Awakentip.SetValid(w3uData.Uawt.String)
+	}
+	// unitString.Casterupgradeart.SetValid(?) // TODO: Set the correct value
+	// unitString.Casterupgradetip.SetValid(?) // TODO: Set the correct value
+	// unitString.Dependencyor.SetValid(?) // TODO: Set the correct value
 }

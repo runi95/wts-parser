@@ -244,9 +244,9 @@ type UnitAbilities struct {
 }
 
 type SLKUnit struct {
-	UnitUI        *UnitUI
-	UnitData      *UnitData
-	UnitBalance   *UnitBalance
-	UnitWeapons   *UnitWeapons
-	UnitAbilities *UnitAbilities
+	UnitUI           *UnitUI
+	UnitData         *UnitData
+	UnitBalance      *UnitBalance
+	UnitWeapons      *UnitWeapons
+	UnitAbilities    *UnitAbilities
 }

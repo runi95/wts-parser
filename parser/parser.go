@@ -2,11 +2,13 @@ package parser
 
 import (
 	"bytes"
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	. "github.com/runi95/wts-parser/models"
 	"gopkg.in/volatiletech/null.v6"
 	"log"
+	"math"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -18,8 +20,12 @@ var stringRegex = regexp.MustCompile(`STRING [0-9]*[^}]*}`) // Regex to find eac
 var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`)  // Regex to find the content container of each string object
 var contentStartRegex = regexp.MustCompile(`^[\r]*[\n]`)
 var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
-var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([-"\\\w]*)`)
+var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([0-9.]+|"[\w-()\\]+")`)
+var SLKHeadRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K"([\w-()]+)"`)
 var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
+var TXTHeadRegex = regexp.MustCompile(`\[(\w+)]`)
+var TXTRegex = regexp.MustCompile(`([A-Z]\w+)=([^\r\n]*)`)
+var TrigstrRegex = regexp.MustCompile(`TRIGSTR_([0-9]+)`)
 
 /*************************
 
@@ -27,11 +33,34 @@ var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
 
 *************************/
 
-func WtsToJson(input []byte) []byte {
+func ReadWtsFile(input []byte) map[string]string {
 	str := string(input)
 
 	findAllStrings := stringRegex.FindAllString(str, -1)
-	m := make(map[int]string)
+	wtsMap := make(map[string]string)
+
+	for _, stringObject := range findAllStrings {
+		findContentContainer := contentContainerRegex.FindString(stringObject)
+		idStr := idRegex.FindString(stringObject)
+
+		removeBrackets := findContentContainer[1 : len(findContentContainer)-1]
+		length := len(contentStartRegex.FindString(removeBrackets))
+		parsedBeginning := removeBrackets[length:]
+		lengthToEnd := len(parsedBeginning) - len(contextEndRegex.FindString(parsedBeginning))
+		parsedContainer := parsedBeginning[:lengthToEnd]
+		strings.Replace(parsedContainer, "\n", "|n", -1)
+
+		wtsMap[idStr] = parsedContainer
+	}
+
+	return wtsMap
+}
+
+func ReadWtsFileAndUseIntAsKey(input []byte) map[int]string {
+	str := string(input)
+
+	findAllStrings := stringRegex.FindAllString(str, -1)
+	wtsMap := make(map[int]string)
 
 	for _, stringObject := range findAllStrings {
 		findContentContainer := contentContainerRegex.FindString(stringObject)
@@ -47,11 +76,18 @@ func WtsToJson(input []byte) []byte {
 		parsedBeginning := removeBrackets[length:]
 		lengthToEnd := len(parsedBeginning) - len(contextEndRegex.FindString(parsedBeginning))
 		parsedContainer := parsedBeginning[:lengthToEnd]
+		strings.Replace(parsedContainer, "\n", "|n", -1)
 
-		m[id] = parsedContainer
+		wtsMap[id] = parsedContainer
 	}
 
-	jsonObject, err := json.Marshal(m)
+	return wtsMap
+}
+
+func WtsToJson(input []byte) []byte {
+	wtsMap := ReadWtsFile(input)
+
+	jsonObject, err := json.Marshal(wtsMap)
 	if err != nil {
 		log.Println(err)
 	}
@@ -98,6 +134,11 @@ func ReadW3uFile(input []byte) map[string]*W3uData {
 			customUnitId := [4]byte{input[i-4], input[i-3], input[i-2], input[i-1]}
 			if customUnitId[0] > 96 && customUnitId[0] < 123 && (customUnitId[1] == 48 || customUnitId[1] == 67) && ((customUnitId[2] > 47 && customUnitId[2] < 58) || (customUnitId[2] > 64 && customUnitId[2] < 91)) && ((customUnitId[3] > 47 && customUnitId[3] < 58) || (customUnitId[3] > 64 && customUnitId[3] < 91)) {
 				unitId := string(customUnitId[0]) + string(customUnitId[1]) + string(customUnitId[2]) + string(customUnitId[3])
+				/*
+				if lastUnitId == "h00H" {
+					log.Println(pretty.Sprint(unitMap[lastUnitId]))
+				}
+				*/
 				lastUnitId = unitId
 				newW3uUnit := new(W3uData)
 				newW3uUnit.BaseUnitId = string(baseUnitId[0]) + string(baseUnitId[1]) + string(baseUnitId[2]) + string(baseUnitId[3])
@@ -106,24 +147,95 @@ func ReadW3uFile(input []byte) map[string]*W3uData {
 			}
 		}
 
-		if input[i] > 31 && input[i-1] > 31 && input[i-2] > 31 && input[i-3] > 31 && input[i+1] == 3 {
-			str := string(input[i-3]) + string(input[i-2]) + string(input[i-1]) + string(input[i])
+		if input[i] > 31 && input[i] < 127 && input[i-1] > 31 && input[i-1] < 127 && input[i-2] > 31 && input[i-2] < 127 && input[i-3] > 31 && input[i-3] < 127 {
+			str := strings.Title(string(input[i-3]) + string(input[i-2]) + string(input[i-1]) + string(input[i]))
 			currentUnit := unitMap[lastUnitId]
+			if currentUnit != nil && reflectIsFieldNamePartOfStruct(currentUnit, str) {
+				metaByte := input[i+1]
+				i += 4
+				switch metaByte {
+				case 3:
+					stringValue := ""
+					for input[i+1] > 31 && input[i+1] < 127 {
+						i++
+						stringValue += string(input[i])
+					}
 
-			i += 4
-			value := ""
-			for input[i+1] > 31 {
-				i++
-				value += string(input[i])
-			}
+					if stringValue == "" {
+						stringValue = "-"
+					}
 
-			if len(value) > 0 {
-				nullString := new(null.String)
-				nullString.SetValid(value)
+					nullString := new(null.String)
+					nullString.SetValid(stringValue)
 
-				err := reflectUpdateValueOnFieldNullString(currentUnit, *nullString, strings.Title(str))
-				if err != nil {
-					log.Println(err)
+					err := reflectUpdateValueOnFieldNullStruct(currentUnit, *nullString, str)
+					if err != nil {
+						log.Println(err)
+					}
+				case 2: // Don't know the difference between 1 and 2
+					bytes := make([]byte, 4)
+					i++
+					bytes[0] = input[i]
+					i++
+					bytes[1] = input[i]
+					i++
+					bytes[2] = input[i]
+					i++
+					bytes[3] = input[i]
+
+					bits := binary.LittleEndian.Uint32(bytes)
+					float := math.Float32frombits(bits)
+
+					nullString := new(null.String)
+					nullString.SetValid(fmt.Sprint(float))
+
+					err := reflectUpdateValueOnFieldNullStruct(currentUnit, *nullString, str)
+					if err != nil {
+						log.Println(err)
+					}
+				case 1: // Don't know the difference between 1 and 2
+					bytes := make([]byte, 4)
+					i++
+					bytes[0] = input[i]
+					i++
+					bytes[1] = input[i]
+					i++
+					bytes[2] = input[i]
+					i++
+					bytes[3] = input[i]
+
+					bits := binary.LittleEndian.Uint32(bytes)
+					float := math.Float32frombits(bits)
+
+					nullString := new(null.String)
+					nullString.SetValid(fmt.Sprint(float))
+
+					err := reflectUpdateValueOnFieldNullStruct(currentUnit, *nullString, str)
+					if err != nil {
+						log.Println(err)
+					}
+				case 0:
+					bytes := make([]byte, 4)
+					i++
+					bytes[0] = input[i]
+					i++
+					bytes[1] = input[i]
+					i++
+					bytes[2] = input[i]
+					i++
+					bytes[3] = input[i]
+
+					uint := binary.LittleEndian.Uint32(bytes)
+
+					nullString := new(null.String)
+					nullString.SetValid(fmt.Sprint(uint))
+
+					err := reflectUpdateValueOnFieldNullStruct(currentUnit, *nullString, str)
+					if err != nil {
+						log.Println(err)
+					}
+				default:
+					log.Println(fmt.Sprint(metaByte) + " is an unknown byte type for " + str)
 				}
 			}
 		}
@@ -166,14 +278,12 @@ func W3uToSLKUnits(input []byte) []*SLKUnit {
 	return slkUnits
 }
 
-func W3uToSLKUnitsWithBaseSLK(baseSLKUnits map[string]*SLKUnit, input []byte) []*SLKUnit {
-	unitMap := ReadW3uFile(input)
-
+func W3uToSlkUnitsWithBaseSlk(baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData) []*SLKUnit {
 	slkUnits := make([]*SLKUnit, len(unitMap))
 	index := 0
 	for _, value := range unitMap {
 		slkUnit := new(SLKUnit)
-		baseSLKUnit := *baseSLKUnits["\"" + value.BaseUnitId + "\""]
+		baseSLKUnit := *baseSLKUnits["\""+value.BaseUnitId+"\""]
 		var unitUI UnitUI
 		var unitData UnitData
 		var unitWeapons UnitWeapons
@@ -191,6 +301,12 @@ func W3uToSLKUnitsWithBaseSLK(baseSLKUnits map[string]*SLKUnit, input []byte) []
 		slkUnit.UnitBalance = &unitBalance
 		slkUnit.UnitAbilities = &unitAbilities
 
+		/*
+		if value.CustomUnitId == "o01C" {
+			log.Println(pretty.Sprint(unitUI))
+		}
+		*/
+
 		value.TransformToSLKUnit(slkUnit)
 		slkUnits[index] = slkUnit
 
@@ -200,21 +316,209 @@ func W3uToSLKUnitsWithBaseSLK(baseSLKUnits map[string]*SLKUnit, input []byte) []
 	return slkUnits
 }
 
+func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFunc, baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData, wtsMap map[string]string) *UnitFuncs {
+	unitFuncs := new(UnitFuncs)
+
+	for _, value := range unitMap {
+		var unitRace string
+		baseSlkUnit := baseSLKUnits["\""+value.BaseUnitId+"\""]
+		if baseSlkUnit.UnitUI.Campaign.Valid && baseSlkUnit.UnitUI.Campaign.String == "1" {
+			unitRace = "campaign"
+		} else if value.Ucam.Valid && value.Ucam.String == "1" {
+			unitRace = "campaign"
+		} else {
+			if value.Urac.Valid {
+				unitRace = value.Urac.String
+			} else {
+				rawUnitRace := baseSlkUnit.UnitData.Race.String
+				unitRace = strings.Replace(rawUnitRace, "\"", "", -1)
+			}
+		}
+
+		//  We just want everything in the campaign file for now...
+		unitRace = "campaign"
+
+		unitFunc := new(UnitFunc)
+		baseTXTUnitFunc := *baseTxtUnitFuncs[value.BaseUnitId]
+
+		var baseUnitFunc UnitFunc
+		baseUnitFunc = baseTXTUnitFunc
+
+		*unitFunc = baseUnitFunc
+
+		value.TransformToUnitFunc(unitFunc)
+
+		nameSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Name.String)
+		if len(nameSubmatch) > 0 {
+			unitFunc.Name.SetValid(wtsMap[nameSubmatch[1]])
+		}
+		tipSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Tip.String)
+		if len(tipSubmatch) > 0 {
+			unitFunc.Tip.SetValid(wtsMap[tipSubmatch[1]])
+		}
+		uberTipSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Ubertip.String)
+		if len(uberTipSubmatch) > 0 {
+			unitFunc.Ubertip.SetValid(wtsMap[uberTipSubmatch[1]])
+		}
+		uberDescriptionSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Description.String)
+		if len(uberDescriptionSubmatch) > 0 {
+			unitFunc.Description.SetValid(wtsMap[uberDescriptionSubmatch[1]])
+		}
+
+		switch unitRace {
+		case "campaign":
+			unitFuncs.CampaignUnitFuncs = append(unitFuncs.CampaignUnitFuncs, unitFunc)
+		case "human":
+			unitFuncs.HumanUnitFuncs = append(unitFuncs.HumanUnitFuncs, unitFunc)
+		case "nightelf":
+			unitFuncs.NightElfUnitFuncs = append(unitFuncs.NightElfUnitFuncs, unitFunc)
+		case "orc":
+			unitFuncs.OrcUnitFuncs = append(unitFuncs.OrcUnitFuncs, unitFunc)
+		case "undead":
+			unitFuncs.UndeadUnitFuncs = append(unitFuncs.UndeadUnitFuncs, unitFunc)
+		case "naga":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		case "creeps":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		case "other":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		case "unknown":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		default:
+			log.Println(fmt.Sprintf("Can't find the race %s", unitRace))
+		}
+	}
+
+	return unitFuncs
+
+	return nil
+}
+
+func W3uToTxtUnitFuncsWithBaseTxt(baseTXTUnitfuncs map[string]*UnitFunc, baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData) *UnitFuncs {
+	unitFuncs := new(UnitFuncs)
+
+	for _, value := range unitMap {
+		var unitRace string
+		baseSlkUnit := baseSLKUnits["\""+value.BaseUnitId+"\""]
+		if baseSlkUnit.UnitUI.Campaign.Valid && baseSlkUnit.UnitUI.Campaign.String == "1" {
+			unitRace = "campaign"
+		} else if value.Ucam.Valid && value.Ucam.String == "1" {
+			unitRace = "campaign"
+		} else {
+			if value.Urac.Valid {
+				unitRace = value.Urac.String
+			} else {
+				rawUnitRace := baseSlkUnit.UnitData.Race.String
+				unitRace = strings.Replace(rawUnitRace, "\"", "", -1)
+			}
+		}
+
+		unitFunc := new(UnitFunc)
+		baseTXTUnitFunc := *baseTXTUnitfuncs[value.BaseUnitId]
+
+		var baseUnitFunc UnitFunc
+		baseUnitFunc = baseTXTUnitFunc
+
+		*unitFunc = baseUnitFunc
+
+		value.TransformToUnitFunc(unitFunc)
+
+		switch unitRace {
+		case "campaign":
+			unitFuncs.CampaignUnitFuncs = append(unitFuncs.CampaignUnitFuncs, unitFunc)
+		case "human":
+			unitFuncs.HumanUnitFuncs = append(unitFuncs.HumanUnitFuncs, unitFunc)
+		case "nightelf":
+			unitFuncs.NightElfUnitFuncs = append(unitFuncs.NightElfUnitFuncs, unitFunc)
+		case "orc":
+			unitFuncs.OrcUnitFuncs = append(unitFuncs.OrcUnitFuncs, unitFunc)
+		case "undead":
+			unitFuncs.UndeadUnitFuncs = append(unitFuncs.UndeadUnitFuncs, unitFunc)
+		case "naga":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		case "creeps":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		case "other":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		case "unknown":
+			unitFuncs.NeutralUnitFuncs = append(unitFuncs.NeutralUnitFuncs, unitFunc)
+		default:
+			log.Println(fmt.Sprintf("Can't find the race %s", unitRace))
+		}
+	}
+
+	return unitFuncs
+}
+
+func WtsToTxtUnitStringsWithBaseTxt(baseUnitStringMap map[string]*UnitString, baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData) *UnitStrings {
+	unitStrings := new(UnitStrings)
+
+	for _, value := range unitMap {
+		var unitRace string
+		baseSlkUnit := baseSLKUnits["\""+value.BaseUnitId+"\""]
+		if baseSlkUnit.UnitUI.Campaign.Valid && baseSlkUnit.UnitUI.Campaign.String == "1" {
+			unitRace = "campaign"
+		} else {
+			if value.Urac.Valid {
+				unitRace = value.Urac.String
+			} else {
+				rawUnitRace := baseSlkUnit.UnitData.Race.String
+				unitRace = strings.Replace(rawUnitRace, "\"", "", -1)
+			}
+		}
+
+		unitString := new(UnitString)
+		baseTxtUnitString := *baseUnitStringMap[value.BaseUnitId]
+
+		var baseUnitString UnitString
+		baseUnitString = baseTxtUnitString
+
+		*unitString = baseUnitString
+
+		value.TransformToUnitString(unitString)
+
+		switch unitRace {
+		case "campaign":
+			unitStrings.CampaignUnitFuncs = append(unitStrings.CampaignUnitFuncs, unitString)
+		case "human":
+			unitStrings.HumanUnitStrings = append(unitStrings.HumanUnitStrings, unitString)
+		case "nightelf":
+			unitStrings.NightElfUnitStrings = append(unitStrings.NightElfUnitStrings, unitString)
+		case "orc":
+			unitStrings.OrcUnitStrings = append(unitStrings.OrcUnitStrings, unitString)
+		case "undead":
+			unitStrings.UndeadUnitStrings = append(unitStrings.UndeadUnitStrings, unitString)
+		case "naga":
+			unitStrings.NeutralUnitStrings = append(unitStrings.NeutralUnitStrings, unitString)
+		case "creeps":
+			unitStrings.NeutralUnitStrings = append(unitStrings.NeutralUnitStrings, unitString)
+		case "other":
+			unitStrings.NeutralUnitStrings = append(unitStrings.NeutralUnitStrings, unitString)
+		case "unknown":
+			unitStrings.NeutralUnitStrings = append(unitStrings.NeutralUnitStrings, unitString)
+		default:
+			log.Println(fmt.Sprintf("Can't find the race %s", unitRace))
+		}
+	}
+
+	return unitStrings
+}
+
 /*************************
 
        SLK PARSERS
 
 *************************/
 
-type SLKInformation struct {
+type SlkInformation struct {
 	split          []string
 	headerMap      map[string]string
 	columnSize     int
 	headerEndIndex int
 }
 
-func GenericSLKReader(input []byte) (*SLKInformation, error) {
-	slkInformation := new(SLKInformation)
+func GenericSlkReader(input []byte) (*SlkInformation, error) {
+	slkInformation := new(SlkInformation)
 	str := string(input)
 	split := strings.Split(str, "\n")
 
@@ -234,12 +538,17 @@ func GenericSLKReader(input []byte) (*SLKInformation, error) {
 	headerLineIndex := 2
 	isNotAtEndOfHeader := true
 	for isNotAtEndOfHeader {
-		headerLineSubmatch := SLKRegex.FindStringSubmatch(split[headerLineIndex])
+		headerLineSubmatch := SLKHeadRegex.FindStringSubmatch(split[headerLineIndex])
 		if len(headerLineSubmatch[2]) > 0 && headerLineSubmatch[2] != "1" {
 			isNotAtEndOfHeader = false
 		} else {
 			if len(headerLineSubmatch) > 1 {
-				headerMap[headerLineSubmatch[1]] = headerLineSubmatch[3]
+				val := headerLineSubmatch[3]
+				if val == "comment(s)" {
+					headerMap[headerLineSubmatch[1]] = "comment"
+				} else {
+					headerMap[headerLineSubmatch[1]] = val
+				}
 			}
 
 			headerLineIndex++
@@ -254,10 +563,49 @@ func GenericSLKReader(input []byte) (*SLKInformation, error) {
 	return slkInformation, nil
 }
 
-func SLKToUnitData(input []byte) map[string]*UnitData {
+func SlkToUnitAbilities(input []byte) map[string]*UnitAbilities {
+	unitAbilitiesMap := make(map[string]*UnitAbilities)
+	var currentUnitAbilities *UnitAbilities
+	slkInformation, err := GenericSlkReader(input)
+	if err != nil {
+		log.Println(err)
+
+		return nil
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
+		if bodyLineSubmatch != nil {
+			if len(bodyLineSubmatch[2]) > 0 {
+				if currentUnitAbilities != nil && currentUnitAbilities.UnitAbilID.Valid {
+					unitAbilitiesMap[currentUnitAbilities.UnitAbilID.String] = currentUnitAbilities
+				}
+
+				currentUnitAbilities = new(UnitAbilities)
+			}
+
+			nullString := new(null.String)
+			nullString.SetValid(bodyLineSubmatch[3])
+
+			err = reflectUpdateValueOnFieldNullStruct(currentUnitAbilities, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	if currentUnitAbilities != nil && currentUnitAbilities.UnitAbilID.Valid {
+		unitAbilitiesMap[currentUnitAbilities.UnitAbilID.String] = currentUnitAbilities
+	}
+
+	return unitAbilitiesMap
+}
+
+func SlkToUnitData(input []byte) map[string]*UnitData {
 	unitDataMap := make(map[string]*UnitData)
 	var currentUnitData *UnitData
-	slkInformation, err := GenericSLKReader(input)
+	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
 
@@ -279,11 +627,15 @@ func SLKToUnitData(input []byte) map[string]*UnitData {
 			nullString := new(null.String)
 			nullString.SetValid(bodyLineSubmatch[3])
 
-			err = reflectUpdateValueOnFieldNullString(currentUnitData, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			err = reflectUpdateValueOnFieldNullStruct(currentUnitData, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
 			if err != nil {
 				log.Println(err)
 			}
 		}
+	}
+
+	if currentUnitData != nil && currentUnitData.UnitID.Valid {
+		unitDataMap[currentUnitData.UnitID.String] = currentUnitData
 	}
 
 	return unitDataMap
@@ -292,7 +644,7 @@ func SLKToUnitData(input []byte) map[string]*UnitData {
 func SLKToUnitUI(input []byte) map[string]*UnitUI {
 	unitUIMap := make(map[string]*UnitUI)
 	var currentUnitUI *UnitUI
-	slkInformation, err := GenericSLKReader(input)
+	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
 
@@ -308,17 +660,33 @@ func SLKToUnitUI(input []byte) map[string]*UnitUI {
 					unitUIMap[currentUnitUI.UnitUIID.String] = currentUnitUI
 				}
 
+				/*
+				if currentUnitUI != nil && currentUnitUI.UnitUIID.String == "\"ogru\"" {
+					log.Println("OGRU: " + pretty.Sprint(currentUnitUI))
+				}
+				*/
+
 				currentUnitUI = new(UnitUI)
 			}
+
+			/*
+			if currentUnitUI != nil && currentUnitUI.UnitUIID.String == "\"ogru\"" {
+				log.Println("bodyLineSubmatch: " + pretty.Sprint(bodyLineSubmatch))
+			}
+			*/
 
 			nullString := new(null.String)
 			nullString.SetValid(bodyLineSubmatch[3])
 
-			err = reflectUpdateValueOnFieldNullString(currentUnitUI, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			err = reflectUpdateValueOnFieldNullStruct(currentUnitUI, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
 			if err != nil {
 				log.Println(err)
 			}
 		}
+	}
+
+	if currentUnitUI != nil && currentUnitUI.UnitUIID.Valid {
+		unitUIMap[currentUnitUI.UnitUIID.String] = currentUnitUI
 	}
 
 	return unitUIMap
@@ -327,7 +695,7 @@ func SLKToUnitUI(input []byte) map[string]*UnitUI {
 func SLKToUnitWeapons(input []byte) map[string]*UnitWeapons {
 	unitWeaponsMap := make(map[string]*UnitWeapons)
 	var currentUnitWeapons *UnitWeapons
-	slkInformation, err := GenericSLKReader(input)
+	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
 
@@ -349,11 +717,15 @@ func SLKToUnitWeapons(input []byte) map[string]*UnitWeapons {
 			nullString := new(null.String)
 			nullString.SetValid(bodyLineSubmatch[3])
 
-			err = reflectUpdateValueOnFieldNullString(currentUnitWeapons, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			err = reflectUpdateValueOnFieldNullStruct(currentUnitWeapons, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
 			if err != nil {
 				log.Println(err)
 			}
 		}
+	}
+
+	if currentUnitWeapons != nil && currentUnitWeapons.UnitWeapID.Valid {
+		unitWeaponsMap[currentUnitWeapons.UnitWeapID.String] = currentUnitWeapons
 	}
 
 	return unitWeaponsMap
@@ -362,7 +734,7 @@ func SLKToUnitWeapons(input []byte) map[string]*UnitWeapons {
 func SLKToUnitBalance(input []byte) map[string]*UnitBalance {
 	unitBalanceMap := make(map[string]*UnitBalance)
 	var currentUnitBalance *UnitBalance
-	slkInformation, err := GenericSLKReader(input)
+	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
 
@@ -384,14 +756,98 @@ func SLKToUnitBalance(input []byte) map[string]*UnitBalance {
 			nullString := new(null.String)
 			nullString.SetValid(bodyLineSubmatch[3])
 
-			err = reflectUpdateValueOnFieldNullString(currentUnitBalance, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
+			err = reflectUpdateValueOnFieldNullStruct(currentUnitBalance, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
 			if err != nil {
 				log.Println(err)
 			}
 		}
 	}
 
+	if currentUnitBalance != nil && currentUnitBalance.UnitBalanceID.Valid {
+		unitBalanceMap[currentUnitBalance.UnitBalanceID.String] = currentUnitBalance
+	}
+
 	return unitBalanceMap
+}
+
+/*************************
+
+       TXT PARSERS
+
+*************************/
+
+func TxtToUnitFunc(input []byte) map[string]*UnitFunc {
+	unitFuncMap := make(map[string]*UnitFunc)
+	var currentUnitFunc *UnitFunc
+
+	str := string(input)
+	split := strings.Split(str, "\n")
+
+	for _, line := range split {
+		if TXTHeadRegex.MatchString(line) {
+			if currentUnitFunc != nil {
+				unitFuncMap[currentUnitFunc.UnitId] = currentUnitFunc
+			}
+
+			currentUnitFunc = new(UnitFunc)
+			lineSubmatch := TXTHeadRegex.FindStringSubmatch(line)
+			currentUnitFunc.UnitId = lineSubmatch[1]
+		} else {
+			lineSubmatch := TXTRegex.FindStringSubmatch(line)
+			if lineSubmatch != nil {
+				nullString := new(null.String)
+				nullString.SetValid(lineSubmatch[2])
+
+				err := reflectUpdateValueOnFieldNullStruct(currentUnitFunc, *nullString, strings.Title(strings.ToLower(lineSubmatch[1])))
+				if err != nil {
+					log.Println(err)
+				}
+			}
+		}
+	}
+
+	if currentUnitFunc != nil {
+		unitFuncMap[currentUnitFunc.UnitId] = currentUnitFunc
+	}
+
+	return unitFuncMap
+}
+
+func TxtToUnitStrings(input []byte) map[string]*UnitString {
+	unitStringsMap := make(map[string]*UnitString)
+	var currentUnitString *UnitString
+
+	str := string(input)
+	split := strings.Split(str, "\n")
+
+	for _, line := range split {
+		if TXTHeadRegex.MatchString(line) {
+			if currentUnitString != nil {
+				unitStringsMap[currentUnitString.UnitId] = currentUnitString
+			}
+
+			currentUnitString = new(UnitString)
+			lineSubmatch := TXTHeadRegex.FindStringSubmatch(line)
+			currentUnitString.UnitId = lineSubmatch[1]
+		} else {
+			lineSubmatch := TXTRegex.FindStringSubmatch(line)
+			if lineSubmatch != nil {
+				nullString := new(null.String)
+				nullString.SetValid(lineSubmatch[2])
+
+				err := reflectUpdateValueOnFieldNullStruct(currentUnitString, *nullString, strings.Title(strings.ToLower(lineSubmatch[1])))
+				if err != nil {
+					log.Println(err)
+				}
+			}
+		}
+	}
+
+	if currentUnitString != nil {
+		unitStringsMap[currentUnitString.UnitId] = currentUnitString
+	}
+
+	return unitStringsMap
 }
 
 /*************************
@@ -400,7 +856,7 @@ func SLKToUnitBalance(input []byte) map[string]*UnitBalance {
 
 *************************/
 
-func reflectUpdateValueOnFieldNullString(iface interface{}, fieldValue null.String, fieldName string) error {
+func reflectUpdateValueOnFieldNullStruct(iface interface{}, fieldValue interface{}, fieldName string) error {
 	fieldName = strings.Replace(fieldName, "\"", "", -1)
 	valueIface := reflect.ValueOf(iface)
 
@@ -453,4 +909,38 @@ func reflectUpdateValueOnField(iface interface{}, fieldValue string, fieldName s
 	}
 
 	return nil
+}
+
+func reflectIsFieldNamePartOfStruct(iface interface{}, fieldName string) bool {
+	valueIface := reflect.ValueOf(iface)
+
+	// Check if the passed interface is a pointer
+	if valueIface.Type().Kind() != reflect.Ptr {
+		return false
+	}
+
+	// 'dereference' with Elem() and get the field by name
+	field := valueIface.Elem().FieldByName(fieldName)
+	if !field.IsValid() {
+		return false
+	}
+
+	return true
+}
+
+func reflectTypeFromFieldName(iface interface{}, fieldName string) reflect.Type {
+	valueIface := reflect.ValueOf(iface)
+
+	// Check if the passed interface is a pointer
+	if valueIface.Type().Kind() != reflect.Ptr {
+		return nil
+	}
+
+	// 'dereference' with Elem() and get the field by name
+	field := valueIface.Elem().FieldByName(fieldName)
+	if !field.IsValid() {
+		return nil
+	}
+
+	return field.Type()
 }

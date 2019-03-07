@@ -76,8 +76,7 @@ C;X73;K"targCount2"
 C;X74;K"damageLoss2"
 C;X75;K"spillDist2"
 C;X76;K"spillRadius2"
-C;X77;K"InBeta"
-{{ range $index, $element := .UnitWeapons }}
+C;X77;K"InBeta"{{ range $index, $element := .UnitWeapons }}
 C;X1;Y{{ inc $index }};K{{ .UnitWeapID.String }}
 C;X2;K{{ .SortWeap.String }}
 C;X3;K{{ .Sort2.String }}
