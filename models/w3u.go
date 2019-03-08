@@ -2,6 +2,8 @@ package models
 
 import (
 	"gopkg.in/volatiletech/null.v6"
+	"log"
+	"strings"
 )
 
 // Unit data
@@ -402,7 +404,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Utar.Valid {
 		unitData.TargType.SetValid("\"" + w3uData.Utar.String + "\"")
 	}
-	// unitData.PathTex.SetValid("\"_\"")    // TODO: Set this value correctly!
+	if w3uData.Uubs.Valid {
+		unitData.PathTex.SetValid(w3uData.Uubs.String)
+	}
 	// unitData.FatLOS.SetValid("0")         // TODO: Set this value correctly!
 	if w3uData.Upoi.Valid {
 		unitData.Points.SetValid(w3uData.Upoi.String)
@@ -531,10 +535,17 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	// unitUI.OccH.SetValid("0")               // TODO: Set this value correctly!
 	// unitUI.InBeta.SetValid("")              // TODO: Set this value correctly!
 	if w3uData.Usnd.Valid {
-		unitUI.UnitSound.SetValid("\"" + w3uData.Usnd.String + "\"") // Simple default for now
+		unitUI.UnitSound.SetValid("\"" + w3uData.Usnd.String + "\"")
 	}
 	if w3uData.Unam.Valid {
+		if w3uData.CustomUnitId == "hC07" {
+			log.Println("VALID(" + w3uData.Unam.String + ")")
+		}
 		unitUI.Name.SetValid("\"" + w3uData.Unam.String + "\"")
+	} else {
+		if w3uData.CustomUnitId == "hC07" {
+			log.Println("INVALID")
+		}
 	}
 
 	unitBalance.UnitBalanceID.SetValid("\"" + w3uData.CustomUnitId + "\"")
@@ -671,15 +682,57 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Ubdg.Valid {
 		unitBalance.Isbldg.SetValid(w3uData.Ubdg.String)
 	}
-	/*
-	TODO: Figure this out, the base SLK files are inverted on this!
+	// TODO: Figure this out, the base SLK files are inverted on this!
 	if w3uData.Upar.Valid {
-		unitBalance.PreventPlace.SetValid(w3uData.Upar.String)
+		split := strings.Split(w3uData.Upar.String, ",")
+		for i := range split {
+			switch split[i] {
+			case "unbuildable":
+				split[i] = "buildable"
+			case "unwalkable":
+				split[i] = "walkable"
+			case "buildable":
+				split[i] = "unbuildable"
+			case "walkable":
+				split[i] = "unwalkable"
+			}
+		}
+
+		newStr := ""
+		for i := range split {
+			if i == 0 {
+				newStr += split[i]
+			} else {
+				newStr += "," + split[i]
+			}
+		}
+		unitBalance.RequirePlace.SetValid(newStr)
 	}
 	if w3uData.Upap.Valid {
-		unitBalance.RequirePlace.SetValid(w3uData.Upap.String)
+		split := strings.Split(w3uData.Upap.String, ",")
+		for i := range split {
+			switch split[i] {
+			case "unbuildable":
+				split[i] = "buildable"
+			case "unwalkable":
+				split[i] = "walkable"
+			case "buildable":
+				split[i] = "unbuildable"
+			case "walkable":
+				split[i] = "unwalkable"
+			}
+		}
+
+		newStr := ""
+		for i := range split {
+			if i == 0 {
+				newStr += split[i]
+			} else {
+				newStr += "," + split[i]
+			}
+		}
+		unitBalance.PreventPlace.SetValid(newStr)
 	}
-	*/
 	// unitBalance.Repulse.SetValid("0") // TODO: Set this value correctly!
 	// unitBalance.RepulseParam.SetValid("0") // TODO: Set this value correctly!
 	// unitBalance.RepulseGroup.SetValid("0") // TODO: Set this value correctly!
@@ -929,40 +982,111 @@ func (w3uData *W3uData) TransformToUnitFunc(unitFunc *UnitFunc) {
 		}
 	}
 	if w3uData.Uico.Valid {
-		unitFunc.Art.SetValid(w3uData.Uico.String)
+		if w3uData.Uico.String == "-" {
+			unitFunc.Art.SetValid("")
+			unitFunc.Art.Valid = false
+		} else {
+			unitFunc.Art.SetValid(w3uData.Uico.String)
+		}
 	}
 	if w3uData.Uspa.Valid {
-		unitFunc.Specialart.SetValid(w3uData.Uspa.String)
+		if w3uData.Uspa.String == "-" {
+			unitFunc.Specialart.SetValid("")
+			unitFunc.Specialart.Valid = false
+		} else {
+			unitFunc.Specialart.SetValid(w3uData.Uspa.String)
+		}
 	}
 	// unitFunc.Casterupgradeart.SetValid("?") // TODO: Set the correct value
 	if w3uData.Utaa.Valid {
-		unitFunc.Targetart.SetValid(w3uData.Utaa.String)
+		if w3uData.Utaa.String == "-" {
+			unitFunc.Targetart.SetValid("")
+			unitFunc.Targetart.Valid = false
+		} else {
+			unitFunc.Targetart.SetValid(w3uData.Utaa.String)
+		}
 	}
 	if w3uData.Ussi.Valid {
-		unitFunc.Scorescreenicon.SetValid(w3uData.Ussi.String)
+		if w3uData.Ussi.String == "-" {
+			unitFunc.Scorescreenicon.SetValid("")
+			unitFunc.Scorescreenicon.Valid = false
+		} else {
+			unitFunc.Scorescreenicon.SetValid(w3uData.Ussi.String)
+		}
 	}
 	if w3uData.Ubpx.Valid {
-		unitFunc.ButtonposX.SetValid(w3uData.Ubpx.String)
+		if w3uData.Ubpx.String == "-" {
+			unitFunc.ButtonposX.SetValid("")
+			unitFunc.ButtonposX.Valid = false
+		} else {
+			unitFunc.ButtonposX.SetValid(w3uData.Ubpx.String)
+		}
 	}
 	if w3uData.Ubpy.Valid {
-		unitFunc.ButtonposY.SetValid(w3uData.Ubpy.String)
+		if w3uData.Ubpy.String == "-" {
+			unitFunc.ButtonposY.SetValid("")
+			unitFunc.ButtonposY.Valid = false
+		} else {
+			unitFunc.ButtonposY.SetValid(w3uData.Ubpy.String)
+		}
 	}
 	if w3uData.Utra.Valid {
-		unitFunc.Trains.SetValid(w3uData.Utra.String)
+		if w3uData.Utra.String == "-" {
+			unitFunc.Trains.SetValid("")
+			unitFunc.Trains.Valid = false
+		} else {
+			unitFunc.Trains.SetValid(w3uData.Utra.String)
+		}
 	}
 	if w3uData.Ubui.Valid {
-		unitFunc.Builds.SetValid(w3uData.Ubui.String)
+		if w3uData.Ubui.String == "-" {
+			unitFunc.Builds.SetValid("")
+			unitFunc.Builds.Valid = false
+		} else {
+			unitFunc.Builds.SetValid(w3uData.Ubui.String)
+		}
 	}
 	if w3uData.Ures.Valid {
-		unitFunc.Researches.SetValid(w3uData.Ures.String)
+		if w3uData.Ures.String == "-" {
+			unitFunc.Researches.SetValid("")
+			unitFunc.Researches.Valid = false
+		} else {
+			unitFunc.Researches.SetValid(w3uData.Ures.String)
+		}
 	}
 	if w3uData.Uupt.Valid {
-		unitFunc.Upgrade.SetValid(w3uData.Uupt.String)
+		if w3uData.Uupt.String == "-" {
+			unitFunc.Upgrade.SetValid("")
+			unitFunc.Upgrade.Valid = false
+		} else {
+			unitFunc.Upgrade.SetValid(w3uData.Uupt.String)
+		}
 	}
 	if w3uData.Useu.Valid {
-		unitFunc.Sellunits.SetValid(w3uData.Useu.String)
+		if w3uData.Useu.String == "-" {
+			unitFunc.Sellunits.SetValid("")
+			unitFunc.Sellunits.Valid = false
+		} else {
+			unitFunc.Sellunits.SetValid(w3uData.Useu.String)
+		}
 	}
-	// unitFunc.Requires.SetValid("?") // TODO: Set the correct value
+	if w3uData.Ureq.Valid {
+		if w3uData.Ureq.String == "-" {
+			unitFunc.Requires.SetValid("")
+			unitFunc.Requires.Valid = false
+		} else {
+			unitFunc.Requires.SetValid(w3uData.Ureq.String)
+		}
+	}
+	if w3uData.Uani.Valid {
+		if w3uData.Uani.String == "-" {
+			unitFunc.Animprops.SetValid("")
+			unitFunc.Animprops.Valid = false
+		} else {
+			unitFunc.Animprops.SetValid(w3uData.Uani.String)
+		}
+	}
+
 	// unitFunc.Requires1.SetValid("?") // TODO: Set the correct value
 	// unitFunc.Requires2.SetValid("?") // TODO: Set the correct value
 	// unitFunc.Requirescount.SetValid("?") // TODO: Set the correct value
@@ -971,17 +1095,13 @@ func (w3uData *W3uData) TransformToUnitFunc(unitFunc *UnitFunc) {
 	// unitFunc.Loopingsoundfadein.SetValid("?") // TODO: Set the correct value
 	// unitFunc.Loopingsoundfadeout.SetValid("?") // TODO: Set the correct value
 	// unitFunc.Revive.SetValid("?") // TODO: Set the correct value
-	// unitFunc.Animprops.SetValid("?") // TODO: Set the correct value
 	// unitFunc.Attachmentanimprops.SetValid("?") // TODO: Set the correct value
 	// unitFunc.Dependencyor.SetValid("?") // TODO: Set the correct value
-	// TODO: I'm not sure this is correct, but it seems to work...
-	if w3uData.Usei.Valid || w3uData.Umki.Valid {
-		if w3uData.Umki.Valid {
-			unitFunc.Makeitems.SetValid(w3uData.Umki.String)
-		}
-		if w3uData.Usei.Valid {
-			unitFunc.Makeitems.SetValid(w3uData.Usei.String)
-		}
+	if w3uData.Umki.Valid {
+		unitFunc.Makeitems.SetValid(w3uData.Umki.String)
+	}
+	if w3uData.Usei.Valid {
+		unitFunc.Sellitems.SetValid(w3uData.Usei.String)
 	}
 	if w3uData.Unam.Valid {
 		unitFunc.Name.SetValid(w3uData.Unam.String)
@@ -1013,6 +1133,22 @@ func (w3uData *W3uData) TransformToUnitFunc(unitFunc *UnitFunc) {
 	// unitString.Casterupgradeart.SetValid(?) // TODO: Set the correct value
 	// unitString.Casterupgradetip.SetValid(?) // TODO: Set the correct value
 	// unitString.Dependencyor.SetValid(?) // TODO: Set the correct value
+
+	if unitFunc.Buttonpos.Valid {
+		currentButtonPos := unitFunc.Buttonpos.String
+		splitButtonPos := strings.Split(currentButtonPos, ",")
+		if len(splitButtonPos) > 1 {
+			if unitFunc.ButtonposX.Valid {
+				splitButtonPos[0] = unitFunc.ButtonposX.String
+			}
+			if unitFunc.ButtonposY.Valid {
+				splitButtonPos[1] = unitFunc.ButtonposY.String
+			}
+			unitFunc.Buttonpos.SetValid(splitButtonPos[0] + "," + splitButtonPos[1])
+		}
+	} else {
+		unitFunc.Buttonpos.SetValid(unitFunc.ButtonposX.String + "," + unitFunc.ButtonposY.String)
+	}
 }
 
 func (w3uData *W3uData) TransformToUnitString(unitString *UnitString) {

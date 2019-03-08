@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"github.com/kr/pretty"
 	. "github.com/runi95/wts-parser/models"
 	"gopkg.in/volatiletech/null.v6"
 	"log"
@@ -20,12 +21,13 @@ var stringRegex = regexp.MustCompile(`STRING [0-9]*[^}]*}`) // Regex to find eac
 var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`)  // Regex to find the content container of each string object
 var contentStartRegex = regexp.MustCompile(`^[\r]*[\n]`)
 var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
-var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([0-9.]+|"[\w-()\\]+")`)
+var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([0-9.]+|"[\w-.,()\\]+")`)
 var SLKHeadRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K"([\w-()]+)"`)
 var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
 var TXTHeadRegex = regexp.MustCompile(`\[(\w+)]`)
 var TXTRegex = regexp.MustCompile(`([A-Z]\w+)=([^\r\n]*)`)
 var TrigstrRegex = regexp.MustCompile(`TRIGSTR_([0-9]+)`)
+var NewLineRegex = regexp.MustCompile(`\r?\n`)
 
 /*************************
 
@@ -48,7 +50,7 @@ func ReadWtsFile(input []byte) map[string]string {
 		parsedBeginning := removeBrackets[length:]
 		lengthToEnd := len(parsedBeginning) - len(contextEndRegex.FindString(parsedBeginning))
 		parsedContainer := parsedBeginning[:lengthToEnd]
-		strings.Replace(parsedContainer, "\n", "|n", -1)
+		parsedContainer = NewLineRegex.ReplaceAllString(parsedContainer, "|n")
 
 		wtsMap[idStr] = parsedContainer
 	}
@@ -134,11 +136,6 @@ func ReadW3uFile(input []byte) map[string]*W3uData {
 			customUnitId := [4]byte{input[i-4], input[i-3], input[i-2], input[i-1]}
 			if customUnitId[0] > 96 && customUnitId[0] < 123 && (customUnitId[1] == 48 || customUnitId[1] == 67) && ((customUnitId[2] > 47 && customUnitId[2] < 58) || (customUnitId[2] > 64 && customUnitId[2] < 91)) && ((customUnitId[3] > 47 && customUnitId[3] < 58) || (customUnitId[3] > 64 && customUnitId[3] < 91)) {
 				unitId := string(customUnitId[0]) + string(customUnitId[1]) + string(customUnitId[2]) + string(customUnitId[3])
-				/*
-				if lastUnitId == "h00H" {
-					log.Println(pretty.Sprint(unitMap[lastUnitId]))
-				}
-				*/
 				lastUnitId = unitId
 				newW3uUnit := new(W3uData)
 				newW3uUnit.BaseUnitId = string(baseUnitId[0]) + string(baseUnitId[1]) + string(baseUnitId[2]) + string(baseUnitId[3])
@@ -301,14 +298,16 @@ func W3uToSlkUnitsWithBaseSlk(baseSLKUnits map[string]*SLKUnit, unitMap map[stri
 		slkUnit.UnitBalance = &unitBalance
 		slkUnit.UnitAbilities = &unitAbilities
 
-		/*
-		if value.CustomUnitId == "o01C" {
-			log.Println(pretty.Sprint(unitUI))
+		if value.CustomUnitId == "hC07" {
+			log.Println(pretty.Sprint(baseSLKUnit))
 		}
-		*/
 
 		value.TransformToSLKUnit(slkUnit)
 		slkUnits[index] = slkUnit
+
+		if value.CustomUnitId == "hC07" {
+			log.Println(pretty.Sprint(slkUnit))
+		}
 
 		index++
 	}
@@ -344,9 +343,17 @@ func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFun
 		var baseUnitFunc UnitFunc
 		baseUnitFunc = baseTXTUnitFunc
 
+		if value.CustomUnitId == "hC07" {
+			log.Println("BASE: " + pretty.Sprint(baseUnitFunc))
+		}
+
 		*unitFunc = baseUnitFunc
 
 		value.TransformToUnitFunc(unitFunc)
+
+		if value.CustomUnitId == "hC07" {
+			log.Println("unitFunc: " + pretty.Sprint(unitFunc))
+		}
 
 		nameSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Name.String)
 		if len(nameSubmatch) > 0 {
@@ -360,9 +367,17 @@ func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFun
 		if len(uberTipSubmatch) > 0 {
 			unitFunc.Ubertip.SetValid(wtsMap[uberTipSubmatch[1]])
 		}
-		uberDescriptionSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Description.String)
-		if len(uberDescriptionSubmatch) > 0 {
-			unitFunc.Description.SetValid(wtsMap[uberDescriptionSubmatch[1]])
+		descriptionSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Description.String)
+		if len(descriptionSubmatch) > 0 {
+			unitFunc.Description.SetValid(wtsMap[descriptionSubmatch[1]])
+		}
+		hotkeySubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Hotkey.String)
+		if len(hotkeySubmatch) > 0 {
+			unitFunc.Hotkey.SetValid(wtsMap[hotkeySubmatch[1]])
+		}
+		editorSuffixSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Editorsuffix.String)
+		if len(editorSuffixSubmatch) > 0 {
+			unitFunc.Editorsuffix.SetValid(wtsMap[editorSuffixSubmatch[1]])
 		}
 
 		switch unitRace {
@@ -660,20 +675,8 @@ func SLKToUnitUI(input []byte) map[string]*UnitUI {
 					unitUIMap[currentUnitUI.UnitUIID.String] = currentUnitUI
 				}
 
-				/*
-				if currentUnitUI != nil && currentUnitUI.UnitUIID.String == "\"ogru\"" {
-					log.Println("OGRU: " + pretty.Sprint(currentUnitUI))
-				}
-				*/
-
 				currentUnitUI = new(UnitUI)
 			}
-
-			/*
-			if currentUnitUI != nil && currentUnitUI.UnitUIID.String == "\"ogru\"" {
-				log.Println("bodyLineSubmatch: " + pretty.Sprint(bodyLineSubmatch))
-			}
-			*/
 
 			nullString := new(null.String)
 			nullString.SetValid(bodyLineSubmatch[3])

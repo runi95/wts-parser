@@ -25,7 +25,7 @@ type UnitUITemplate struct {
 }
 
 type UnitAbilitiesTemplate struct {
-	RowCount int
+	RowCount      int
 	UnitAbilities []*models.UnitAbilities
 }
 
@@ -244,36 +244,6 @@ func main() {
 
 		parsedUndeadUnitFunc := parser.TxtToUnitFunc(undeadUnitFuncBytes)
 
-		log.Println("Building baseUnitFunc map...")
-
-		baseUnitFuncMap := make(map[string]*models.UnitFunc)
-		for k, v := range parsedCampaignUnitFunc {
-			baseUnitFuncMap[k] = v
-		}
-
-		for k, v := range parsedHumanUnitFunc {
-			baseUnitFuncMap[k] = v
-		}
-
-		for k, v := range parsedNeutralUnitFunc {
-			baseUnitFuncMap[k] = v
-		}
-
-		for k, v := range parsedNightElfUnitFunc {
-			baseUnitFuncMap[k] = v
-		}
-
-		for k, v := range parsedOrcUnitFunc {
-			baseUnitFuncMap[k] = v
-		}
-
-		for k, v := range parsedUndeadUnitFunc {
-			baseUnitFuncMap[k] = v
-		}
-
-		customUnitFuncs := parser.W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseUnitFuncMap, baseUnitMap, unitMap, wtsMap)
-
-		/*
 		log.Println("Reading CampaignUnitStrings.txt...")
 
 		campaignUnitStringsBytes, err := ioutil.ReadFile("resources/CampaignUnitStrings.txt")
@@ -334,33 +304,261 @@ func main() {
 
 		parsedUndeadUnitStrings := parser.TxtToUnitStrings(undeadUnitStringsBytes)
 
-		log.Println("Building baseUnitString map...")
+		log.Println("Building baseUnitFunc map...")
 
-		baseUnitStringMap := make(map[string]*models.UnitString)
+		baseUnitFuncMap := make(map[string]*models.UnitFunc)
+		for k, v := range parsedCampaignUnitFunc {
+			baseUnitFuncMap[k] = v
+		}
+
+		for k, v := range parsedHumanUnitFunc {
+			baseUnitFuncMap[k] = v
+		}
+
+		for k, v := range parsedNeutralUnitFunc {
+			baseUnitFuncMap[k] = v
+		}
+
+		for k, v := range parsedNightElfUnitFunc {
+			baseUnitFuncMap[k] = v
+		}
+
+		for k, v := range parsedOrcUnitFunc {
+			baseUnitFuncMap[k] = v
+		}
+
+		for k, v := range parsedUndeadUnitFunc {
+			baseUnitFuncMap[k] = v
+		}
+
+		// log.Println("Building baseUnitString map...")
+
+		// baseUnitStringMap := make(map[string]*models.UnitString)
 		for k, v := range parsedCampaignUnitStrings {
-			baseUnitStringMap[k] = v
+			if v.Name.Valid {
+				baseUnitFuncMap[k].Name.SetValid(v.Name.String)
+			}
+			if v.Hotkey.Valid {
+				baseUnitFuncMap[k].Hotkey.SetValid(v.Hotkey.String)
+			}
+			if v.Description.Valid {
+				baseUnitFuncMap[k].Description.SetValid(v.Description.String)
+			}
+			if v.Tip.Valid {
+				baseUnitFuncMap[k].Tip.SetValid(v.Tip.String)
+			}
+			if v.Ubertip.Valid {
+				baseUnitFuncMap[k].Ubertip.SetValid(v.Ubertip.String)
+			}
+			if v.Editorsuffix.Valid {
+				baseUnitFuncMap[k].Editorsuffix.SetValid(v.Editorsuffix.String)
+			}
+			if v.Propernames.Valid {
+				baseUnitFuncMap[k].Propernames.SetValid(v.Propernames.String)
+			}
+			if v.Revivetip.Valid {
+				baseUnitFuncMap[k].Revivetip.SetValid(v.Revivetip.String)
+			}
+			if v.Awakentip.Valid {
+				baseUnitFuncMap[k].Awakentip.SetValid(v.Awakentip.String)
+			}
+			if v.Casterupgradename.Valid {
+				baseUnitFuncMap[k].Casterupgradename.SetValid(v.Casterupgradename.String)
+			}
+			if v.Casterupgradetip.Valid {
+				baseUnitFuncMap[k].Casterupgradetip.SetValid(v.Casterupgradetip.String)
+			}
+			// baseUnitStringMap[k] = v
 		}
 
 		for k, v := range parsedHumanUnitStrings {
-			baseUnitStringMap[k] = v
+			if v.Name.Valid {
+				baseUnitFuncMap[k].Name.SetValid(v.Name.String)
+			}
+			if v.Hotkey.Valid {
+				baseUnitFuncMap[k].Hotkey.SetValid(v.Hotkey.String)
+			}
+			if v.Description.Valid {
+				baseUnitFuncMap[k].Description.SetValid(v.Description.String)
+			}
+			if v.Tip.Valid {
+				baseUnitFuncMap[k].Tip.SetValid(v.Tip.String)
+			}
+			if v.Ubertip.Valid {
+				baseUnitFuncMap[k].Ubertip.SetValid(v.Ubertip.String)
+			}
+			if v.Editorsuffix.Valid {
+				baseUnitFuncMap[k].Editorsuffix.SetValid(v.Editorsuffix.String)
+			}
+			if v.Propernames.Valid {
+				baseUnitFuncMap[k].Propernames.SetValid(v.Propernames.String)
+			}
+			if v.Revivetip.Valid {
+				baseUnitFuncMap[k].Revivetip.SetValid(v.Revivetip.String)
+			}
+			if v.Awakentip.Valid {
+				baseUnitFuncMap[k].Awakentip.SetValid(v.Awakentip.String)
+			}
+			if v.Casterupgradename.Valid {
+				baseUnitFuncMap[k].Casterupgradename.SetValid(v.Casterupgradename.String)
+			}
+			if v.Casterupgradetip.Valid {
+				baseUnitFuncMap[k].Casterupgradetip.SetValid(v.Casterupgradetip.String)
+			}
+			// baseUnitStringMap[k] = v
 		}
 
 		for k, v := range parsedNeutralUnitStrings {
-			baseUnitStringMap[k] = v
+			if v.Name.Valid {
+				baseUnitFuncMap[k].Name.SetValid(v.Name.String)
+			}
+			if v.Hotkey.Valid {
+				baseUnitFuncMap[k].Hotkey.SetValid(v.Hotkey.String)
+			}
+			if v.Description.Valid {
+				baseUnitFuncMap[k].Description.SetValid(v.Description.String)
+			}
+			if v.Tip.Valid {
+				baseUnitFuncMap[k].Tip.SetValid(v.Tip.String)
+			}
+			if v.Ubertip.Valid {
+				baseUnitFuncMap[k].Ubertip.SetValid(v.Ubertip.String)
+			}
+			if v.Editorsuffix.Valid {
+				baseUnitFuncMap[k].Editorsuffix.SetValid(v.Editorsuffix.String)
+			}
+			if v.Propernames.Valid {
+				baseUnitFuncMap[k].Propernames.SetValid(v.Propernames.String)
+			}
+			if v.Revivetip.Valid {
+				baseUnitFuncMap[k].Revivetip.SetValid(v.Revivetip.String)
+			}
+			if v.Awakentip.Valid {
+				baseUnitFuncMap[k].Awakentip.SetValid(v.Awakentip.String)
+			}
+			if v.Casterupgradename.Valid {
+				baseUnitFuncMap[k].Casterupgradename.SetValid(v.Casterupgradename.String)
+			}
+			if v.Casterupgradetip.Valid {
+				baseUnitFuncMap[k].Casterupgradetip.SetValid(v.Casterupgradetip.String)
+			}
+			// baseUnitStringMap[k] = v
 		}
 
 		for k, v := range parsedNightElfUnitStrings {
-			baseUnitStringMap[k] = v
+			if v.Name.Valid {
+				baseUnitFuncMap[k].Name.SetValid(v.Name.String)
+			}
+			if v.Hotkey.Valid {
+				baseUnitFuncMap[k].Hotkey.SetValid(v.Hotkey.String)
+			}
+			if v.Description.Valid {
+				baseUnitFuncMap[k].Description.SetValid(v.Description.String)
+			}
+			if v.Tip.Valid {
+				baseUnitFuncMap[k].Tip.SetValid(v.Tip.String)
+			}
+			if v.Ubertip.Valid {
+				baseUnitFuncMap[k].Ubertip.SetValid(v.Ubertip.String)
+			}
+			if v.Editorsuffix.Valid {
+				baseUnitFuncMap[k].Editorsuffix.SetValid(v.Editorsuffix.String)
+			}
+			if v.Propernames.Valid {
+				baseUnitFuncMap[k].Propernames.SetValid(v.Propernames.String)
+			}
+			if v.Revivetip.Valid {
+				baseUnitFuncMap[k].Revivetip.SetValid(v.Revivetip.String)
+			}
+			if v.Awakentip.Valid {
+				baseUnitFuncMap[k].Awakentip.SetValid(v.Awakentip.String)
+			}
+			if v.Casterupgradename.Valid {
+				baseUnitFuncMap[k].Casterupgradename.SetValid(v.Casterupgradename.String)
+			}
+			if v.Casterupgradetip.Valid {
+				baseUnitFuncMap[k].Casterupgradetip.SetValid(v.Casterupgradetip.String)
+			}
+			// baseUnitStringMap[k] = v
 		}
 
 		for k, v := range parsedOrcUnitStrings {
-			baseUnitStringMap[k] = v
+			if v.Name.Valid {
+				baseUnitFuncMap[k].Name.SetValid(v.Name.String)
+			}
+			if v.Hotkey.Valid {
+				baseUnitFuncMap[k].Hotkey.SetValid(v.Hotkey.String)
+			}
+			if v.Description.Valid {
+				baseUnitFuncMap[k].Description.SetValid(v.Description.String)
+			}
+			if v.Tip.Valid {
+				baseUnitFuncMap[k].Tip.SetValid(v.Tip.String)
+			}
+			if v.Ubertip.Valid {
+				baseUnitFuncMap[k].Ubertip.SetValid(v.Ubertip.String)
+			}
+			if v.Editorsuffix.Valid {
+				baseUnitFuncMap[k].Editorsuffix.SetValid(v.Editorsuffix.String)
+			}
+			if v.Propernames.Valid {
+				baseUnitFuncMap[k].Propernames.SetValid(v.Propernames.String)
+			}
+			if v.Revivetip.Valid {
+				baseUnitFuncMap[k].Revivetip.SetValid(v.Revivetip.String)
+			}
+			if v.Awakentip.Valid {
+				baseUnitFuncMap[k].Awakentip.SetValid(v.Awakentip.String)
+			}
+			if v.Casterupgradename.Valid {
+				baseUnitFuncMap[k].Casterupgradename.SetValid(v.Casterupgradename.String)
+			}
+			if v.Casterupgradetip.Valid {
+				baseUnitFuncMap[k].Casterupgradetip.SetValid(v.Casterupgradetip.String)
+			}
+			// baseUnitStringMap[k] = v
 		}
 
 		for k, v := range parsedUndeadUnitStrings {
-			baseUnitStringMap[k] = v
+			if v.Name.Valid {
+				baseUnitFuncMap[k].Name.SetValid(v.Name.String)
+			}
+			if v.Hotkey.Valid {
+				baseUnitFuncMap[k].Hotkey.SetValid(v.Hotkey.String)
+			}
+			if v.Description.Valid {
+				baseUnitFuncMap[k].Description.SetValid(v.Description.String)
+			}
+			if v.Tip.Valid {
+				baseUnitFuncMap[k].Tip.SetValid(v.Tip.String)
+			}
+			if v.Ubertip.Valid {
+				baseUnitFuncMap[k].Ubertip.SetValid(v.Ubertip.String)
+			}
+			if v.Editorsuffix.Valid {
+				baseUnitFuncMap[k].Editorsuffix.SetValid(v.Editorsuffix.String)
+			}
+			if v.Propernames.Valid {
+				baseUnitFuncMap[k].Propernames.SetValid(v.Propernames.String)
+			}
+			if v.Revivetip.Valid {
+				baseUnitFuncMap[k].Revivetip.SetValid(v.Revivetip.String)
+			}
+			if v.Awakentip.Valid {
+				baseUnitFuncMap[k].Awakentip.SetValid(v.Awakentip.String)
+			}
+			if v.Casterupgradename.Valid {
+				baseUnitFuncMap[k].Casterupgradename.SetValid(v.Casterupgradename.String)
+			}
+			if v.Casterupgradetip.Valid {
+				baseUnitFuncMap[k].Casterupgradetip.SetValid(v.Casterupgradetip.String)
+			}
+			// baseUnitStringMap[k] = v
 		}
 
+		customUnitFuncs := parser.W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseUnitFuncMap, baseUnitMap, unitMap, wtsMap)
+
+		/*
 		customUnitStrings := parser.WtsToTxtUnitStringsWithBaseTxt(baseUnitStringMap, baseUnitMap, unitMap)
 
 		log.Println("Writing to CampaignUnitString...")

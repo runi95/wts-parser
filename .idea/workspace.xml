@@ -4,19 +4,12 @@
     <bookmark url="file://$PROJECT_DIR$/templates/UnitFunc.tmpl" description="{{ if .Builds.Valid }}Builds={{ .Builds.String }}{..." line="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5d11401-69e9-4834-8386-ce6a04eebdcf" name="Default Changelist" comment="Got the first simple w3u parser working">
-      <change afterPath="$PROJECT_DIR$/models/txt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitAbilities.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitFunc.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitFuncAndStrings.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/UnitStrings.tmpl" afterDir="false" />
+    <list default="true" id="d5d11401-69e9-4834-8386-ce6a04eebdcf" name="Default Changelist" comment="Fixed several">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/slk.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/slk.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/w3u.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/w3u.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/parser.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/parser.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/UnitUI.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/UnitUI.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/UnitWeapons.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/UnitWeapons.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/UnitFuncAndStrings.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/UnitFuncAndStrings.tmpl" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,38 +45,39 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="awsedrf" value="2" />
-          <entry key="go" value="31" />
+          <entry key="go" value="34" />
           <entry key="json" value="3" />
           <entry key="sedrf" value="2" />
-          <entry key="slk" value="95" />
-          <entry key="tmpl" value="40" />
-          <entry key="txt" value="47" />
+          <entry key="slk" value="106" />
+          <entry key="tmpl" value="47" />
+          <entry key="txt" value="73" />
+          <entry key="wesdr" value="1" />
           <entry key="wts" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Go" value="31" />
-          <entry key="Go template" value="39" />
+          <entry key="Go" value="34" />
+          <entry key="Go template" value="46" />
           <entry key="JSON" value="3" />
-          <entry key="PLAIN_TEXT" value="150" />
+          <entry key="PLAIN_TEXT" value="188" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="awsedrf" value="3" />
-          <entry key="go" value="46802" />
+          <entry key="go" value="48819" />
           <entry key="sedrf" value="24" />
-          <entry key="slk" value="34" />
-          <entry key="tmpl" value="1768" />
-          <entry key="txt" value="477" />
+          <entry key="slk" value="37" />
+          <entry key="tmpl" value="1813" />
+          <entry key="txt" value="592" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="46802" />
-          <entry key="Go template" value="1705" />
-          <entry key="PLAIN_TEXT" value="601" />
+          <entry key="Go" value="48819" />
+          <entry key="Go template" value="1750" />
+          <entry key="PLAIN_TEXT" value="719" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.go.postfix.template.usages.trigger">
@@ -96,20 +90,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="114" column="34" selection-start-line="114" selection-start-column="34" selection-end-line="114" selection-end-column="34" />
+            <state relative-caret-position="499">
+              <caret line="554" column="13" selection-start-line="554" selection-start-column="13" selection-end-line="554" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/HumanUnitStrings.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="205">
+              <caret line="167" column="5" selection-start-line="167" selection-start-column="1" selection-end-line="167" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/UnitUI.tmpl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/models/w3u.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="976" column="66" selection-start-line="976" selection-start-column="66" selection-end-line="976" selection-end-column="66" />
+            <state relative-caret-position="49">
+              <caret line="711" column="50" selection-start-line="711" selection-start-column="50" selection-end-line="711" selection-end-column="50" />
               <folding>
                 <element signature="e#16#59#0" expanded="true" />
               </folding>
@@ -118,10 +130,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/slk.go">
+        <entry file="file://$PROJECT_DIR$/resources/UnitBalance.slk">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="237" column="12" selection-start-line="237" selection-start-column="4" selection-end-line="237" selection-end-column="12" />
+            <state relative-caret-position="205">
+              <caret line="9826" column="9" selection-start-line="9826" selection-start-column="2" selection-end-line="9826" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/out/CampaignUnitFunc.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="205">
+              <caret line="4399" column="5" selection-start-line="4399" selection-start-column="1" selection-end-line="4399" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -129,11 +150,38 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/parser/parser.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="136" column="18" selection-start-line="136" selection-start-column="18" selection-end-line="136" selection-end-column="18" />
+            <state relative-caret-position="496">
+              <caret line="346" column="61" selection-start-line="346" selection-start-column="49" selection-end-line="346" selection-end-column="61" />
               <folding>
                 <element signature="e#16#183#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/txt.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="109">
+              <caret line="67" selection-start-line="67" selection-end-line="78" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/UnitFuncAndStrings.tmpl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="11" column="23" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/HumanUnitFunc.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="205">
+              <caret line="278" column="5" selection-start-line="278" selection-start-column="1" selection-end-line="278" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -149,36 +197,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Reading UnitUI</find>
-      <find>log.Pr</find>
-      <find>pretty.</find>
-      <find>o01C</find>
-      <find>X7;K&quot;grunt</find>
-      <find>model</find>
-      <find>Umdl</find>
-      <find>Model</find>
-      <find>File</find>
-      <find>&quot;&quot;</find>
-      <find>Placement</find>
-      <find>preventPlace</find>
-      <find>new(nul</find>
-      <find>h03S</find>
-      <find>X54;</find>
-      <find>pretty</find>
-      <find>Item</find>
-      <find>Makei</find>
-      <find>MakeItem</find>
-      <find>items</find>
-      <find>Make</find>
-      <find>Race Chooser</find>
-      <find>Items</find>
-      <find>Usei</find>
-      <find>Umki</find>
-      <find>Race Choo</find>
-      <find>h00H</find>
-      <find>MakeI</find>
-      <find>Researches</find>
-      <find>Makeitems</find>
+      <find>Trig</find>
+      <find>TRIG</find>
+      <find>X5;</find>
+      <find>hgtw</find>
+      <find>Button</find>
+      <find>Name=Tower</find>
+      <find>h043</find>
+      <find>Sound</find>
+      <find>Buttonpos</find>
+      <find>Arcane</find>
+      <find>hvlt</find>
+      <find>h044</find>
+      <find>BTNPeasant</find>
+      <find>BaseSLK</find>
+      <find>Unam</find>
+      <find>Base</find>
+      <find>hpea</find>
+      <find>Reading HumanUnitStri</find>
+      <find>hC07</find>
+      <find>Require</find>
+      <find>Upaw</find>
+      <find>Upap</find>
+      <find>unbuildable</find>
+      <find>X54;K&quot;[^_]</find>
+      <find>X54;K&quot;(?!unwalkable).(?!_)&quot;</find>
+      <find>X54;K&quot;(?!unwalkable).&quot;</find>
+      <find>X52;K&quot;(?!unwalkable|_).&quot;</find>
+      <find>X55;K&quot;(?!unwalkable|_).&quot;</find>
+      <find>X5;K&quot;-&quot;</find>
+      <find>Upar</find>
     </findStrings>
     <replaceStrings>
       <replace>finalResult[</replace>
@@ -245,15 +293,18 @@
         <option value="$PROJECT_DIR$/models/asdfg.go" />
         <option value="$PROJECT_DIR$/templates/UnitStrings.tmpl" />
         <option value="$PROJECT_DIR$/templates/UnitFunc.tmpl" />
-        <option value="$PROJECT_DIR$/models/txt.go" />
         <option value="$PROJECT_DIR$/out/UnitWeapons.slk" />
         <option value="$PROJECT_DIR$/templates/UnitWeapons.tmpl" />
         <option value="$PROJECT_DIR$/templates/UnitAbilities.tmpl" />
-        <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/templates/UnitUI.tmpl" />
         <option value="$PROJECT_DIR$/out/UnitBalance.slk" />
-        <option value="$PROJECT_DIR$/parser/parser.go" />
+        <option value="$PROJECT_DIR$/models/txt.go" />
+        <option value="$PROJECT_DIR$/models/wesdr" />
         <option value="$PROJECT_DIR$/templates/UnitFuncAndStrings.tmpl" />
+        <option value="$PROJECT_DIR$/out/UnitUI.slk" />
+        <option value="$PROJECT_DIR$/out/CampaignUnitFunc.txt" />
+        <option value="$PROJECT_DIR$/parser/parser.go" />
+        <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/models/w3u.go" />
       </list>
     </option>
@@ -266,7 +317,7 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="260" />
-    <option name="y" value="53" />
+    <option name="y" value="47" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
@@ -354,7 +405,7 @@
     <property name="GO_FMT" value="false" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../wc3-slk-edit" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
@@ -414,20 +465,29 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1020" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2593583" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2593583" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32914287" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946523" visible="true" weight="0.32914287" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946523" visible="true" weight="0.32914287" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32914287" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
@@ -457,21 +517,15 @@
     <MESSAGE value="Added an output folder and put it in .gitignore" />
     <MESSAGE value="Fixed a pointer bug" />
     <MESSAGE value="Fixed some templating issues" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed some templating issues" />
+    <MESSAGE value="Got the first w3u file parsed correctly" />
+    <option name="LAST_COMMIT_MESSAGE" value="Got the first w3u file parsed correctly" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/UndeadAbilityFunc.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/AbilityBuffMetaData.slk">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/AbilityData.slk">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1125" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/out/UnitData.slk" />
     <entry file="file://$PROJECT_DIR$/../../../gopkg.in/volatiletech/null.v6/string.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="196">
@@ -584,27 +638,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/txt.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="53" column="1" selection-start-line="53" selection-start-column="1" selection-end-line="53" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/UnitBalance.slk">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="13531" column="9" selection-start-line="13531" selection-start-column="2" selection-end-line="13531" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/UnitData.slk">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="26" column="12" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/HumanUpgradeStrings.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -645,13 +678,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/UnitData.tmpl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="33" column="34" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/UnitFunc.tmpl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -680,13 +706,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/out/UnitAbilities.slk">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/UnitAbilities.tmpl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -694,38 +713,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/out/UnitUI.slk">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="70">
-          <caret line="25502" column="16" selection-start-line="25502" selection-start-column="12" selection-end-line="25502" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/UnitUI.slk">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="12" lean-forward="true" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/UnitUI.tmpl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="55" column="24" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/out/UnitBalance.slk">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="8237" column="10" lean-forward="true" selection-start-line="8237" selection-start-column="10" selection-end-line="8237" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/out/CampaignUnitFunc.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-80">
-          <caret line="8986" column="5" selection-start-line="8986" selection-start-column="5" selection-end-line="8986" selection-end-column="5" />
+        <state relative-caret-position="505">
+          <caret line="30737" column="9" selection-start-line="30737" selection-start-column="9" selection-end-line="30737" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -736,54 +727,130 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parser/parser.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="136" column="18" selection-start-line="136" selection-start-column="18" selection-end-line="136" selection-end-column="18" />
-          <folding>
-            <element signature="e#16#183#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/models/wesdr">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/HumanUnitStrings.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="152" column="6" selection-start-line="152" selection-end-line="152" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/HumanUnitFunc.txt">
+    <entry file="file://$PROJECT_DIR$/out/UnitAbilities.slk">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="205">
-          <caret line="358" column="9" selection-start-line="358" selection-end-line="358" selection-end-column="9" />
+          <caret line="933" column="16" selection-start-line="933" selection-start-column="12" selection-end-line="933" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/UnitFuncAndStrings.tmpl">
+    <entry file="file://$PROJECT_DIR$/out/UnitData.slk">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="40" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="40" />
+        <state relative-caret-position="205">
+          <caret line="10871" column="7" lean-forward="true" selection-start-line="10871" selection-start-column="7" selection-end-line="10871" selection-end-column="7" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/w3u.go">
+    <entry file="file://$PROJECT_DIR$/resources/UnitData.slk">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="976" column="66" selection-start-line="976" selection-start-column="66" selection-end-line="976" selection-end-column="66" />
-          <folding>
-            <element signature="e#16#59#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="490">
+          <caret line="1447" selection-start-line="1447" selection-end-line="1447" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/HumanAbilityStrings.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/HumanAbilityFunc.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/UnitData.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="52" column="18" selection-start-line="52" selection-start-column="11" selection-end-line="52" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/UnitUI.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitUI.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="2080" column="8" lean-forward="true" selection-start-line="2080" selection-start-column="8" selection-end-line="2080" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/out/UnitUI.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="25145" column="16" selection-start-line="25145" selection-start-column="12" selection-end-line="25145" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/UnitFuncAndStrings.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="23" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/HumanUnitStrings.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="167" column="5" selection-start-line="167" selection-start-column="1" selection-end-line="167" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/HumanUnitFunc.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="278" column="5" selection-start-line="278" selection-start-column="1" selection-end-line="278" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parser/parser.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="346" column="61" selection-start-line="346" selection-start-column="49" selection-end-line="346" selection-end-column="61" />
+          <folding>
+            <element signature="e#16#183#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/txt.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="67" selection-start-line="67" selection-end-line="78" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/out/CampaignUnitFunc.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="4399" column="5" selection-start-line="4399" selection-start-column="1" selection-end-line="4399" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="114" column="34" selection-start-line="114" selection-start-column="34" selection-end-line="114" selection-end-column="34" />
+        <state relative-caret-position="499">
+          <caret line="554" column="13" selection-start-line="554" selection-start-column="13" selection-end-line="554" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/UnitBalance.slk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="9826" column="9" selection-start-line="9826" selection-start-column="2" selection-end-line="9826" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/w3u.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="49">
+          <caret line="711" column="50" selection-start-line="711" selection-start-column="50" selection-end-line="711" selection-end-column="50" />
+          <folding>
+            <element signature="e#16#59#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
