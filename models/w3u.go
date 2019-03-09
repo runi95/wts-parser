@@ -2,7 +2,6 @@ package models
 
 import (
 	"gopkg.in/volatiletech/null.v6"
-	"log"
 	"strings"
 )
 
@@ -538,14 +537,7 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 		unitUI.UnitSound.SetValid("\"" + w3uData.Usnd.String + "\"")
 	}
 	if w3uData.Unam.Valid {
-		if w3uData.CustomUnitId == "hC07" {
-			log.Println("VALID(" + w3uData.Unam.String + ")")
-		}
 		unitUI.Name.SetValid("\"" + w3uData.Unam.String + "\"")
-	} else {
-		if w3uData.CustomUnitId == "hC07" {
-			log.Println("INVALID")
-		}
 	}
 
 	unitBalance.UnitBalanceID.SetValid("\"" + w3uData.CustomUnitId + "\"")
@@ -555,7 +547,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Ulev.Valid {
 		unitBalance.Level.SetValid(w3uData.Ulev.String)
 	}
-	// unitBalance.Type.SetValid("\"_\"") // TODO: Set this value correctly!
+	if w3uData.Utyp.Valid {
+		unitBalance.Type.SetValid(w3uData.Utyp.String)
+	}
 	if w3uData.Ugol.Valid {
 		unitBalance.Goldcost.SetValid(w3uData.Ugol.String)
 	}

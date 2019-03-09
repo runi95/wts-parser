@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"github.com/kr/pretty"
 	. "github.com/runi95/wts-parser/models"
 	"gopkg.in/volatiletech/null.v6"
 	"log"
@@ -298,16 +297,8 @@ func W3uToSlkUnitsWithBaseSlk(baseSLKUnits map[string]*SLKUnit, unitMap map[stri
 		slkUnit.UnitBalance = &unitBalance
 		slkUnit.UnitAbilities = &unitAbilities
 
-		if value.CustomUnitId == "hC07" {
-			log.Println(pretty.Sprint(baseSLKUnit))
-		}
-
 		value.TransformToSLKUnit(slkUnit)
 		slkUnits[index] = slkUnit
-
-		if value.CustomUnitId == "hC07" {
-			log.Println(pretty.Sprint(slkUnit))
-		}
 
 		index++
 	}
