@@ -343,17 +343,9 @@ func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFun
 		var baseUnitFunc UnitFunc
 		baseUnitFunc = baseTXTUnitFunc
 
-		if value.CustomUnitId == "hC07" {
-			log.Println("BASE: " + pretty.Sprint(baseUnitFunc))
-		}
-
 		*unitFunc = baseUnitFunc
 
 		value.TransformToUnitFunc(unitFunc)
-
-		if value.CustomUnitId == "hC07" {
-			log.Println("unitFunc: " + pretty.Sprint(unitFunc))
-		}
 
 		nameSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Name.String)
 		if len(nameSubmatch) > 0 {
@@ -365,7 +357,7 @@ func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFun
 		}
 		uberTipSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Ubertip.String)
 		if len(uberTipSubmatch) > 0 {
-			unitFunc.Ubertip.SetValid(wtsMap[uberTipSubmatch[1]])
+			unitFunc.Ubertip.SetValid("\"" + wtsMap[uberTipSubmatch[1]] + "\"")
 		}
 		descriptionSubmatch := TrigstrRegex.FindStringSubmatch(unitFunc.Description.String)
 		if len(descriptionSubmatch) > 0 {
