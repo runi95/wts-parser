@@ -503,6 +503,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Uhhd.Valid {
 		unitUI.HideHeroDeathMsg.SetValid(w3uData.Uhhd.String)
 	}
+	if w3uData.Uhom.Valid {
+		unitUI.HideOnMinimap.SetValid(w3uData.Uhom.String)
+	}
 	// unitUI.Blend.SetValid("0,15")            // TODO: Set this value correctly!
 	if w3uData.Ussc.Valid {
 		unitUI.Scale.SetValid(w3uData.Ussc.String)
@@ -719,6 +722,7 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	}
 	// TODO: Figure this out, the base SLK files are inverted on this!
 	if w3uData.Upar.Valid {
+		/*
 		split := strings.Split(w3uData.Upar.String, ",")
 		for i := range split {
 			switch split[i] {
@@ -733,7 +737,7 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 			}
 		}
 
-		newStr := ""
+		newStr := "\""
 		for i := range split {
 			if i == 0 {
 				newStr += split[i]
@@ -741,10 +745,13 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 				newStr += "," + split[i]
 			}
 		}
-		unitBalance.RequirePlace.SetValid(newStr)
+		newStr += "\""
+		*/
+		unitBalance.RequirePlace.SetValid(w3uData.Upar.String)
 	}
 	if w3uData.Upap.Valid {
-		split := strings.Split(w3uData.Upap.String, ",")
+		/*
+		split := strings.Split(w3uData.Upar.String, ",")
 		for i := range split {
 			switch split[i] {
 			case "unbuildable":
@@ -758,7 +765,7 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 			}
 		}
 
-		newStr := ""
+		newStr := "\""
 		for i := range split {
 			if i == 0 {
 				newStr += split[i]
@@ -766,7 +773,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 				newStr += "," + split[i]
 			}
 		}
-		unitBalance.PreventPlace.SetValid(newStr)
+		newStr += "\""
+		*/
+		unitBalance.PreventPlace.SetValid(w3uData.Upap.String)
 	}
 	// unitBalance.Repulse.SetValid("0") // TODO: Set this value correctly!
 	// unitBalance.RepulseParam.SetValid("0") // TODO: Set this value correctly!
@@ -852,7 +861,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	// unitWeapons.Mindmg1.SetValid("\"-\"") // TODO: Set this value correctly!
 	// unitWeapons.Avgdmg1.SetValid("\"-\"") // TODO: Set this value correctly!
 	// unitWeapons.Maxdmg1.SetValid("\"-\"") // TODO: Set this value correctly!
-	// unitWeapons.Dmgpt1.SetValid("\"-\"")  // TODO: Set this value correctly!
+	if w3uData.Udp1.Valid {
+		unitWeapons.Dmgpt1.SetValid(w3uData.Udp1.String)
+	}
 	if w3uData.Ubs1.Valid {
 		unitWeapons.BackSw1.SetValid(w3uData.Ubs1.String)
 	}
@@ -928,7 +939,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	// unitWeapons.Mindmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
 	// unitWeapons.Avgdmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
 	// unitWeapons.Maxdmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
-	// unitWeapons.Dmgpt2.SetValid("\"-\"")        // TODO: Set this value correctly!
+	if w3uData.Udp2.Valid {
+		unitWeapons.Dmgpt2.SetValid(w3uData.Udp2.String)
+	}
 	if w3uData.Ubs2.Valid {
 		unitWeapons.BackSw2.SetValid(w3uData.Ubs2.String)
 	}
