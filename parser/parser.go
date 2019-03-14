@@ -996,7 +996,6 @@ func TxtToUnitFunc(input []byte) map[string]*UnitFunc {
 			currentUnitFunc.UnitId = lineSubmatch[1]
 		} else {
 			lineSubmatch := TXTRegex.FindStringSubmatch(line)
-			log.Println("lineSubmatch(" + fmt.Sprint(lineSubmatch) + "), currentUnitFunc(" + fmt.Sprint(currentUnitFunc) + ")")
 			if lineSubmatch != nil {
 				nullString := new(null.String)
 				nullString.SetValid(lineSubmatch[2])
