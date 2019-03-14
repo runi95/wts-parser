@@ -25,7 +25,7 @@ var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
 var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K([0-9.]+|"[\w-.,()\\]+")`)
 var SLKHeadRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K"([\w-()]+)"`)
 var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
-var TXTHeadRegex = regexp.MustCompile(`^\[(\w+)]$`)
+var TXTHeadRegex = regexp.MustCompile(`^\[(\w+)]`)
 var TXTRegex = regexp.MustCompile(`([A-Z]\w+)=([^\r\n]*)`)
 var TrigstrRegex = regexp.MustCompile(`TRIGSTR_([0-9]+)`)
 var NewLineRegex = regexp.MustCompile(`\r?\n`)
@@ -996,6 +996,7 @@ func TxtToUnitFunc(input []byte) map[string]*UnitFunc {
 			currentUnitFunc.UnitId = lineSubmatch[1]
 		} else {
 			lineSubmatch := TXTRegex.FindStringSubmatch(line)
+			log.Println("lineSubmatch(" + fmt.Sprint(lineSubmatch) + "), currentUnitFunc(" + fmt.Sprint(currentUnitFunc) + ")")
 			if lineSubmatch != nil {
 				nullString := new(null.String)
 				nullString.SetValid(lineSubmatch[2])

@@ -13,7 +13,7 @@ import (
 var fileNameRegex = regexp.MustCompile("[^.]*")
 var fileExtensionRegex = regexp.MustCompile("\\.[^.]+$") // Find file extension
 
-func main() {
+func main2() {
 	log.Println("Reading CampaignUnitFunc.txt...")
 
 	campaignUnitFuncBytes, err := ioutil.ReadFile("out/CampaignUnitFunc.txt")
@@ -25,7 +25,7 @@ func main() {
 	parser.TxtToUnitFunc(campaignUnitFuncBytes)
 }
 
-func main2() {
+func main() {
 	if len(os.Args) != 2 {
 		log.Printf("Error: Expected 1 argument, but got %d\n", len(os.Args)-1)
 		os.Exit(10)
