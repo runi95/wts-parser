@@ -8,38 +8,24 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"text/template"
 )
 
 var fileNameRegex = regexp.MustCompile("[^.]*")
 var fileExtensionRegex = regexp.MustCompile("\\.[^.]+$") // Find file extension
 
-type UnitBalanceTemplate struct {
-	RowCount    int
-	UnitBalance []*models.UnitBalance
-}
-
-type UnitUITemplate struct {
-	RowCount int
-	UnitUI   []*models.UnitUI
-}
-
-type UnitAbilitiesTemplate struct {
-	RowCount      int
-	UnitAbilities []*models.UnitAbilities
-}
-
-type UnitDataTemplate struct {
-	RowCount int
-	UnitData []*models.UnitData
-}
-
-type UnitWeaponsTemplate struct {
-	RowCount    int
-	UnitWeapons []*models.UnitWeapons
-}
-
 func main() {
+	log.Println("Reading CampaignUnitFunc.txt...")
+
+	campaignUnitFuncBytes, err := ioutil.ReadFile("out/CampaignUnitFunc.txt")
+	if err != nil {
+		log.Println(err)
+		os.Exit(10)
+	}
+
+	parser.TxtToUnitFunc(campaignUnitFuncBytes)
+}
+
+func main2() {
 	if len(os.Args) != 2 {
 		log.Printf("Error: Expected 1 argument, but got %d\n", len(os.Args)-1)
 		os.Exit(10)
@@ -164,12 +150,6 @@ func main() {
 			parsedSLKUnitsUI[i] = parsedSLKUnit.UnitUI
 			parsedSLKUnitsWeapons[i] = parsedSLKUnit.UnitWeapons
 			parsedSLKUnitsBalance[i] = parsedSLKUnit.UnitBalance
-		}
-
-		funcMap := template.FuncMap{
-			"inc": func(i int) int {
-				return i + 2
-			},
 		}
 
 		log.Println("Reading .wts file...")
@@ -670,213 +650,7 @@ func main() {
 		}
 		*/
 
-		log.Println("Writing to CampaignUnitFunc...")
-
-		campaignUnitFuncFile, err := os.Create("out/CampaignUnitFunc.txt")
-		if err != nil {
-			log.Println(err)
-		}
-
-		campaignUnitFuncTemplate := template.New("UnitFunc")
-		campaignUnitFuncTemplate, err = campaignUnitFuncTemplate.ParseFiles("templates/UnitFuncAndStrings.tmpl")
-		if err != nil {
-			log.Println(err)
-		}
-
-		err = campaignUnitFuncTemplate.ExecuteTemplate(campaignUnitFuncFile, "UnitFunc", customUnitFuncs.CampaignUnitFuncs)
-		if err != nil {
-			log.Println(err)
-		}
-
-		if len(customUnitFuncs.HumanUnitFuncs) > 0 {
-			log.Println("Writing to HumanUnitFunc...")
-
-			humanUnitFuncFile, err := os.Create("out/HumanUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-			}
-
-			humanUnitFuncTemplate := template.New("UnitFunc")
-			humanUnitFuncTemplate, err = humanUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
-			if err != nil {
-				log.Println(err)
-			}
-
-			err = humanUnitFuncTemplate.ExecuteTemplate(humanUnitFuncFile, "UnitFunc", customUnitFuncs.HumanUnitFuncs)
-			if err != nil {
-				log.Println(err)
-			}
-		}
-
-		if len(customUnitFuncs.NightElfUnitFuncs) > 0 {
-			log.Println("Writing to NightElfUnitFunc...")
-
-			nightElfUnitFuncFile, err := os.Create("out/NightElfUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-			}
-
-			nightElfUnitFuncTemplate := template.New("UnitFunc")
-			nightElfUnitFuncTemplate, err = nightElfUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
-			if err != nil {
-				log.Println(err)
-			}
-
-			err = nightElfUnitFuncTemplate.ExecuteTemplate(nightElfUnitFuncFile, "UnitFunc", customUnitFuncs.NightElfUnitFuncs)
-			if err != nil {
-				log.Println(err)
-			}
-		}
-
-		if len(customUnitFuncs.OrcUnitFuncs) > 0 {
-			log.Println("Writing to OrcUnitFunc...")
-
-			orcUnitFuncFile, err := os.Create("out/OrcUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-			}
-
-			orcUnitFuncTemplate := template.New("UnitFunc")
-			orcUnitFuncTemplate, err = orcUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
-			if err != nil {
-				log.Println(err)
-			}
-
-			err = orcUnitFuncTemplate.ExecuteTemplate(orcUnitFuncFile, "UnitFunc", customUnitFuncs.OrcUnitFuncs)
-			if err != nil {
-				log.Println(err)
-			}
-		}
-
-		if len(customUnitFuncs.UndeadUnitFuncs) > 0 {
-			log.Println("Writing to UndeadUnitFunc...")
-
-			undeadUnitFuncFile, err := os.Create("out/UndeadUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-			}
-
-			undeadUnitFuncTemplate := template.New("UnitFunc")
-			undeadUnitFuncTemplate, err = undeadUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
-			if err != nil {
-				log.Println(err)
-			}
-
-			err = undeadUnitFuncTemplate.ExecuteTemplate(undeadUnitFuncFile, "UnitFunc", customUnitFuncs.UndeadUnitFuncs)
-			if err != nil {
-				log.Println(err)
-			}
-		}
-
-		if len(customUnitFuncs.NeutralUnitFuncs) > 0 {
-			log.Println("Writing to NeutralUnitFunc...")
-
-			neutralUnitFuncFile, err := os.Create("out/NeutralUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-			}
-
-			neutralUnitFuncTemplate := template.New("UnitFunc")
-			neutralUnitFuncTemplate, err = neutralUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
-			if err != nil {
-				log.Println(err)
-			}
-
-			err = neutralUnitFuncTemplate.ExecuteTemplate(neutralUnitFuncFile, "UnitFunc", customUnitFuncs.NeutralUnitFuncs)
-			if err != nil {
-				log.Println(err)
-			}
-		}
-
-		log.Println("Writing to UnitAbilities.slk...")
-
-		unitAbilitiesFile, err := os.Create("out/UnitAbilities.slk")
-		if err != nil {
-			log.Println(err)
-		}
-
-		unitAbilitiesTemplate := template.New("UnitAbilities").Funcs(funcMap)
-		unitAbilitiesTemplate, err = unitAbilitiesTemplate.ParseFiles("templates/UnitAbilities.tmpl")
-		if err != nil {
-			log.Println(err)
-		}
-
-		err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", UnitAbilitiesTemplate{RowCount: len(parsedSLKUnitsAbilities) + 1, UnitAbilities: parsedSLKUnitsAbilities})
-		if err != nil {
-			log.Println(err)
-		}
-
-		log.Println("Writing to UnitData.slk...")
-
-		unitDataFile, err := os.Create("out/UnitData.slk")
-		if err != nil {
-			log.Println(err)
-		}
-
-		unitDataTemplate := template.New("UnitData").Funcs(funcMap)
-		unitDataTemplate, err = unitDataTemplate.ParseFiles("templates/UnitData.tmpl")
-		if err != nil {
-			log.Println(err)
-		}
-
-		err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", UnitDataTemplate{RowCount: len(parsedSLKUnitsData) + 1, UnitData: parsedSLKUnitsData})
-		if err != nil {
-			log.Println(err)
-		}
-
-		log.Println("Writing to UnitBalance.slk...")
-
-		unitBalanceFile, err := os.Create("out/UnitBalance.slk")
-		if err != nil {
-			log.Println(err)
-		}
-
-		unitBalanceTemplate := template.New("UnitBalance").Funcs(funcMap)
-		unitBalanceTemplate, err = unitBalanceTemplate.ParseFiles("templates/UnitBalance.tmpl")
-		if err != nil {
-			log.Println(err)
-		}
-
-		err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", UnitBalanceTemplate{RowCount: len(parsedSLKUnitsBalance) + 1, UnitBalance: parsedSLKUnitsBalance})
-		if err != nil {
-			log.Println(err)
-		}
-
-		log.Println("Writing to UnitUI.slk...")
-
-		unitUIFile, err := os.Create("out/UnitUI.slk")
-		if err != nil {
-			log.Println(err)
-		}
-
-		unitUITemplate := template.New("UnitUI").Funcs(funcMap)
-		unitUITemplate, err = unitUITemplate.ParseFiles("templates/UnitUI.tmpl")
-		if err != nil {
-			log.Println(err)
-		}
-
-		err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", UnitUITemplate{RowCount: len(parsedSLKUnitsUI) + 1, UnitUI: parsedSLKUnitsUI})
-		if err != nil {
-			log.Println(err)
-		}
-
-		log.Println("Writing to UnitWeapons.slk...")
-
-		unitWeaponsFile, err := os.Create("out/UnitWeapons.slk")
-		if err != nil {
-			log.Println(err)
-		}
-
-		unitWeaponsTemplate := template.New("UnitWeapons").Funcs(funcMap)
-		unitWeaponsTemplate, err = unitWeaponsTemplate.ParseFiles("templates/UnitWeapons.tmpl")
-		if err != nil {
-			log.Println(err)
-		}
-
-		err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", UnitWeaponsTemplate{RowCount: len(parsedSLKUnitsWeapons) + 1, UnitWeapons: parsedSLKUnitsWeapons})
-		if err != nil {
-			log.Println(err)
-		}
+		parser.WriteToFiles(customUnitFuncs, parsedSLKUnitsAbilities, parsedSLKUnitsData, parsedSLKUnitsUI, parsedSLKUnitsWeapons, parsedSLKUnitsBalance)
 	} else {
 		log.Fatal(fmt.Errorf("expected .wts or .json, but got " + fileExtension))
 	}
