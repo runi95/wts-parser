@@ -31,6 +31,10 @@ var TrigstrRegex = regexp.MustCompile(`TRIGSTR_([0-9]+)`)
 var NewLineRegex = regexp.MustCompile(`\r?\n`)
 
 func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbilities, parsedSLKUnitsData []*UnitData, parsedSLKUnitsUI []*UnitUI, parsedSLKUnitsWeapons []*UnitWeapons, parsedSLKUnitsBalance []*UnitBalance) {
+	WriteToFilesAndSaveToFolder(customUnitFuncs, parsedSLKUnitsAbilities, parsedSLKUnitsData, parsedSLKUnitsUI, parsedSLKUnitsWeapons, parsedSLKUnitsBalance, "out")
+}
+
+func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbilities, parsedSLKUnitsData []*UnitData, parsedSLKUnitsUI []*UnitUI, parsedSLKUnitsWeapons []*UnitWeapons, parsedSLKUnitsBalance []*UnitBalance, outputFolder string) {
 	funcMap := template.FuncMap{
 		"inc": func(i int) int {
 			return i + 2
@@ -39,7 +43,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 
 	log.Println("Writing to CampaignUnitFunc...")
 
-	campaignUnitFuncFile, err := os.Create("out/CampaignUnitFunc.txt")
+	campaignUnitFuncFile, err := os.Create(outputFolder + "/CampaignUnitFunc.txt")
 	if err != nil {
 		log.Println(err)
 	}
@@ -58,7 +62,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 	if len(customUnitFuncs.HumanUnitFuncs) > 0 {
 		log.Println("Writing to HumanUnitFunc...")
 
-		humanUnitFuncFile, err := os.Create("out/HumanUnitFunc.txt")
+		humanUnitFuncFile, err := os.Create(outputFolder + "/HumanUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
 		}
@@ -78,7 +82,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 	if len(customUnitFuncs.NightElfUnitFuncs) > 0 {
 		log.Println("Writing to NightElfUnitFunc...")
 
-		nightElfUnitFuncFile, err := os.Create("out/NightElfUnitFunc.txt")
+		nightElfUnitFuncFile, err := os.Create(outputFolder + "/NightElfUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
 		}
@@ -98,7 +102,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 	if len(customUnitFuncs.OrcUnitFuncs) > 0 {
 		log.Println("Writing to OrcUnitFunc...")
 
-		orcUnitFuncFile, err := os.Create("out/OrcUnitFunc.txt")
+		orcUnitFuncFile, err := os.Create(outputFolder + "/OrcUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
 		}
@@ -118,7 +122,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 	if len(customUnitFuncs.UndeadUnitFuncs) > 0 {
 		log.Println("Writing to UndeadUnitFunc...")
 
-		undeadUnitFuncFile, err := os.Create("out/UndeadUnitFunc.txt")
+		undeadUnitFuncFile, err := os.Create(outputFolder + "/UndeadUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
 		}
@@ -138,7 +142,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 	if len(customUnitFuncs.NeutralUnitFuncs) > 0 {
 		log.Println("Writing to NeutralUnitFunc...")
 
-		neutralUnitFuncFile, err := os.Create("out/NeutralUnitFunc.txt")
+		neutralUnitFuncFile, err := os.Create(outputFolder + "/NeutralUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
 		}
@@ -157,7 +161,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 
 	log.Println("Writing to UnitAbilities.slk...")
 
-	unitAbilitiesFile, err := os.Create("out/UnitAbilities.slk")
+	unitAbilitiesFile, err := os.Create(outputFolder + "/UnitAbilities.slk")
 	if err != nil {
 		log.Println(err)
 	}
@@ -175,7 +179,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 
 	log.Println("Writing to UnitData.slk...")
 
-	unitDataFile, err := os.Create("out/UnitData.slk")
+	unitDataFile, err := os.Create(outputFolder + "/UnitData.slk")
 	if err != nil {
 		log.Println(err)
 	}
@@ -193,7 +197,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 
 	log.Println("Writing to UnitBalance.slk...")
 
-	unitBalanceFile, err := os.Create("out/UnitBalance.slk")
+	unitBalanceFile, err := os.Create(outputFolder + "/UnitBalance.slk")
 	if err != nil {
 		log.Println(err)
 	}
@@ -211,7 +215,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 
 	log.Println("Writing to UnitUI.slk...")
 
-	unitUIFile, err := os.Create("out/UnitUI.slk")
+	unitUIFile, err := os.Create(outputFolder + "/UnitUI.slk")
 	if err != nil {
 		log.Println(err)
 	}
@@ -229,7 +233,7 @@ func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbi
 
 	log.Println("Writing to UnitWeapons.slk...")
 
-	unitWeaponsFile, err := os.Create("out/UnitWeapons.slk")
+	unitWeaponsFile, err := os.Create(outputFolder + "/UnitWeapons.slk")
 	if err != nil {
 		log.Println(err)
 	}
