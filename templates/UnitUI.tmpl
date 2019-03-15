@@ -1,4 +1,5 @@
-{{ define "UnitUI" }}ID;PWXL;N;E
+{{- define "UnitUI" }}
+ID;PWXL;N;E
 B;X51;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitUIID"
 C;X2;K"sortUI"
@@ -50,7 +51,8 @@ C;X47;K"shadowY"
 C;X48;K"shadowOnWater"
 C;X49;K"selCircOnWater"
 C;X50;K"occH"
-C;X51;K"InBeta"{{ range $index, $element := .UnitUI }}
+C;X51;K"InBeta"
+{{- range $index, $element := .UnitUI }}
 C;X1;Y{{ inc $index }};K{{ .UnitUIID.String }}
 C;X2;K{{ .SortUI.String }}
 C;X3;K{{ .File.String }}
@@ -101,6 +103,7 @@ C;X47;K{{ .ShadowY.String }}
 C;X48;K{{ .ShadowOnWater.String }}
 C;X49;K{{ .SelCircOnWater.String }}
 C;X50;K{{ .OccH.String }}
-C;X51;K{{ .InBeta.String }}{{end}}
+C;X51;K{{ .InBeta.String }}
+{{- end }}
 E
-{{end}}
+{{ end }}

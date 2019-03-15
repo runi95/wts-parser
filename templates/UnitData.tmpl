@@ -1,4 +1,5 @@
-{{ define "UnitData" }}ID;PWXL;N;E
+{{- define "UnitData" }}
+ID;PWXL;N;E
 B;X32;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitID"
 C;X2;K"sort"
@@ -30,7 +31,8 @@ C;X27;K"requireWaterRadius"
 C;X28;K"isBuildOn"
 C;X29;K"canBuildOn"
 C;X30;K"InBeta"
-C;X31;K"version"{{ range $index, $element := .UnitData }}
+C;X31;K"version"
+{{- range $index, $element := .UnitData }}
 C;X1;Y{{ inc $index }};K{{ .UnitID.String }}
 C;X2;K{{ .Sort.String }}
 C;X3;K{{ .Comment.String }}
@@ -61,6 +63,7 @@ C;X27;K{{ .RequireWaterRadius.String }}
 C;X28;K{{ .IsBuildOn.String }}
 C;X29;K{{ .CanBuildOn.String }}
 C;X30;K{{ .InBeta.String }}
-C;X31;K{{ .Version.String }}{{end}}
+C;X31;K{{ .Version.String }}
+{{- end }}
 E
-{{end}}
+{{ end }}

@@ -1,4 +1,5 @@
-{{ define "UnitBalance" }}ID;PWXL;N;E
+{{- define "UnitBalance" }}
+ID;PWXL;N;E
 B;X61;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitBalanceID"
 C;X2;K"sortBalance"
@@ -59,7 +60,8 @@ C;X57;K"repulseParam"
 C;X58;K"repulseGroup"
 C;X59;K"repulsePrio"
 C;X60;K"collision"
-C;X61;K"InBeta"{{ range $index, $element := .UnitBalance }}
+C;X61;K"InBeta"
+{{- range $index, $element := .UnitBalance }}
 C;X1;Y{{ inc $index }};K{{ .UnitBalanceID.String }}
 C;X2;K{{ .SortBalance.String }}
 C;X3;K{{ .Sort2.String }}
@@ -120,6 +122,7 @@ C;X57;K{{ .RepulseParam.String }}
 C;X58;K{{ .RepulseGroup.String }}
 C;X59;K{{ .RepulsePrio.String }}
 C;X60;K{{ .Collision.String }}
-C;X61;K{{ .InBeta.String }}{{ end }}
+C;X61;K{{ .InBeta.String }}
+{{- end }}
 E
 {{ end }}
