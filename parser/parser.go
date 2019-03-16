@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	. "github.com/runi95/wts-parser/models"
+	"github.com/runi95/wts-parser/templates"
 	"gopkg.in/volatiletech/null.v6"
 	"log"
 	"math"
@@ -46,17 +47,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 	campaignUnitFuncFile, err := os.Create(outputFolder + "/CampaignUnitFunc.txt")
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	campaignUnitFuncTemplate := template.New("UnitFunc")
-	campaignUnitFuncTemplate, err = campaignUnitFuncTemplate.ParseFiles("templates/UnitFuncAndStrings.tmpl")
+	campaignUnitFuncTemplate, err = campaignUnitFuncTemplate.Parse(templates.GetUnitFuncAndStringsTemplate())
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	err = campaignUnitFuncTemplate.ExecuteTemplate(campaignUnitFuncFile, "UnitFunc", customUnitFuncs.CampaignUnitFuncs)
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	if len(customUnitFuncs.HumanUnitFuncs) > 0 {
@@ -65,17 +69,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		humanUnitFuncFile, err := os.Create(outputFolder + "/HumanUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		humanUnitFuncTemplate := template.New("UnitFunc")
-		humanUnitFuncTemplate, err = humanUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
+		humanUnitFuncTemplate, err = humanUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		err = humanUnitFuncTemplate.ExecuteTemplate(humanUnitFuncFile, "UnitFunc", customUnitFuncs.HumanUnitFuncs)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 	}
 
@@ -85,17 +92,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		nightElfUnitFuncFile, err := os.Create(outputFolder + "/NightElfUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		nightElfUnitFuncTemplate := template.New("UnitFunc")
-		nightElfUnitFuncTemplate, err = nightElfUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
+		nightElfUnitFuncTemplate, err = nightElfUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		err = nightElfUnitFuncTemplate.ExecuteTemplate(nightElfUnitFuncFile, "UnitFunc", customUnitFuncs.NightElfUnitFuncs)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 	}
 
@@ -105,17 +115,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		orcUnitFuncFile, err := os.Create(outputFolder + "/OrcUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		orcUnitFuncTemplate := template.New("UnitFunc")
-		orcUnitFuncTemplate, err = orcUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
+		orcUnitFuncTemplate, err = orcUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		err = orcUnitFuncTemplate.ExecuteTemplate(orcUnitFuncFile, "UnitFunc", customUnitFuncs.OrcUnitFuncs)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 	}
 
@@ -125,17 +138,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		undeadUnitFuncFile, err := os.Create(outputFolder + "/UndeadUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		undeadUnitFuncTemplate := template.New("UnitFunc")
-		undeadUnitFuncTemplate, err = undeadUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
+		undeadUnitFuncTemplate, err = undeadUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		err = undeadUnitFuncTemplate.ExecuteTemplate(undeadUnitFuncFile, "UnitFunc", customUnitFuncs.UndeadUnitFuncs)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 	}
 
@@ -145,17 +161,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		neutralUnitFuncFile, err := os.Create(outputFolder + "/NeutralUnitFunc.txt")
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		neutralUnitFuncTemplate := template.New("UnitFunc")
-		neutralUnitFuncTemplate, err = neutralUnitFuncTemplate.ParseFiles("templates/UnitFunc.tmpl")
+		neutralUnitFuncTemplate, err = neutralUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
 		if err != nil {
 			log.Println(err)
+			return
 		}
 
 		err = neutralUnitFuncTemplate.ExecuteTemplate(neutralUnitFuncFile, "UnitFunc", customUnitFuncs.NeutralUnitFuncs)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 	}
 
@@ -164,17 +183,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 	unitAbilitiesFile, err := os.Create(outputFolder + "/UnitAbilities.slk")
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	unitAbilitiesTemplate := template.New("UnitAbilities").Funcs(funcMap)
-	unitAbilitiesTemplate, err = unitAbilitiesTemplate.ParseFiles("templates/UnitAbilities.tmpl")
+	unitAbilitiesTemplate, err = unitAbilitiesTemplate.Parse(templates.GetUnitAbilitiesTemplate())
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", UnitAbilitiesTemplate{RowCount: len(parsedSLKUnitsAbilities) + 1, UnitAbilities: parsedSLKUnitsAbilities})
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	log.Println("Writing to UnitData.slk...")
@@ -182,17 +204,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 	unitDataFile, err := os.Create(outputFolder + "/UnitData.slk")
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	unitDataTemplate := template.New("UnitData").Funcs(funcMap)
-	unitDataTemplate, err = unitDataTemplate.ParseFiles("templates/UnitData.tmpl")
+	unitDataTemplate, err = unitDataTemplate.Parse(templates.GetUnitDataTemplate())
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", UnitDataTemplate{RowCount: len(parsedSLKUnitsData) + 1, UnitData: parsedSLKUnitsData})
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	log.Println("Writing to UnitBalance.slk...")
@@ -200,17 +225,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 	unitBalanceFile, err := os.Create(outputFolder + "/UnitBalance.slk")
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	unitBalanceTemplate := template.New("UnitBalance").Funcs(funcMap)
-	unitBalanceTemplate, err = unitBalanceTemplate.ParseFiles("templates/UnitBalance.tmpl")
+	unitBalanceTemplate, err = unitBalanceTemplate.Parse(templates.GetUnitBalanceTemplate())
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", UnitBalanceTemplate{RowCount: len(parsedSLKUnitsBalance) + 1, UnitBalance: parsedSLKUnitsBalance})
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	log.Println("Writing to UnitUI.slk...")
@@ -218,17 +246,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 	unitUIFile, err := os.Create(outputFolder + "/UnitUI.slk")
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	unitUITemplate := template.New("UnitUI").Funcs(funcMap)
-	unitUITemplate, err = unitUITemplate.ParseFiles("templates/UnitUI.tmpl")
+	unitUITemplate, err = unitUITemplate.Parse(templates.GetUnitUITemplate())
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", UnitUITemplate{RowCount: len(parsedSLKUnitsUI) + 1, UnitUI: parsedSLKUnitsUI})
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	log.Println("Writing to UnitWeapons.slk...")
@@ -236,17 +267,20 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 	unitWeaponsFile, err := os.Create(outputFolder + "/UnitWeapons.slk")
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	unitWeaponsTemplate := template.New("UnitWeapons").Funcs(funcMap)
-	unitWeaponsTemplate, err = unitWeaponsTemplate.ParseFiles("templates/UnitWeapons.tmpl")
+	unitWeaponsTemplate, err = unitWeaponsTemplate.Parse(templates.GetUnitWeaponsTemplate())
 	if err != nil {
 		log.Println(err)
+		return
 	}
 
 	err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", UnitWeaponsTemplate{RowCount: len(parsedSLKUnitsWeapons) + 1, UnitWeapons: parsedSLKUnitsWeapons})
 	if err != nil {
 		log.Println(err)
+		return
 	}
 }
 

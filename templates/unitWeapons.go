@@ -1,5 +1,7 @@
-{{- define "UnitWeapons" }}
-ID;PWXL;N;E
+package templates
+
+func GetUnitWeaponsTemplate() string {
+	return `{{- define "UnitWeapons" }}ID;PWXL;N;E
 B;X79;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitWeapID"
 C;X2;K"sortWeap"
@@ -158,4 +160,5 @@ C;X76;K{{ .SpillRadius2.String }}
 C;X77;K{{ .InBeta.String }}
 {{- end }}
 E
-{{ end }}
+{{ end }}`
+}

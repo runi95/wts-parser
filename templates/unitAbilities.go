@@ -1,5 +1,7 @@
-{{- define "UnitAbilities" }}
-ID;PWXL;N;E
+package templates
+
+func GetUnitAbilitiesTemplate() string {
+	return `{{- define "UnitAbilities" }}ID;PWXL;N;E
 B;X7;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitAbilID"
 C;X2;K"sortAbil"
@@ -18,4 +20,5 @@ C;X6;K{{ .HeroAbilList.String }}
 C;X7;K{{ .InBeta.String }}
 {{- end }}
 E
-{{ end }}
+{{ end }}`
+}

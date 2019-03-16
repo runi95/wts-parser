@@ -1,5 +1,7 @@
-{{- define "UnitBalance" }}
-ID;PWXL;N;E
+package templates
+
+func GetUnitBalanceTemplate() string {
+	return `{{- define "UnitBalance" }}ID;PWXL;N;E
 B;X61;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitBalanceID"
 C;X2;K"sortBalance"
@@ -125,4 +127,5 @@ C;X60;K{{ .Collision.String }}
 C;X61;K{{ .InBeta.String }}
 {{- end }}
 E
-{{ end }}
+{{ end }}`
+}

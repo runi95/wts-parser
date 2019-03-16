@@ -1,5 +1,7 @@
-{{- define "UnitData" }}
-ID;PWXL;N;E
+package templates
+
+func GetUnitDataTemplate() string {
+	return `{{- define "UnitData" }}ID;PWXL;N;E
 B;X32;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitID"
 C;X2;K"sort"
@@ -66,4 +68,5 @@ C;X30;K{{ .InBeta.String }}
 C;X31;K{{ .Version.String }}
 {{- end }}
 E
-{{ end }}
+{{ end }}`
+}

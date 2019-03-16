@@ -1,5 +1,7 @@
-{{- define "UnitUI" }}
-ID;PWXL;N;E
+package templates
+
+func GetUnitUITemplate() string {
+	return `{{- define "UnitUI" }}ID;PWXL;N;E
 B;X51;Y{{ .RowCount }};D0
 C;X1;Y1;K"unitUIID"
 C;X2;K"sortUI"
@@ -106,4 +108,5 @@ C;X50;K{{ .OccH.String }}
 C;X51;K{{ .InBeta.String }}
 {{- end }}
 E
-{{ end }}
+{{ end }}`
+}

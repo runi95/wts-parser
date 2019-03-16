@@ -1,5 +1,7 @@
-{{- define "UnitStrings" }}
-{{- range . }}[{{ .UnitId }}]
+package templates
+
+func GetUnitStringsTemplate() string {
+	return `{{- define "UnitStrings" }}{{- range . }}[{{ .UnitId }}]
 {{- if .Name.Valid }}
 Name={{ .Name.String }}
 {{- end }}
@@ -38,4 +40,5 @@ DependencyOr={{ .Dependencyor.String }}
 {{- end }}
 
 {{ end }}
-{{- end }}
+{{- end }}`
+}
