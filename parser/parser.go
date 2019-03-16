@@ -13,6 +13,7 @@ import (
 	"os"
 	"reflect"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"text/template"
@@ -32,14 +33,62 @@ var TrigstrRegex = regexp.MustCompile(`TRIGSTR_([0-9]+)`)
 var NewLineRegex = regexp.MustCompile(`\r?\n`)
 
 func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbilities, parsedSLKUnitsData []*UnitData, parsedSLKUnitsUI []*UnitUI, parsedSLKUnitsWeapons []*UnitWeapons, parsedSLKUnitsBalance []*UnitBalance) {
-	WriteToFilesAndSaveToFolder(customUnitFuncs, parsedSLKUnitsAbilities, parsedSLKUnitsData, parsedSLKUnitsUI, parsedSLKUnitsWeapons, parsedSLKUnitsBalance, "out")
+	WriteToFilesAndSaveToFolder(customUnitFuncs, parsedSLKUnitsAbilities, parsedSLKUnitsData, parsedSLKUnitsUI, parsedSLKUnitsWeapons, parsedSLKUnitsBalance, "out", true)
 }
 
-func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbilities, parsedSLKUnitsData []*UnitData, parsedSLKUnitsUI []*UnitUI, parsedSLKUnitsWeapons []*UnitWeapons, parsedSLKUnitsBalance []*UnitBalance, outputFolder string) {
+func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbilities, parsedSLKUnitsData []*UnitData, parsedSLKUnitsUI []*UnitUI, parsedSLKUnitsWeapons []*UnitWeapons, parsedSLKUnitsBalance []*UnitBalance, outputFolder string, sortBeforeSave bool) {
 	funcMap := template.FuncMap{
 		"inc": func(i int) int {
 			return i + 2
 		},
+	}
+
+	if sortBeforeSave {
+		log.Println("Sorting units according to unit ID...")
+
+		sort.Slice(customUnitFuncs.CampaignUnitFuncs, func(i, j int) bool {
+			return customUnitFuncs.CampaignUnitFuncs[i].UnitId < customUnitFuncs.CampaignUnitFuncs[j].UnitId
+		})
+
+		sort.Slice(customUnitFuncs.NightElfUnitFuncs, func(i, j int) bool {
+			return customUnitFuncs.NightElfUnitFuncs[i].UnitId < customUnitFuncs.NightElfUnitFuncs[j].UnitId
+		})
+
+		sort.Slice(customUnitFuncs.OrcUnitFuncs, func(i, j int) bool {
+			return customUnitFuncs.OrcUnitFuncs[i].UnitId < customUnitFuncs.OrcUnitFuncs[j].UnitId
+		})
+
+		sort.Slice(customUnitFuncs.UndeadUnitFuncs, func(i, j int) bool {
+			return customUnitFuncs.UndeadUnitFuncs[i].UnitId < customUnitFuncs.UndeadUnitFuncs[j].UnitId
+		})
+
+		sort.Slice(customUnitFuncs.NeutralUnitFuncs, func(i, j int) bool {
+			return customUnitFuncs.NeutralUnitFuncs[i].UnitId < customUnitFuncs.NeutralUnitFuncs[j].UnitId
+		})
+
+		sort.Slice(customUnitFuncs.HumanUnitFuncs, func(i, j int) bool {
+			return customUnitFuncs.HumanUnitFuncs[i].UnitId < customUnitFuncs.HumanUnitFuncs[j].UnitId
+		})
+
+		sort.Slice(parsedSLKUnitsAbilities, func(i, j int) bool {
+			return parsedSLKUnitsAbilities[i].UnitAbilID.String < parsedSLKUnitsAbilities[j].UnitAbilID.String
+		})
+
+		sort.Slice(parsedSLKUnitsData, func(i, j int) bool {
+			return parsedSLKUnitsData[i].UnitID.String < parsedSLKUnitsData[j].UnitID.String
+		})
+
+		sort.Slice(parsedSLKUnitsUI, func(i, j int) bool {
+			return parsedSLKUnitsUI[i].UnitUIID.String < parsedSLKUnitsUI[j].UnitUIID.String
+		})
+
+		sort.Slice(parsedSLKUnitsWeapons, func(i, j int) bool {
+			return parsedSLKUnitsWeapons[i].UnitWeapID.String < parsedSLKUnitsWeapons[j].UnitWeapID.String
+		})
+
+		sort.Slice(parsedSLKUnitsBalance, func(i, j int) bool {
+			return parsedSLKUnitsBalance[i].UnitBalanceID.String < parsedSLKUnitsBalance[j].UnitBalanceID.String
+		})
 	}
 
 	log.Println("Writing to CampaignUnitFunc...")
