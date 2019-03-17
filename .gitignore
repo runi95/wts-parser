@@ -1,2 +1,5 @@
 out
 .idea
+wts-parser
+wts-parser.exe
+go.sum
