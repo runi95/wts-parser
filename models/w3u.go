@@ -13,7 +13,7 @@ type W3uData struct {
 	Udaa null.String // Default Active Ability
 	Uhab null.String // Hero Abilities
 	Uabi null.String // Abilities
-	Utcc null.String // Allow Custom Team Color // TODO: Find usage
+	Utcc null.String // Allow Custom Team Color
 	Uble null.String // Blend Time
 	Ucbs null.String // Cast Backswing
 	Ucpt null.String // Cast Point
@@ -537,6 +537,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	// unitUI.SelZ.SetValid("0")        // TODO: Set this value correctly!
 	// unitUI.Weap1.SetValid("\"_\"")   // TODO: Set this value correctly! This can be _ or MetalLightChop etc...
 	// unitUI.Weap2.SetValid("\"_\"")   // TODO: Set this value correctly! This can be _ or MetalLightChop etc...
+	if w3uData.Utcc.Valid {
+		unitUI.CustomTeamColor.SetValid(w3uData.Utcc.String)
+	}
 	if w3uData.Utco.Valid {
 		unitUI.TeamColor.SetValid(w3uData.Utco.String)
 	}
