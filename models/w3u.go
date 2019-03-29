@@ -362,7 +362,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Urac.Valid {
 		unitData.Race.SetValid("\"" + w3uData.Urac.String + "\"")
 	}
-	unitData.Prio.SetValid(w3uData.Upri.String)
+	if w3uData.Upri.Valid {
+		unitData.Prio.SetValid(w3uData.Upri.String)
+	}
 	// unitData.Threat.SetValid("1")    // TODO: Figure this out
 	if w3uData.Unbr.Valid { // Here I assume unitData.Valid = valid as random neutral unit
 		unitData.Valid.SetValid(w3uData.Unbr.String)
