@@ -126,7 +126,7 @@ type W3uData struct {
 	Udea null.String // Death Type
 	Udef null.String // Defense Base
 	Udty null.String // Defense Type
-	Udup null.String // Defense Upgrade Bonus // TODO: Find usage
+	Udup null.String // Defense Upgrade Bonus
 	Uamn null.String // Minimum Attack Range
 	Utar null.String // Targeted As
 	Udro null.String // Drop Items On Death
@@ -669,7 +669,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 		unitBalance.Def.SetValid(w3uData.Udef.String)
 		unitBalance.Realdef.SetValid(w3uData.Udef.String) // TODO: Calculate this value by putting base defense + some% * AGI
 	}
-	// unitBalance.DefUp.SetValid("0") // TODO: Set this value correctly!
+	if w3uData.Udup.Valid {
+		unitBalance.DefUp.SetValid(w3uData.Udup.String)
+	}
 	// unitBalance.Realdef.SetValid("3,1") // TODO: Set this value correctly!
 	if w3uData.Udty.Valid {
 		unitBalance.DefType.SetValid(w3uData.Udty.String)
