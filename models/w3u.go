@@ -137,10 +137,10 @@ type W3uData struct {
 	Uine null.String // Placeable In Editor
 	Util null.String // Tilesets
 	Uuch null.String // Use Click Helper
-	Urpo null.String // Group Separation Enabled // TODO: Find usage
-	Urpg null.String // Group Separation Group Number // TODO: Find usage
-	Urpp null.String // Group Separation Parameter // TODO: Find usage
-	Urpr null.String // Group Separation Priority // TODO: Find usage
+	Urpo null.String // Group Separation Enabled
+	Urpg null.String // Group Separation Group Number
+	Urpp null.String // Group Separation Parameter
+	Urpr null.String // Group Separation Priority
 	Umvh null.String // Fly Height
 	Umvf null.String // Minimum Height
 	Umvs null.String // Speed Base
@@ -784,10 +784,18 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 		*/
 		unitBalance.PreventPlace.SetValid(w3uData.Upap.String)
 	}
-	// unitBalance.Repulse.SetValid("0") // TODO: Set this value correctly!
-	// unitBalance.RepulseParam.SetValid("0") // TODO: Set this value correctly!
-	// unitBalance.RepulseGroup.SetValid("0") // TODO: Set this value correctly!
-	// unitBalance.RepulsePrio.SetValid("0") // TODO: Set this value correctly!
+	if w3uData.Urpo.Valid {
+		unitBalance.Repulse.SetValid(w3uData.Urpo.String)
+	}
+	if w3uData.Urpp.Valid {
+		unitBalance.RepulseParam.SetValid(w3uData.Urpp.String)
+	}
+	if w3uData.Urpg.Valid {
+		unitBalance.RepulseGroup.SetValid(w3uData.Urpg.String)
+	}
+	if w3uData.Urpr.Valid {
+		unitBalance.RepulsePrio.SetValid(w3uData.Urpr.String)
+	}
 	if w3uData.Ucol.Valid {
 		unitBalance.Collision.SetValid(w3uData.Ucol.String)
 	}
