@@ -902,7 +902,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Usr1.Valid {
 		unitWeapons.SpillRadius1.SetValid(w3uData.Usr1.String)
 	}
-	// unitWeapons.DmgUp1.SetValid("0")            // TODO: Set this value correctly!
+	if w3uData.Udu1.Valid {
+		unitWeapons.DmgUp1.SetValid(w3uData.Udu1.String)
+	}
 	// unitWeapons.Dmod1.SetValid("0")             // TODO: Set this value correctly!
 	// unitWeapons.DPS.SetValid("0")               // TODO: Set this value correctly!
 	if w3uData.Ucs2.Valid {
@@ -940,7 +942,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Ua2b.Valid {
 		unitWeapons.Dmgplus2.SetValid(w3uData.Ua2b.String)
 	}
-	// unitWeapons.DmgUp2.SetValid("\"-\"")        // TODO: Set this value correctly! (seems like it's always equal to -)
+	if w3uData.Udu2.Valid {
+		unitWeapons.DmgUp2.SetValid(w3uData.Udu2.String)
+	}
 	// unitWeapons.Mindmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
 	// unitWeapons.Avgdmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
 	// unitWeapons.Maxdmg2.SetValid("\"-\"")       // TODO: Set this value correctly!
