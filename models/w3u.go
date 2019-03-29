@@ -13,7 +13,7 @@ type W3uData struct {
 	Udaa null.String // Default Active Ability
 	Uhab null.String // Hero Abilities
 	Uabi null.String // Abilities
-	Utcc null.String // Allow Custom Team Color
+	Utcc null.String // Allow Custom Team Color // TODO: Find usage
 	Uble null.String // Blend Time
 	Ucbs null.String // Cast Backswing
 	Ucpt null.String // Cast Point
@@ -63,7 +63,7 @@ type W3uData struct {
 	Uclr null.String // Red Tint
 	Uclg null.String // Green Tint
 	Uclb null.String // Blue Tint
-	Ulos null.String // Use Extended Line Of Sight
+	Ulos null.String // Use Extended Line Of Sight // TODO: Find usage
 	Uacq null.String // Acquisition Range
 	Uarm null.String // Armor Type
 	Ubs1 null.String // Backswing Point1
@@ -82,7 +82,7 @@ type W3uData struct {
 	Ua1s null.String // Damage Sides Per Die1
 	Usd1 null.String // Damage Spill Distance1
 	Usr1 null.String // Damage Spill Radius1
-	Udu1 null.String // Damage Upgrade Amount1
+	Udu1 null.String // Damage Upgrade Amount1 // TODO: Find usage
 	Utc1 null.String // Maximum Targets1
 	Uma1 null.String // Projectile Arc1
 	Ua1m null.String // Projectile Art1
@@ -126,7 +126,7 @@ type W3uData struct {
 	Udea null.String // Death Type
 	Udef null.String // Defense Base
 	Udty null.String // Defense Type
-	Udup null.String // Defense Upgrade Bonus
+	Udup null.String // Defense Upgrade Bonus // TODO: Find usage
 	Uamn null.String // Minimum Attack Range
 	Utar null.String // Targeted As
 	Udro null.String // Drop Items On Death
@@ -137,10 +137,10 @@ type W3uData struct {
 	Uine null.String // Placeable In Editor
 	Util null.String // Tilesets
 	Uuch null.String // Use Click Helper
-	Urpo null.String // Group Separation Enabled
-	Urpg null.String // Group Separation Group Number
-	Urpp null.String // Group Separation Parameter
-	Urpr null.String // Group Separation Priority
+	Urpo null.String // Group Separation Enabled // TODO: Find usage
+	Urpg null.String // Group Separation Group Number // TODO: Find usage
+	Urpp null.String // Group Separation Parameter // TODO: Find usage
+	Urpr null.String // Group Separation Priority // TODO: Find usage
 	Umvh null.String // Fly Height
 	Umvf null.String // Minimum Height
 	Umvs null.String // Speed Base
@@ -148,18 +148,18 @@ type W3uData struct {
 	Umis null.String // Speed Minimum
 	Umvr null.String // Turn Rate
 	Umvt null.String // Move Type
-	Uabr null.String // A IPlacement Radius
-	Uabt null.String // A IPlacement Type
+	Uabr null.String // A IPlacement Radius // TODO: Find usage
+	Uabt null.String // A IPlacement Type // TODO: Find usage
 	Ucol null.String // Collision Size
 	Upat null.String // Pathing Map
 	Upar null.String // Placement Prevented By
 	Upap null.String // Placement Requires
 	Upaw null.String // Placement Requires Water Radius
 	Ubsl null.String // Build Sound
-	Ulfi null.String // Sound Loop Fade In Rate
-	Ulfo null.String // Sound Loop Fade Out Rate
-	Umsl null.String // Move Sound
-	Ursl null.String // Random Sound
+	Ulfi null.String // Sound Loop Fade In Rate // TODO: Find usage
+	Ulfo null.String // Sound Loop Fade Out Rate // TODO: Find usage
+	Umsl null.String // Move Sound // TODO: Find usage
+	Ursl null.String // Random Sound // TODO: Find usage
 	Usnd null.String // Sound Set
 	Uagp null.String // Agility Per Level
 	Ubld null.String // Build Time
@@ -181,7 +181,7 @@ type W3uData struct {
 	Uhpr null.String // Hit Points Regeneration
 	Uhrt null.String // Hit Points Regeneration Type
 	Uinp null.String // Intelligence Per Level
-	Ubdg null.String // Is ABuilding
+	Ubdg null.String // Is A Building
 	Ulev null.String // Level
 	Ulba null.String // Lumber Bounty Base
 	Ulbd null.String // Lumber Bounty Number Of Dice
@@ -211,7 +211,7 @@ type W3uData struct {
 	Ustp null.String // Strength Per Level
 	Ucar null.String // Transported Size
 	Utyp null.String // Unit Classification
-	Udep null.String // Dependency Equivalents
+	Udep null.String // Dependency Equivalents // TODO: Find usage
 	Urva null.String // Hero Revival Locations
 	Umki null.String // Items Made
 	Usei null.String // Items Sold
@@ -362,7 +362,7 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Urac.Valid {
 		unitData.Race.SetValid("\"" + w3uData.Urac.String + "\"")
 	}
-	// unitData.Prio.SetValid("9")      // TODO: Figure this out
+	unitData.Prio.SetValid(w3uData.Upri.String)
 	// unitData.Threat.SetValid("1")    // TODO: Figure this out
 	if w3uData.Unbr.Valid { // Here I assume unitData.Valid = valid as random neutral unit
 		unitData.Valid.SetValid(w3uData.Unbr.String)
