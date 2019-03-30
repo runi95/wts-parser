@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	. "github.com/runi95/wts-parser/models"
+	"github.com/runi95/wts-parser/models"
 	"github.com/runi95/wts-parser/templates"
 	"gopkg.in/volatiletech/null.v6"
 	"log"
@@ -32,11 +32,11 @@ var TXTRegex = regexp.MustCompile(`([A-Z]\w+)=([^\r\n]*)`)
 var TrigstrRegex = regexp.MustCompile(`TRIGSTR_([0-9]+)`)
 var NewLineRegex = regexp.MustCompile(`\r?\n`)
 
-func WriteToFiles(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbilities, parsedSLKUnitsData []*UnitData, parsedSLKUnitsUI []*UnitUI, parsedSLKUnitsWeapons []*UnitWeapons, parsedSLKUnitsBalance []*UnitBalance) {
+func WriteToFiles(customUnitFuncs *models.UnitFuncs, parsedSLKUnitsAbilities []*models.UnitAbilities, parsedSLKUnitsData []*models.UnitData, parsedSLKUnitsUI []*models.UnitUI, parsedSLKUnitsWeapons []*models.UnitWeapons, parsedSLKUnitsBalance []*models.UnitBalance) {
 	WriteToFilesAndSaveToFolder(customUnitFuncs, parsedSLKUnitsAbilities, parsedSLKUnitsData, parsedSLKUnitsUI, parsedSLKUnitsWeapons, parsedSLKUnitsBalance, "out", true)
 }
 
-func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbilities []*UnitAbilities, parsedSLKUnitsData []*UnitData, parsedSLKUnitsUI []*UnitUI, parsedSLKUnitsWeapons []*UnitWeapons, parsedSLKUnitsBalance []*UnitBalance, outputFolder string, sortBeforeSave bool) {
+func WriteToFilesAndSaveToFolder(customUnitFuncs *models.UnitFuncs, parsedSLKUnitsAbilities []*models.UnitAbilities, parsedSLKUnitsData []*models.UnitData, parsedSLKUnitsUI []*models.UnitUI, parsedSLKUnitsWeapons []*models.UnitWeapons, parsedSLKUnitsBalance []*models.UnitBalance, outputFolder string, sortBeforeSave bool) {
 	funcMap := template.FuncMap{
 		"inc": func(i int) int {
 			return i + 2
@@ -242,7 +242,7 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		return
 	}
 
-	err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", UnitAbilitiesTemplate{RowCount: len(parsedSLKUnitsAbilities) + 1, UnitAbilities: parsedSLKUnitsAbilities})
+	err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", models.UnitAbilitiesTemplate{RowCount: len(parsedSLKUnitsAbilities) + 1, UnitAbilities: parsedSLKUnitsAbilities})
 	if err != nil {
 		log.Println(err)
 		return
@@ -263,7 +263,7 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		return
 	}
 
-	err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", UnitDataTemplate{RowCount: len(parsedSLKUnitsData) + 1, UnitData: parsedSLKUnitsData})
+	err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", models.UnitDataTemplate{RowCount: len(parsedSLKUnitsData) + 1, UnitData: parsedSLKUnitsData})
 	if err != nil {
 		log.Println(err)
 		return
@@ -284,7 +284,7 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		return
 	}
 
-	err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", UnitBalanceTemplate{RowCount: len(parsedSLKUnitsBalance) + 1, UnitBalance: parsedSLKUnitsBalance})
+	err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", models.UnitBalanceTemplate{RowCount: len(parsedSLKUnitsBalance) + 1, UnitBalance: parsedSLKUnitsBalance})
 	if err != nil {
 		log.Println(err)
 		return
@@ -305,7 +305,7 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		return
 	}
 
-	err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", UnitUITemplate{RowCount: len(parsedSLKUnitsUI) + 1, UnitUI: parsedSLKUnitsUI})
+	err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", models.UnitUITemplate{RowCount: len(parsedSLKUnitsUI) + 1, UnitUI: parsedSLKUnitsUI})
 	if err != nil {
 		log.Println(err)
 		return
@@ -326,7 +326,7 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *UnitFuncs, parsedSLKUnitsAbili
 		return
 	}
 
-	err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", UnitWeaponsTemplate{RowCount: len(parsedSLKUnitsWeapons) + 1, UnitWeapons: parsedSLKUnitsWeapons})
+	err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", models.UnitWeaponsTemplate{RowCount: len(parsedSLKUnitsWeapons) + 1, UnitWeapons: parsedSLKUnitsWeapons})
 	if err != nil {
 		log.Println(err)
 		return
@@ -430,9 +430,9 @@ func JsonToWts(input []byte) []byte {
 
 *************************/
 
-func ReadW3uFile(input []byte) map[string]*W3uData {
+func ReadW3uFile(input []byte) map[string]*models.W3uData {
 	var lastUnitId string
-	unitMap := make(map[string]*W3uData)
+	unitMap := make(map[string]*models.W3uData)
 
 	for i := 12; i < len(input); i++ {
 		baseUnitId := [4]byte{input[i-8], input[i-7], input[i-6], input[i-5]}
@@ -441,7 +441,7 @@ func ReadW3uFile(input []byte) map[string]*W3uData {
 			if customUnitId[0] > 96 && customUnitId[0] < 123 && (customUnitId[1] == 48 || customUnitId[1] == 67) && ((customUnitId[2] > 47 && customUnitId[2] < 58) || (customUnitId[2] > 64 && customUnitId[2] < 91)) && ((customUnitId[3] > 47 && customUnitId[3] < 58) || (customUnitId[3] > 64 && customUnitId[3] < 91)) {
 				unitId := string(customUnitId[0]) + string(customUnitId[1]) + string(customUnitId[2]) + string(customUnitId[3])
 				lastUnitId = unitId
-				newW3uUnit := new(W3uData)
+				newW3uUnit := new(models.W3uData)
 				newW3uUnit.BaseUnitId = string(baseUnitId[0]) + string(baseUnitId[1]) + string(baseUnitId[2]) + string(baseUnitId[3])
 				newW3uUnit.CustomUnitId = string(customUnitId[0]) + string(customUnitId[1]) + string(customUnitId[2]) + string(customUnitId[3])
 				unitMap[unitId] = newW3uUnit
@@ -548,7 +548,7 @@ func ReadW3uFile(input []byte) map[string]*W3uData {
 func W3uToJson(input []byte) []byte {
 	unitMap := ReadW3uFile(input)
 
-	mapValues := make([]*W3uData, len(unitMap))
+	mapValues := make([]*models.W3uData, len(unitMap))
 	index := 0
 	for _, value := range unitMap {
 		mapValues[index] = value
@@ -563,13 +563,13 @@ func W3uToJson(input []byte) []byte {
 	return jsonObject
 }
 
-func W3uToSLKUnits(input []byte) []*SLKUnit {
+func W3uToSLKUnits(input []byte) []*models.SLKUnit {
 	unitMap := ReadW3uFile(input)
 
-	slkUnits := make([]*SLKUnit, len(unitMap))
+	slkUnits := make([]*models.SLKUnit, len(unitMap))
 	index := 0
 	for _, value := range unitMap {
-		slkUnit := new(SLKUnit)
+		slkUnit := new(models.SLKUnit)
 		value.TransformToSLKUnit(slkUnit)
 
 		slkUnits[index] = slkUnit
@@ -579,17 +579,17 @@ func W3uToSLKUnits(input []byte) []*SLKUnit {
 	return slkUnits
 }
 
-func W3uToSlkUnitsWithBaseSlk(baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData) []*SLKUnit {
-	slkUnits := make([]*SLKUnit, len(unitMap))
+func W3uToSlkUnitsWithBaseSlk(baseSLKUnits map[string]*models.SLKUnit, unitMap map[string]*models.W3uData) []*models.SLKUnit {
+	slkUnits := make([]*models.SLKUnit, len(unitMap))
 	index := 0
 	for _, value := range unitMap {
-		slkUnit := new(SLKUnit)
+		slkUnit := new(models.SLKUnit)
 		baseSLKUnit := *baseSLKUnits["\""+value.BaseUnitId+"\""]
-		var unitUI UnitUI
-		var unitData UnitData
-		var unitWeapons UnitWeapons
-		var unitBalance UnitBalance
-		var unitAbilities UnitAbilities
+		var unitUI models.UnitUI
+		var unitData models.UnitData
+		var unitWeapons models.UnitWeapons
+		var unitBalance models.UnitBalance
+		var unitAbilities models.UnitAbilities
 		unitUI = *baseSLKUnit.UnitUI
 		unitData = *baseSLKUnit.UnitData
 		unitWeapons = *baseSLKUnit.UnitWeapons
@@ -611,8 +611,8 @@ func W3uToSlkUnitsWithBaseSlk(baseSLKUnits map[string]*SLKUnit, unitMap map[stri
 	return slkUnits
 }
 
-func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFunc, baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData, wtsMap map[string]string) *UnitFuncs {
-	unitFuncs := new(UnitFuncs)
+func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*models.UnitFunc, baseSLKUnits map[string]*models.SLKUnit, unitMap map[string]*models.W3uData, wtsMap map[string]string) *models.UnitFuncs {
+	unitFuncs := new(models.UnitFuncs)
 
 	for _, value := range unitMap {
 		var unitRace string
@@ -633,10 +633,10 @@ func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFun
 		//  We just want everything in the campaign file for now...
 		unitRace = "campaign"
 
-		unitFunc := new(UnitFunc)
+		unitFunc := new(models.UnitFunc)
 		baseTXTUnitFunc := *baseTxtUnitFuncs[value.BaseUnitId]
 
-		var baseUnitFunc UnitFunc
+		var baseUnitFunc models.UnitFunc
 		baseUnitFunc = baseTXTUnitFunc
 
 		*unitFunc = baseUnitFunc
@@ -695,8 +695,8 @@ func W3uToTxtUnitFuncsWithBaseTxtAndBaseWts(baseTxtUnitFuncs map[string]*UnitFun
 	return unitFuncs
 }
 
-func W3uToTxtUnitFuncsWithBaseTxt(baseTXTUnitfuncs map[string]*UnitFunc, baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData) *UnitFuncs {
-	unitFuncs := new(UnitFuncs)
+func W3uToTxtUnitFuncsWithBaseTxt(baseTXTUnitfuncs map[string]*models.UnitFunc, baseSLKUnits map[string]*models.SLKUnit, unitMap map[string]*models.W3uData) *models.UnitFuncs {
+	unitFuncs := new(models.UnitFuncs)
 
 	for _, value := range unitMap {
 		var unitRace string
@@ -714,10 +714,10 @@ func W3uToTxtUnitFuncsWithBaseTxt(baseTXTUnitfuncs map[string]*UnitFunc, baseSLK
 			}
 		}
 
-		unitFunc := new(UnitFunc)
+		unitFunc := new(models.UnitFunc)
 		baseTXTUnitFunc := *baseTXTUnitfuncs[value.BaseUnitId]
 
-		var baseUnitFunc UnitFunc
+		var baseUnitFunc models.UnitFunc
 		baseUnitFunc = baseTXTUnitFunc
 
 		*unitFunc = baseUnitFunc
@@ -751,8 +751,8 @@ func W3uToTxtUnitFuncsWithBaseTxt(baseTXTUnitfuncs map[string]*UnitFunc, baseSLK
 	return unitFuncs
 }
 
-func WtsToTxtUnitStringsWithBaseTxt(baseUnitStringMap map[string]*UnitString, baseSLKUnits map[string]*SLKUnit, unitMap map[string]*W3uData) *UnitStrings {
-	unitStrings := new(UnitStrings)
+func WtsToTxtUnitStringsWithBaseTxt(baseUnitStringMap map[string]*models.UnitString, baseSLKUnits map[string]*models.SLKUnit, unitMap map[string]*models.W3uData) *models.UnitStrings {
+	unitStrings := new(models.UnitStrings)
 
 	for _, value := range unitMap {
 		var unitRace string
@@ -768,10 +768,10 @@ func WtsToTxtUnitStringsWithBaseTxt(baseUnitStringMap map[string]*UnitString, ba
 			}
 		}
 
-		unitString := new(UnitString)
+		unitString := new(models.UnitString)
 		baseTxtUnitString := *baseUnitStringMap[value.BaseUnitId]
 
-		var baseUnitString UnitString
+		var baseUnitString models.UnitString
 		baseUnitString = baseTxtUnitString
 
 		*unitString = baseUnitString
@@ -864,9 +864,9 @@ func GenericSlkReader(input []byte) (*SlkInformation, error) {
 	return slkInformation, nil
 }
 
-func SlkToUnitAbilities(input []byte) map[string]*UnitAbilities {
-	unitAbilitiesMap := make(map[string]*UnitAbilities)
-	var currentUnitAbilities *UnitAbilities
+func SlkToUnitAbilities(input []byte) map[string]*models.UnitAbilities {
+	unitAbilitiesMap := make(map[string]*models.UnitAbilities)
+	var currentUnitAbilities *models.UnitAbilities
 	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
@@ -883,7 +883,7 @@ func SlkToUnitAbilities(input []byte) map[string]*UnitAbilities {
 					unitAbilitiesMap[currentUnitAbilities.UnitAbilID.String] = currentUnitAbilities
 				}
 
-				currentUnitAbilities = new(UnitAbilities)
+				currentUnitAbilities = new(models.UnitAbilities)
 			}
 
 			nullString := new(null.String)
@@ -903,9 +903,9 @@ func SlkToUnitAbilities(input []byte) map[string]*UnitAbilities {
 	return unitAbilitiesMap
 }
 
-func SlkToUnitData(input []byte) map[string]*UnitData {
-	unitDataMap := make(map[string]*UnitData)
-	var currentUnitData *UnitData
+func SlkToUnitData(input []byte) map[string]*models.UnitData {
+	unitDataMap := make(map[string]*models.UnitData)
+	var currentUnitData *models.UnitData
 	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
@@ -922,7 +922,7 @@ func SlkToUnitData(input []byte) map[string]*UnitData {
 					unitDataMap[currentUnitData.UnitID.String] = currentUnitData
 				}
 
-				currentUnitData = new(UnitData)
+				currentUnitData = new(models.UnitData)
 			}
 
 			nullString := new(null.String)
@@ -942,9 +942,9 @@ func SlkToUnitData(input []byte) map[string]*UnitData {
 	return unitDataMap
 }
 
-func SLKToUnitUI(input []byte) map[string]*UnitUI {
-	unitUIMap := make(map[string]*UnitUI)
-	var currentUnitUI *UnitUI
+func SLKToUnitUI(input []byte) map[string]*models.UnitUI {
+	unitUIMap := make(map[string]*models.UnitUI)
+	var currentUnitUI *models.UnitUI
 	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
@@ -961,7 +961,7 @@ func SLKToUnitUI(input []byte) map[string]*UnitUI {
 					unitUIMap[currentUnitUI.UnitUIID.String] = currentUnitUI
 				}
 
-				currentUnitUI = new(UnitUI)
+				currentUnitUI = new(models.UnitUI)
 			}
 
 			nullString := new(null.String)
@@ -981,9 +981,9 @@ func SLKToUnitUI(input []byte) map[string]*UnitUI {
 	return unitUIMap
 }
 
-func SLKToUnitWeapons(input []byte) map[string]*UnitWeapons {
-	unitWeaponsMap := make(map[string]*UnitWeapons)
-	var currentUnitWeapons *UnitWeapons
+func SLKToUnitWeapons(input []byte) map[string]*models.UnitWeapons {
+	unitWeaponsMap := make(map[string]*models.UnitWeapons)
+	var currentUnitWeapons *models.UnitWeapons
 	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
@@ -1000,7 +1000,7 @@ func SLKToUnitWeapons(input []byte) map[string]*UnitWeapons {
 					unitWeaponsMap[currentUnitWeapons.UnitWeapID.String] = currentUnitWeapons
 				}
 
-				currentUnitWeapons = new(UnitWeapons)
+				currentUnitWeapons = new(models.UnitWeapons)
 			}
 
 			nullString := new(null.String)
@@ -1020,9 +1020,9 @@ func SLKToUnitWeapons(input []byte) map[string]*UnitWeapons {
 	return unitWeaponsMap
 }
 
-func SLKToUnitBalance(input []byte) map[string]*UnitBalance {
-	unitBalanceMap := make(map[string]*UnitBalance)
-	var currentUnitBalance *UnitBalance
+func SLKToUnitBalance(input []byte) map[string]*models.UnitBalance {
+	unitBalanceMap := make(map[string]*models.UnitBalance)
+	var currentUnitBalance *models.UnitBalance
 	slkInformation, err := GenericSlkReader(input)
 	if err != nil {
 		log.Println(err)
@@ -1039,7 +1039,7 @@ func SLKToUnitBalance(input []byte) map[string]*UnitBalance {
 					unitBalanceMap[currentUnitBalance.UnitBalanceID.String] = currentUnitBalance
 				}
 
-				currentUnitBalance = new(UnitBalance)
+				currentUnitBalance = new(models.UnitBalance)
 			}
 
 			nullString := new(null.String)
@@ -1065,9 +1065,9 @@ func SLKToUnitBalance(input []byte) map[string]*UnitBalance {
 
 *************************/
 
-func TxtToUnitFunc(input []byte) map[string]*UnitFunc {
-	unitFuncMap := make(map[string]*UnitFunc)
-	var currentUnitFunc *UnitFunc
+func TxtToUnitFunc(input []byte) map[string]*models.UnitFunc {
+	unitFuncMap := make(map[string]*models.UnitFunc)
+	var currentUnitFunc *models.UnitFunc
 
 	str := string(input)
 	split := strings.Split(str, "\n")
@@ -1078,7 +1078,7 @@ func TxtToUnitFunc(input []byte) map[string]*UnitFunc {
 				unitFuncMap[currentUnitFunc.UnitId] = currentUnitFunc
 			}
 
-			currentUnitFunc = new(UnitFunc)
+			currentUnitFunc = new(models.UnitFunc)
 			lineSubmatch := TXTHeadRegex.FindStringSubmatch(line)
 			currentUnitFunc.UnitId = lineSubmatch[1]
 		} else {
@@ -1102,9 +1102,9 @@ func TxtToUnitFunc(input []byte) map[string]*UnitFunc {
 	return unitFuncMap
 }
 
-func TxtToUnitStrings(input []byte) map[string]*UnitString {
-	unitStringsMap := make(map[string]*UnitString)
-	var currentUnitString *UnitString
+func TxtToUnitStrings(input []byte) map[string]*models.UnitString {
+	unitStringsMap := make(map[string]*models.UnitString)
+	var currentUnitString *models.UnitString
 
 	str := string(input)
 	split := strings.Split(str, "\n")
@@ -1115,7 +1115,7 @@ func TxtToUnitStrings(input []byte) map[string]*UnitString {
 				unitStringsMap[currentUnitString.UnitId] = currentUnitString
 			}
 
-			currentUnitString = new(UnitString)
+			currentUnitString = new(models.UnitString)
 			lineSubmatch := TXTHeadRegex.FindStringSubmatch(line)
 			currentUnitString.UnitId = lineSubmatch[1]
 		} else {
