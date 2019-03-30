@@ -62,7 +62,7 @@ type UnitUI struct {
 	ScaleBull        null.String
 	MaxPitch         null.String
 	MaxRoll          null.String
-	ElevPts          null.String // But really int, unless empty string
+	ElevPts          null.String
 	ElevRad          null.String
 	FogRad           null.String
 	Walk             null.String
@@ -80,10 +80,10 @@ type UnitUI struct {
 	UberSplat        null.String
 	UnitShadow       null.String
 	BuildingShadow   null.String
-	ShadowW          null.String // But really int, unless empty string
-	ShadowH          null.String // But really int, unless empty string
-	ShadowX          null.String // But really int, unless empty string
-	ShadowY          null.String // But really int, unless empty string
+	ShadowW          null.String
+	ShadowH          null.String
+	ShadowX          null.String
+	ShadowY          null.String
 	ShadowOnWater    null.String
 	SelCircOnWater   null.String
 	OccH             null.String
@@ -96,9 +96,9 @@ type UnitWeapons struct {
 	Sort2        null.String
 	Comment      null.String
 	WeapsOn      null.String
-	Acquire      null.String // But really int, unless empty string
-	MinRange     null.String // But really int, unless empty string
-	Castpt       null.String // But really int, unless empty string
+	Acquire      null.String 
+	MinRange     null.String 
+	Castpt       null.String 
 	Castbsw      null.String
 	LaunchX      null.String
 	LaunchY      null.String
@@ -109,61 +109,61 @@ type UnitWeapons struct {
 	WeapType1    null.String
 	Targs1       null.String
 	ShowUI1      null.String
-	RangeN1      null.String // But really int, unless empty string
+	RangeN1      null.String 
 	RngTst       null.String
-	RngBuff1     null.String // But really int, unless empty string
+	RngBuff1     null.String 
 	AtkType1     null.String
 	WeapTp1      null.String
-	Cool1        null.String // But really int, unless empty string
+	Cool1        null.String 
 	Mincool1     null.String
-	Dice1        null.String // But really int, unless empty string
-	Sides1       null.String // But really int, unless empty string
-	Dmgplus1     null.String // But really int, unless empty string
+	Dice1        null.String 
+	Sides1       null.String 
+	Dmgplus1     null.String 
 	DmgUp1       null.String
-	Mindmg1      null.String // But really int, unless empty string
-	Avgdmg1      null.String // But really int, unless empty string
-	Maxdmg1      null.String // But really int, unless empty string
+	Mindmg1      null.String 
+	Avgdmg1      null.String 
+	Maxdmg1      null.String 
 	Dmgpt1       null.String // But really float64, unless empty string
 	BackSw1      null.String // But really float64, unless empty string
-	Farea1       null.String // But really int, unless empty string
-	Harea1       null.String // But really int, unless empty string
-	Qarea1       null.String // But really int, unless empty string
+	Farea1       null.String 
+	Harea1       null.String 
+	Qarea1       null.String 
 	Hfact1       null.String
 	Qfact1       null.String
 	SplashTargs1 null.String
-	TargCount1   null.String // But really int, unless empty string
+	TargCount1   null.String 
 	DamageLoss1  null.String
 	SpillDist1   null.String
 	SpillRadius1 null.String
 	DmgUpg       null.String
-	Dmod1        null.String // But really int, unless empty string
+	Dmod1        null.String 
 	DPS          null.String
 	WeapType2    null.String
 	Targs2       null.String
 	ShowUI2      null.String
-	RangeN2      null.String // But really int, unless empty string
+	RangeN2      null.String 
 	RngTst2      null.String
-	RngBuff2     null.String // But really int, unless empty string
+	RngBuff2     null.String 
 	AtkType2     null.String
 	WeapTp2      null.String
-	Cool2        null.String // But really int, unless empty string
+	Cool2        null.String 
 	Mincool2     null.String
-	Dice2        null.String // But really int, unless empty string
-	Sides2       null.String // But really int, unless empty string
-	Dmgplus2     null.String // But really int, unless empty string
+	Dice2        null.String 
+	Sides2       null.String 
+	Dmgplus2     null.String 
 	DmgUp2       null.String
-	Mindmg2      null.String // But really int, unless empty string
-	Avgdmg2      null.String // But really int, unless empty string
-	Maxdmg2      null.String // But really int, unless empty string
+	Mindmg2      null.String 
+	Avgdmg2      null.String 
+	Maxdmg2      null.String 
 	Dmgpt2       null.String // But really float64, unless empty string
 	BackSw2      null.String // But really float64, unless empty string
-	Farea2       null.String // But really int, unless empty string
-	Harea2       null.String // But really int, unless empty string
-	Qarea2       null.String // But really int, unless empty string
+	Farea2       null.String 
+	Harea2       null.String 
+	Qarea2       null.String 
 	Hfact2       null.String
 	Qfact2       null.String
 	SplashTargs2 null.String
-	TargCount2   null.String // But really int, unless empty string
+	TargCount2   null.String 
 	DamageLoss2  null.String
 	SpillDist2   null.String
 	SpillRadius2 null.String
