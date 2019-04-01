@@ -405,49 +405,8 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Utar.Valid {
 		unitData.TargType.SetValid("\"" + w3uData.Utar.String + "\"")
 	}
-	if w3uData.Uubs.Valid {
-		switch w3uData.Uubs.String {
-		case "UMED":
-			unitData.PathTex.SetValid("\"PathTextures\\10x10Simple.tga\"")
-		case "EMDB":
-			unitData.PathTex.SetValid("\"PathTextures\\10x10Simple.tga\"")
-		case "HMED":
-			unitData.PathTex.SetValid("\"PathTextures\\10x10Simple.tga\"")
-		case "OMED":
-			unitData.PathTex.SetValid("\"PathTextures\\10x10Simple.tga\"")
-		case "EMDA":
-			unitData.PathTex.SetValid("\"PathTextures\\12x12Simple.tga\"")
-		case "ESMA":
-			unitData.PathTex.SetValid("\"PathTextures\\6x6SimpleSolid.tga\"")
-		case "HSMA":
-			unitData.PathTex.SetValid("\"PathTextures\\4x4SimpleSolid.tga\"")
-		case "HCAS":
-			unitData.PathTex.SetValid("\"PathTextures\\16x16Simple.tga\"")
-		case "NDGS":
-			unitData.PathTex.SetValid("\"PathTextures\\DemonGatePath.tga\"")
-		case "DPSE":
-			unitData.PathTex.SetValid("\"PathTextures\\DarkPortalSE.tga\"")
-		case "DPSW":
-			unitData.PathTex.SetValid("\"PathTextures\\DarkPortalSW.tga\"")
-		case "NGOL":
-			unitData.PathTex.SetValid("\"PathTextures\\16x16Goldmine.tga\"")
-		case "OLAR":
-			unitData.PathTex.SetValid("\"PathTextures\\16x16Simple.tga\"")
-		case "ULAR":
-			unitData.PathTex.SetValid("\"PathTextures\\UndeadNecropolis.tga\"")
-		case "HTOW":
-			unitData.PathTex.SetValid("\"PathTextures\\16x16Simple.tga\"")
-		case "ESMB":
-			unitData.PathTex.SetValid("\"PathTextures\\6x6SimpleSolid.tga\"")
-		case "OSMA":
-			unitData.PathTex.SetValid("\"PathTextures\\8x8SimpleSolid.tga\"")
-		case "HLAR":
-			unitData.PathTex.SetValid("\"PathTextures\\12x12Simple.tga\"")
-		case "USMA":
-			unitData.PathTex.SetValid("\"PathTextures\\6x6SimpleSolid.tga\"")
-		case "NLAR":
-			unitData.PathTex.SetValid("\"PathTextures\\16x16Simple.tga\"")
-		}
+	if w3uData.Upat.Valid {
+		unitData.PathTex.SetValid(w3uData.Upat.String)
 	}
 	// unitData.FatLOS.SetValid("0")         // TODO: Set this value correctly!
 	if w3uData.Upoi.Valid {
@@ -558,7 +517,9 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Uclb.Valid {
 		unitUI.Blue.SetValid(w3uData.Uclb.String)
 	}
-	// unitUI.UberSplat.SetValid("\"_\"")      // TODO: Set this value correctly!
+	if w3uData.Uubs.Valid {
+		unitUI.UberSplat.SetValid(w3uData.Uubs.String)
+	}
 	if w3uData.Ushu.Valid {
 		unitUI.UnitShadow.SetValid(w3uData.Ushu.String)
 	}
