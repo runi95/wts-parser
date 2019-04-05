@@ -14,9 +14,17 @@ type UnitFunc struct {
 	ButtonposX          null.String
 	ButtonposY          null.String
 	Missileart          null.String
+	Missileart1         null.String
+	Missileart2         null.String
 	Missilearc          null.String
+	Missilearc1         null.String
+	Missilearc2         null.String
 	Missilespeed        null.String
+	Missilespeed1       null.String
+	Missilespeed2       null.String
 	Missilehoming       null.String
+	Missilehoming1      null.String
+	Missilehoming2      null.String
 	Trains              null.String
 	Builds              null.String
 	Researches          null.String
