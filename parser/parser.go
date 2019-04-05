@@ -91,6 +91,64 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *models.UnitFuncs, parsedSLKUni
 		})
 	}
 
+	for _, campaignUnitFunc := range customUnitFuncs.CampaignUnitFuncs {
+		if !campaignUnitFunc.Missileart.Valid && (campaignUnitFunc.Missileart1.Valid || campaignUnitFunc.Missileart2.Valid) {
+			missileArt1 := "_"
+			if campaignUnitFunc.Missileart1.Valid {
+				missileArt1 = campaignUnitFunc.Missileart1.String
+			}
+
+			missileArt := missileArt1
+			if campaignUnitFunc.Missileart2.Valid {
+				missileArt += "," + campaignUnitFunc.Missileart2.String
+			}
+
+			campaignUnitFunc.Missileart.SetValid(missileArt)
+		}
+
+		if !campaignUnitFunc.Missilearc.Valid && (campaignUnitFunc.Missilearc1.Valid || campaignUnitFunc.Missilearc2.Valid) {
+			missilearc1 := "_"
+			if campaignUnitFunc.Missilearc1.Valid {
+				missilearc1 = campaignUnitFunc.Missilearc1.String
+			}
+
+			missilearc := missilearc1
+			if campaignUnitFunc.Missilearc2.Valid {
+				missilearc += "," + campaignUnitFunc.Missilearc2.String
+			}
+
+			campaignUnitFunc.Missilearc.SetValid(missilearc)
+		}
+
+		if !campaignUnitFunc.Missilespeed.Valid && (campaignUnitFunc.Missilespeed1.Valid || campaignUnitFunc.Missilespeed2.Valid) {
+			missilespeed1 := "_"
+			if campaignUnitFunc.Missilespeed1.Valid {
+				missilespeed1 = campaignUnitFunc.Missilespeed1.String
+			}
+
+			missilespeed := missilespeed1
+			if campaignUnitFunc.Missilespeed2.Valid {
+				missilespeed += "," + campaignUnitFunc.Missilespeed2.String
+			}
+
+			campaignUnitFunc.Missilespeed.SetValid(missilespeed)
+		}
+
+		if !campaignUnitFunc.Missilehoming.Valid && (campaignUnitFunc.Missilehoming1.Valid || campaignUnitFunc.Missilehoming2.Valid) {
+			missilehoming1 := "_"
+			if campaignUnitFunc.Missilehoming1.Valid {
+				missilehoming1 = campaignUnitFunc.Missilehoming1.String
+			}
+
+			missilehoming := missilehoming1
+			if campaignUnitFunc.Missilehoming2.Valid {
+				missilehoming += "," + campaignUnitFunc.Missilehoming2.String
+			}
+
+			campaignUnitFunc.Missilehoming.SetValid(missilehoming)
+		}
+	}
+
 	log.Println("Writing to CampaignUnitFunc...")
 
 	campaignUnitFuncFile, err := os.Create(outputFolder + "/CampaignUnitFunc.txt")
