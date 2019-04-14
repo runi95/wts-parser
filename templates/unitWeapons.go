@@ -82,9 +82,6 @@ C;X76;K"spillRadius2"
 C;X77;K"InBeta"
 {{- range $index, $element := .UnitWeapons }}
 C;X1;Y{{ inc $index }};K{{ .UnitWeapID.String }}
-C;X2;K{{ .SortWeap.String }}
-C;X3;K{{ .Sort2.String }}
-C;X4;K{{ .Comment.String }}
 C;X5;K{{ .WeapsOn.String }}
 C;X6;K{{ .Acquire.String }}
 C;X7;K{{ .MinRange.String }}
@@ -157,7 +154,6 @@ C;X73;K{{ .TargCount2.String }}
 C;X74;K{{ .DamageLoss2.String }}
 C;X75;K{{ .SpillDist2.String }}
 C;X76;K{{ .SpillRadius2.String }}
-C;X77;K{{ .InBeta.String }}
 {{- end }}
 E
 {{ end }}`

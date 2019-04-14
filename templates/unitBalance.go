@@ -65,9 +65,6 @@ C;X60;K"collision"
 C;X61;K"InBeta"
 {{- range $index, $element := .UnitBalance }}
 C;X1;Y{{ inc $index }};K{{ .UnitBalanceID.String }}
-C;X2;K{{ .SortBalance.String }}
-C;X3;K{{ .Sort2.String }}
-C;X4;K"{{ .Comment.String }}
 C;X5;K{{ .Level.String }}
 C;X6;KFALSE
 C;X7;K{{ .Type.String }}
@@ -124,7 +121,6 @@ C;X57;K{{ .RepulseParam.String }}
 C;X58;K{{ .RepulseGroup.String }}
 C;X59;K{{ .RepulsePrio.String }}
 C;X60;K{{ .Collision.String }}
-C;X61;K{{ .InBeta.String }}
 {{- end }}
 E
 {{ end }}`

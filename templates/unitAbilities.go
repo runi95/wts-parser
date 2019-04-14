@@ -12,12 +12,9 @@ C;X6;K"heroAbilList"
 C;X7;K"InBeta"
 {{- range $index, $element := .UnitAbilities }}
 C;X1;Y{{ inc $index }};K{{ .UnitAbilID.String }}
-C;X2;K{{ .SortAbil.String }}
-C;X3;K{{ .Comment.String }}
 C;X4;K{{ .Auto.String }}
 C;X5;K{{ .AbilList.String }}
 C;X6;K{{ .HeroAbilList.String }}
-C;X7;K{{ .InBeta.String }}
 {{- end }}
 E
 {{ end }}`

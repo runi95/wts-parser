@@ -36,8 +36,6 @@ C;X30;K"InBeta"
 C;X31;K"version"
 {{- range $index, $element := .UnitData }}
 C;X1;Y{{ inc $index }};K{{ .UnitID.String }}
-C;X2;K{{ .Sort.String }}
-C;X3;K{{ .Comment.String }}
 C;X4;K{{ .Race.String }}
 C;X5;K{{ .Prio.String }}
 C;X6;K{{ .Threat.String }}
@@ -64,8 +62,6 @@ C;X26;K{{ .CanFlee.String }}
 C;X27;K{{ .RequireWaterRadius.String }}
 C;X28;K{{ .IsBuildOn.String }}
 C;X29;K{{ .CanBuildOn.String }}
-C;X30;K{{ .InBeta.String }}
-C;X31;K{{ .Version.String }}
 {{- end }}
 E
 {{ end }}`

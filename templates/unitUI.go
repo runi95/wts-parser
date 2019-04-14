@@ -56,7 +56,6 @@ C;X50;K"occH"
 C;X51;K"InBeta"
 {{- range $index, $element := .UnitUI }}
 C;X1;Y{{ inc $index }};K{{ .UnitUIID.String }}
-C;X2;K{{ .SortUI.String }}
 C;X3;K{{ .File.String }}
 C;X4;K{{ .FileVerFlags.String }}
 C;X5;K{{ .UnitSound.String }}
@@ -105,7 +104,6 @@ C;X47;K{{ .ShadowY.String }}
 C;X48;K{{ .ShadowOnWater.String }}
 C;X49;K{{ .SelCircOnWater.String }}
 C;X50;K{{ .OccH.String }}
-C;X51;K{{ .InBeta.String }}
 {{- end }}
 E
 {{ end }}`
