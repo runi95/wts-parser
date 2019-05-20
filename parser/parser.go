@@ -16,6 +16,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"text/template"
 )
 
@@ -46,49 +47,108 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *models.UnitFuncs, parsedSLKUni
 	if sortBeforeSave {
 		log.Println("Sorting units according to unit ID...")
 
-		sort.Slice(customUnitFuncs.CampaignUnitFuncs, func(i, j int) bool {
-			return customUnitFuncs.CampaignUnitFuncs[i].UnitId < customUnitFuncs.CampaignUnitFuncs[j].UnitId
-		})
+		var sortWaitGroup sync.WaitGroup
 
-		sort.Slice(customUnitFuncs.NightElfUnitFuncs, func(i, j int) bool {
-			return customUnitFuncs.NightElfUnitFuncs[i].UnitId < customUnitFuncs.NightElfUnitFuncs[j].UnitId
-		})
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
 
-		sort.Slice(customUnitFuncs.OrcUnitFuncs, func(i, j int) bool {
-			return customUnitFuncs.OrcUnitFuncs[i].UnitId < customUnitFuncs.OrcUnitFuncs[j].UnitId
-		})
+			sort.Slice(customUnitFuncs.CampaignUnitFuncs, func(i, j int) bool {
+				return customUnitFuncs.CampaignUnitFuncs[i].UnitId < customUnitFuncs.CampaignUnitFuncs[j].UnitId
+			})
+		}()
 
-		sort.Slice(customUnitFuncs.UndeadUnitFuncs, func(i, j int) bool {
-			return customUnitFuncs.UndeadUnitFuncs[i].UnitId < customUnitFuncs.UndeadUnitFuncs[j].UnitId
-		})
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
 
-		sort.Slice(customUnitFuncs.NeutralUnitFuncs, func(i, j int) bool {
-			return customUnitFuncs.NeutralUnitFuncs[i].UnitId < customUnitFuncs.NeutralUnitFuncs[j].UnitId
-		})
+			sort.Slice(customUnitFuncs.NightElfUnitFuncs, func(i, j int) bool {
+				return customUnitFuncs.NightElfUnitFuncs[i].UnitId < customUnitFuncs.NightElfUnitFuncs[j].UnitId
+			})
+		}()
 
-		sort.Slice(customUnitFuncs.HumanUnitFuncs, func(i, j int) bool {
-			return customUnitFuncs.HumanUnitFuncs[i].UnitId < customUnitFuncs.HumanUnitFuncs[j].UnitId
-		})
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
 
-		sort.Slice(parsedSLKUnitsAbilities, func(i, j int) bool {
-			return parsedSLKUnitsAbilities[i].UnitAbilID.String < parsedSLKUnitsAbilities[j].UnitAbilID.String
-		})
+			sort.Slice(customUnitFuncs.OrcUnitFuncs, func(i, j int) bool {
+				return customUnitFuncs.OrcUnitFuncs[i].UnitId < customUnitFuncs.OrcUnitFuncs[j].UnitId
+			})
+		}()
 
-		sort.Slice(parsedSLKUnitsData, func(i, j int) bool {
-			return parsedSLKUnitsData[i].UnitID.String < parsedSLKUnitsData[j].UnitID.String
-		})
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
 
-		sort.Slice(parsedSLKUnitsUI, func(i, j int) bool {
-			return parsedSLKUnitsUI[i].UnitUIID.String < parsedSLKUnitsUI[j].UnitUIID.String
-		})
+			sort.Slice(customUnitFuncs.UndeadUnitFuncs, func(i, j int) bool {
+				return customUnitFuncs.UndeadUnitFuncs[i].UnitId < customUnitFuncs.UndeadUnitFuncs[j].UnitId
+			})
+		}()
 
-		sort.Slice(parsedSLKUnitsWeapons, func(i, j int) bool {
-			return parsedSLKUnitsWeapons[i].UnitWeapID.String < parsedSLKUnitsWeapons[j].UnitWeapID.String
-		})
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
 
-		sort.Slice(parsedSLKUnitsBalance, func(i, j int) bool {
-			return parsedSLKUnitsBalance[i].UnitBalanceID.String < parsedSLKUnitsBalance[j].UnitBalanceID.String
-		})
+			sort.Slice(customUnitFuncs.NeutralUnitFuncs, func(i, j int) bool {
+				return customUnitFuncs.NeutralUnitFuncs[i].UnitId < customUnitFuncs.NeutralUnitFuncs[j].UnitId
+			})
+		}()
+
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
+
+			sort.Slice(customUnitFuncs.HumanUnitFuncs, func(i, j int) bool {
+				return customUnitFuncs.HumanUnitFuncs[i].UnitId < customUnitFuncs.HumanUnitFuncs[j].UnitId
+			})
+		}()
+
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
+
+			sort.Slice(parsedSLKUnitsAbilities, func(i, j int) bool {
+				return parsedSLKUnitsAbilities[i].UnitAbilID.String < parsedSLKUnitsAbilities[j].UnitAbilID.String
+			})
+		}()
+
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
+
+			sort.Slice(parsedSLKUnitsData, func(i, j int) bool {
+				return parsedSLKUnitsData[i].UnitID.String < parsedSLKUnitsData[j].UnitID.String
+			})
+		}()
+
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
+
+			sort.Slice(parsedSLKUnitsUI, func(i, j int) bool {
+				return parsedSLKUnitsUI[i].UnitUIID.String < parsedSLKUnitsUI[j].UnitUIID.String
+			})
+		}()
+
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
+
+			sort.Slice(parsedSLKUnitsWeapons, func(i, j int) bool {
+				return parsedSLKUnitsWeapons[i].UnitWeapID.String < parsedSLKUnitsWeapons[j].UnitWeapID.String
+			})
+		}()
+
+		sortWaitGroup.Add(1)
+		go func() {
+			defer sortWaitGroup.Done()
+
+			sort.Slice(parsedSLKUnitsBalance, func(i, j int) bool {
+				return parsedSLKUnitsBalance[i].UnitBalanceID.String < parsedSLKUnitsBalance[j].UnitBalanceID.String
+			})
+		}()
+
+		sortWaitGroup.Wait()
 	}
 
 	for _, campaignUnitFunc := range customUnitFuncs.CampaignUnitFuncs {
@@ -149,251 +209,298 @@ func WriteToFilesAndSaveToFolder(customUnitFuncs *models.UnitFuncs, parsedSLKUni
 		}
 	}
 
+	var writeToFileWaitGroup sync.WaitGroup
 	log.Println("Writing to CampaignUnitFunc...")
+	writeToFileWaitGroup.Add(1)
 
-	campaignUnitFuncFile, err := os.Create(outputFolder + "/CampaignUnitFunc.txt")
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		campaignUnitFuncFile, err := os.Create(outputFolder + "/CampaignUnitFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	campaignUnitFuncTemplate := template.New("UnitFunc")
-	campaignUnitFuncTemplate, err = campaignUnitFuncTemplate.Parse(templates.GetUnitFuncAndStringsTemplate())
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		campaignUnitFuncTemplate := template.New("UnitFunc")
+		campaignUnitFuncTemplate, err = campaignUnitFuncTemplate.Parse(templates.GetUnitFuncAndStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	err = campaignUnitFuncTemplate.ExecuteTemplate(campaignUnitFuncFile, "UnitFunc", customUnitFuncs.CampaignUnitFuncs)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		err = campaignUnitFuncTemplate.ExecuteTemplate(campaignUnitFuncFile, "UnitFunc", customUnitFuncs.CampaignUnitFuncs)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
 	if len(customUnitFuncs.HumanUnitFuncs) > 0 {
 		log.Println("Writing to HumanUnitFunc...")
+		writeToFileWaitGroup.Add(1)
 
-		humanUnitFuncFile, err := os.Create(outputFolder + "/HumanUnitFunc.txt")
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		go func() {
+			defer writeToFileWaitGroup.Done()
+			humanUnitFuncFile, err := os.Create(outputFolder + "/HumanUnitFunc.txt")
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		humanUnitFuncTemplate := template.New("UnitFunc")
-		humanUnitFuncTemplate, err = humanUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			humanUnitFuncTemplate := template.New("UnitFunc")
+			humanUnitFuncTemplate, err = humanUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		err = humanUnitFuncTemplate.ExecuteTemplate(humanUnitFuncFile, "UnitFunc", customUnitFuncs.HumanUnitFuncs)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			err = humanUnitFuncTemplate.ExecuteTemplate(humanUnitFuncFile, "UnitFunc", customUnitFuncs.HumanUnitFuncs)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}()
 	}
 
 	if len(customUnitFuncs.NightElfUnitFuncs) > 0 {
 		log.Println("Writing to NightElfUnitFunc...")
+		writeToFileWaitGroup.Add(1)
 
-		nightElfUnitFuncFile, err := os.Create(outputFolder + "/NightElfUnitFunc.txt")
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		go func() {
+			defer writeToFileWaitGroup.Done()
+			nightElfUnitFuncFile, err := os.Create(outputFolder + "/NightElfUnitFunc.txt")
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		nightElfUnitFuncTemplate := template.New("UnitFunc")
-		nightElfUnitFuncTemplate, err = nightElfUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			nightElfUnitFuncTemplate := template.New("UnitFunc")
+			nightElfUnitFuncTemplate, err = nightElfUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		err = nightElfUnitFuncTemplate.ExecuteTemplate(nightElfUnitFuncFile, "UnitFunc", customUnitFuncs.NightElfUnitFuncs)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			err = nightElfUnitFuncTemplate.ExecuteTemplate(nightElfUnitFuncFile, "UnitFunc", customUnitFuncs.NightElfUnitFuncs)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}()
 	}
 
 	if len(customUnitFuncs.OrcUnitFuncs) > 0 {
 		log.Println("Writing to OrcUnitFunc...")
+		writeToFileWaitGroup.Add(1)
 
-		orcUnitFuncFile, err := os.Create(outputFolder + "/OrcUnitFunc.txt")
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		go func() {
+			defer writeToFileWaitGroup.Done()
+			orcUnitFuncFile, err := os.Create(outputFolder + "/OrcUnitFunc.txt")
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		orcUnitFuncTemplate := template.New("UnitFunc")
-		orcUnitFuncTemplate, err = orcUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			orcUnitFuncTemplate := template.New("UnitFunc")
+			orcUnitFuncTemplate, err = orcUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		err = orcUnitFuncTemplate.ExecuteTemplate(orcUnitFuncFile, "UnitFunc", customUnitFuncs.OrcUnitFuncs)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			err = orcUnitFuncTemplate.ExecuteTemplate(orcUnitFuncFile, "UnitFunc", customUnitFuncs.OrcUnitFuncs)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}()
 	}
 
 	if len(customUnitFuncs.UndeadUnitFuncs) > 0 {
 		log.Println("Writing to UndeadUnitFunc...")
+		writeToFileWaitGroup.Add(1)
 
-		undeadUnitFuncFile, err := os.Create(outputFolder + "/UndeadUnitFunc.txt")
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		go func() {
+			defer writeToFileWaitGroup.Done()
+			undeadUnitFuncFile, err := os.Create(outputFolder + "/UndeadUnitFunc.txt")
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		undeadUnitFuncTemplate := template.New("UnitFunc")
-		undeadUnitFuncTemplate, err = undeadUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			undeadUnitFuncTemplate := template.New("UnitFunc")
+			undeadUnitFuncTemplate, err = undeadUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		err = undeadUnitFuncTemplate.ExecuteTemplate(undeadUnitFuncFile, "UnitFunc", customUnitFuncs.UndeadUnitFuncs)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			err = undeadUnitFuncTemplate.ExecuteTemplate(undeadUnitFuncFile, "UnitFunc", customUnitFuncs.UndeadUnitFuncs)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}()
 	}
 
 	if len(customUnitFuncs.NeutralUnitFuncs) > 0 {
 		log.Println("Writing to NeutralUnitFunc...")
+		writeToFileWaitGroup.Add(1)
 
-		neutralUnitFuncFile, err := os.Create(outputFolder + "/NeutralUnitFunc.txt")
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		go func() {
+			defer writeToFileWaitGroup.Done()
+			neutralUnitFuncFile, err := os.Create(outputFolder + "/NeutralUnitFunc.txt")
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		neutralUnitFuncTemplate := template.New("UnitFunc")
-		neutralUnitFuncTemplate, err = neutralUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			neutralUnitFuncTemplate := template.New("UnitFunc")
+			neutralUnitFuncTemplate, err = neutralUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		err = neutralUnitFuncTemplate.ExecuteTemplate(neutralUnitFuncFile, "UnitFunc", customUnitFuncs.NeutralUnitFuncs)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+			err = neutralUnitFuncTemplate.ExecuteTemplate(neutralUnitFuncFile, "UnitFunc", customUnitFuncs.NeutralUnitFuncs)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}()
 	}
 
 	log.Println("Writing to UnitAbilities.slk...")
+	writeToFileWaitGroup.Add(1)
 
-	unitAbilitiesFile, err := os.Create(outputFolder + "/UnitAbilities.slk")
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		unitAbilitiesFile, err := os.Create(outputFolder + "/UnitAbilities.slk")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	unitAbilitiesTemplate := template.New("UnitAbilities").Funcs(funcMap)
-	unitAbilitiesTemplate, err = unitAbilitiesTemplate.Parse(templates.GetUnitAbilitiesTemplate())
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		unitAbilitiesTemplate := template.New("UnitAbilities").Funcs(funcMap)
+		unitAbilitiesTemplate, err = unitAbilitiesTemplate.Parse(templates.GetUnitAbilitiesTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", models.UnitAbilitiesTemplate{RowCount: len(parsedSLKUnitsAbilities) + 1, UnitAbilities: parsedSLKUnitsAbilities})
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", models.UnitAbilitiesTemplate{RowCount: len(parsedSLKUnitsAbilities) + 1, UnitAbilities: parsedSLKUnitsAbilities})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
 	log.Println("Writing to UnitData.slk...")
+	writeToFileWaitGroup.Add(1)
 
-	unitDataFile, err := os.Create(outputFolder + "/UnitData.slk")
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		unitDataFile, err := os.Create(outputFolder + "/UnitData.slk")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	unitDataTemplate := template.New("UnitData").Funcs(funcMap)
-	unitDataTemplate, err = unitDataTemplate.Parse(templates.GetUnitDataTemplate())
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		unitDataTemplate := template.New("UnitData").Funcs(funcMap)
+		unitDataTemplate, err = unitDataTemplate.Parse(templates.GetUnitDataTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", models.UnitDataTemplate{RowCount: len(parsedSLKUnitsData) + 1, UnitData: parsedSLKUnitsData})
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", models.UnitDataTemplate{RowCount: len(parsedSLKUnitsData) + 1, UnitData: parsedSLKUnitsData})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
 	log.Println("Writing to UnitBalance.slk...")
+	writeToFileWaitGroup.Add(1)
 
-	unitBalanceFile, err := os.Create(outputFolder + "/UnitBalance.slk")
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		unitBalanceFile, err := os.Create(outputFolder + "/UnitBalance.slk")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	unitBalanceTemplate := template.New("UnitBalance").Funcs(funcMap)
-	unitBalanceTemplate, err = unitBalanceTemplate.Parse(templates.GetUnitBalanceTemplate())
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		unitBalanceTemplate := template.New("UnitBalance").Funcs(funcMap)
+		unitBalanceTemplate, err = unitBalanceTemplate.Parse(templates.GetUnitBalanceTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", models.UnitBalanceTemplate{RowCount: len(parsedSLKUnitsBalance) + 1, UnitBalance: parsedSLKUnitsBalance})
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", models.UnitBalanceTemplate{RowCount: len(parsedSLKUnitsBalance) + 1, UnitBalance: parsedSLKUnitsBalance})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
 	log.Println("Writing to UnitUI.slk...")
+	writeToFileWaitGroup.Add(1)
 
-	unitUIFile, err := os.Create(outputFolder + "/UnitUI.slk")
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		unitUIFile, err := os.Create(outputFolder + "/UnitUI.slk")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	unitUITemplate := template.New("UnitUI").Funcs(funcMap)
-	unitUITemplate, err = unitUITemplate.Parse(templates.GetUnitUITemplate())
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		unitUITemplate := template.New("UnitUI").Funcs(funcMap)
+		unitUITemplate, err = unitUITemplate.Parse(templates.GetUnitUITemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", models.UnitUITemplate{RowCount: len(parsedSLKUnitsUI) + 1, UnitUI: parsedSLKUnitsUI})
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", models.UnitUITemplate{RowCount: len(parsedSLKUnitsUI) + 1, UnitUI: parsedSLKUnitsUI})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
 	log.Println("Writing to UnitWeapons.slk...")
+	writeToFileWaitGroup.Add(1)
 
-	unitWeaponsFile, err := os.Create(outputFolder + "/UnitWeapons.slk")
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		unitWeaponsFile, err := os.Create(outputFolder + "/UnitWeapons.slk")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	unitWeaponsTemplate := template.New("UnitWeapons").Funcs(funcMap)
-	unitWeaponsTemplate, err = unitWeaponsTemplate.Parse(templates.GetUnitWeaponsTemplate())
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		unitWeaponsTemplate := template.New("UnitWeapons").Funcs(funcMap)
+		unitWeaponsTemplate, err = unitWeaponsTemplate.Parse(templates.GetUnitWeaponsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", models.UnitWeaponsTemplate{RowCount: len(parsedSLKUnitsWeapons) + 1, UnitWeapons: parsedSLKUnitsWeapons})
-	if err != nil {
-		log.Println(err)
-		return
-	}
+		err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", models.UnitWeaponsTemplate{RowCount: len(parsedSLKUnitsWeapons) + 1, UnitWeapons: parsedSLKUnitsWeapons})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	writeToFileWaitGroup.Wait()
 }
 
 /*************************
 
-       WTS PARSERS
+	   WTS PARSERS
 
 *************************/
 
@@ -461,7 +568,7 @@ func WtsToJson(input []byte) []byte {
 
 /*************************
 
-      JSON PARSERS
+	  JSON PARSERS
 
 *************************/
 
@@ -484,7 +591,7 @@ func JsonToWts(input []byte) []byte {
 
 /*************************
 
-       W3U PARSERS
+	   W3U PARSERS
 
 *************************/
 
@@ -865,7 +972,7 @@ func WtsToTxtUnitStringsWithBaseTxt(baseUnitStringMap map[string]*models.UnitStr
 
 /*************************
 
-       SLK PARSERS
+	   SLK PARSERS
 
 *************************/
 
@@ -1119,7 +1226,7 @@ func SLKToUnitBalance(input []byte) map[string]*models.UnitBalance {
 
 /*************************
 
-       TXT PARSERS
+	   TXT PARSERS
 
 *************************/
 
@@ -1199,7 +1306,7 @@ func TxtToUnitStrings(input []byte) map[string]*models.UnitString {
 
 /*************************
 
-    PRIVATE FUNCTIONS
+	PRIVATE FUNCTIONS
 
 *************************/
 
