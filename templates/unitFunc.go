@@ -11,6 +11,9 @@ Specialart={{ .Specialart.String }}
 {{- if .Casterupgradeart.Valid }}
 Casterupgradeart={{ .Casterupgradeart.String }}
 {{- end }}
+{{- if .Targetart.Valid }}
+Targetart={{ .Targetart.String }}
+{{- end }}
 {{- if .Scorescreenicon.Valid }}
 ScoreScreenIcon={{ .Scorescreenicon.String }}
 {{- end }}
@@ -37,6 +40,12 @@ Builds={{ .Builds.String }}
 {{- end }}
 {{- if .Researches.Valid }}
 Builds={{ .Researches.String }}
+{{- end }}
+{{- if .Upgrade.Valid }}
+Upgrade={{ .Upgrade.String }}
+{{- end }}
+{{- if .Sellunits.Valid }}
+Sellunits={{ .Sellunits.String }}
 {{- end }}
 {{- if .Requires.Valid }}
 Requires={{ .Requires.String }}
@@ -73,6 +82,21 @@ Attachmentanimprops={{ .Attachmentanimprops.String }}
 {{- end }}
 {{- if .Dependencyor.Valid }}
 DependencyOr={{ .Dependencyor.String }}
+{{- end }}
+{{- if .Makeitems.Valid }}
+Makeitems={{ .Makeitems.String }}
+{{- end }}
+{{- if .Attachmentlinkprops.Valid }}
+Attachmentlinkprops={{ .Attachmentlinkprops.String }}
+{{- end }}
+{{- if .Boneprops.Valid }}
+Boneprops={{ .Boneprops.String }}
+{{- end }}
+{{- if .Sellitems.Valid }}
+Sellitems={{ .Sellitems.String }}
+{{- end }}
+{{- if .Randomsoundlabel.Valid }}
+Randomsoundlabel={{ .Randomsoundlabel.String }}
 {{- end }}
 
 {{ end }}

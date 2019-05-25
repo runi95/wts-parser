@@ -1131,33 +1131,6 @@ func (w3uData *W3uData) TransformToUnitFunc(unitFunc *UnitFunc) {
 	if w3uData.Usei.Valid {
 		unitFunc.Sellitems.SetValid(w3uData.Usei.String)
 	}
-	if w3uData.Unam.Valid {
-		unitFunc.Name.SetValid(w3uData.Unam.String)
-	}
-	if w3uData.Uhot.Valid {
-		unitFunc.Hotkey.SetValid(w3uData.Uhot.String)
-	}
-	if w3uData.Ides.Valid {
-		unitFunc.Description.SetValid(w3uData.Ides.String)
-	}
-	if w3uData.Utip.Valid {
-		unitFunc.Tip.SetValid(w3uData.Utip.String)
-	}
-	if w3uData.Utub.Valid {
-		unitFunc.Ubertip.SetValid(w3uData.Utub.String)
-	}
-	if w3uData.Unsf.Valid {
-		unitFunc.Editorsuffix.SetValid(w3uData.Unsf.String)
-	}
-	if w3uData.Upro.Valid {
-		unitFunc.Propernames.SetValid(w3uData.Upro.String)
-	}
-	if w3uData.Utpr.Valid {
-		unitFunc.Revivetip.SetValid(w3uData.Utpr.String)
-	}
-	if w3uData.Uawt.Valid {
-		unitFunc.Awakentip.SetValid(w3uData.Uawt.String)
-	}
 	// unitString.Casterupgradeart.SetValid(?) // TODO: Set the correct value
 	// unitString.Casterupgradetip.SetValid(?) // TODO: Set the correct value
 	// unitString.Dependencyor.SetValid(?) // TODO: Set the correct value

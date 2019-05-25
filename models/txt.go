@@ -88,7 +88,7 @@ type UnitString struct {
 }
 
 type UnitStrings struct {
-	CampaignUnitFuncs   []*UnitString
+	CampaignUnitStrings []*UnitString
 	HumanUnitStrings    []*UnitString
 	NeutralUnitStrings  []*UnitString
 	NightElfUnitStrings []*UnitString
