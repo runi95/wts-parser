@@ -34,35 +34,88 @@ C;X28;K"isBuildOn"
 C;X29;K"canBuildOn"
 C;X30;K"InBeta"
 C;X31;K"version"
-{{- range $index, $element := .UnitData }}
-C;X1;Y{{ inc $index }};K{{ .UnitID.String }}
+{{- range $index, $element := .Unit }}{{- if .UnitID.Valid }}
+C;X1;Y{{ inc $index }};K{{ .UnitID.String }} 
+{{- if .Race.Valid }}
 C;X4;K{{ .Race.String }}
+{{- end }} 
+{{- if .Prio.Valid }}
 C;X5;K{{ .Prio.String }}
+{{- end }} 
+{{- if .Threat.Valid }}
 C;X6;K{{ .Threat.String }}
+{{- end }} 
+{{- if .Valid.Valid }}
 C;X7;K{{ .Valid.String }}
+{{- end }} 
+{{- if .DeathType.Valid }}
 C;X8;K{{ .DeathType.String }}
+{{- end }} 
+{{- if .Death.Valid }}
 C;X9;K{{ .Death.String }}
+{{- end }} 
+{{- if .CanSleep.Valid }}
 C;X10;K{{ .CanSleep.String }}
+{{- end }} 
+{{- if .CargoSize.Valid }}
 C;X11;K{{ .CargoSize.String }}
+{{- end }} 
+{{- if .Movetp.Valid }}
 C;X12;K{{ .Movetp.String }}
+{{- end }} 
+{{- if .MoveHeight.Valid }}
 C;X13;K{{ .MoveHeight.String }}
+{{- end }} 
+{{- if .MoveFloor.Valid }}
 C;X14;K{{ .MoveFloor.String }}
+{{- end }} 
+{{- if .TurnRate.Valid }}
 C;X15;K{{ .TurnRate.String }}
+{{- end }} 
+{{- if .PropWin.Valid }}
 C;X16;K{{ .PropWin.String }}
+{{- end }} 
+{{- if .OrientInterp.Valid }}
 C;X17;K{{ .OrientInterp.String }}
+{{- end }} 
+{{- if .Formation.Valid }}
 C;X18;K{{ .Formation.String }}
+{{- end }} 
+{{- if .TargType.Valid }}
 C;X19;K{{ .TargType.String }}
+{{- end }} 
+{{- if .PathTex.Valid }}
 C;X20;K{{ .PathTex.String }}
+{{- end }} 
+{{- if .FatLOS.Valid }}
 C;X21;K{{ .FatLOS.String }}
+{{- end }} 
+{{- if .Points.Valid }}
 C;X22;K{{ .Points.String }}
+{{- end }} 
+{{- if .BuffType.Valid }}
 C;X23;K{{ .BuffType.String }}
+{{- end }} 
+{{- if .BuffRadius.Valid }}
 C;X24;K{{ .BuffRadius.String }}
+{{- end }} 
+{{- if .NameCount.Valid }}
 C;X25;K{{ .NameCount.String }}
+{{- end }} 
+{{- if .CanFlee.Valid }}
 C;X26;K{{ .CanFlee.String }}
+{{- end }} 
+{{- if .RequireWaterRadius.Valid }}
 C;X27;K{{ .RequireWaterRadius.String }}
+{{- end }} 
+{{- if .IsBuildOn.Valid }}
 C;X28;K{{ .IsBuildOn.String }}
+{{- end }} 
+{{- if .CanBuildOn.Valid }}
 C;X29;K{{ .CanBuildOn.String }}
 {{- end }}
+{{- end }}
+{{- end }}
 E
-{{ end }}`
+{{- end }}`
 }

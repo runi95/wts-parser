@@ -3,7 +3,7 @@ package models
 import "gopkg.in/volatiletech/null.v6"
 
 type UnitFunc struct {
-	UnitId string
+	UnitFuncId null.String
 
 	Art                 null.String
 	Specialart          null.String
@@ -47,18 +47,6 @@ type UnitFunc struct {
 	Boneprops           null.String
 	Sellitems           null.String
 	Randomsoundlabel    null.String
-
-	Name              null.String
-	Hotkey            null.String
-	Description       null.String
-	Tip               null.String
-	Ubertip           null.String
-	Editorsuffix      null.String
-	Propernames       null.String
-	Revivetip         null.String
-	Awakentip         null.String
-	Casterupgradename null.String
-	Casterupgradetip  null.String
 }
 
 type UnitFuncs struct {
@@ -71,7 +59,7 @@ type UnitFuncs struct {
 }
 
 type UnitString struct {
-	UnitId string
+	UnitStringId null.String
 
 	Name              null.String
 	Hotkey            null.String
@@ -84,7 +72,6 @@ type UnitString struct {
 	Awakentip         null.String
 	Casterupgradename null.String
 	Casterupgradetip  null.String
-	Dependencyor      null.String
 }
 
 type UnitStrings struct {

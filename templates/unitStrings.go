@@ -1,9 +1,9 @@
 package templates
 
 func GetUnitStringsTemplate() string {
-	return `{{- define "UnitStrings" }}{{- range . }}[{{ .UnitId }}]
-{{- if .Name.Valid }}
-Name={{ .Name.String }}
+	return `{{- define "UnitStrings" }}{{- range . }}{{- if .UnitStringId.Valid }}{{- if campaignAndRaceCheck .Race.String .Campaign.String }}[{{ .UnitStringId.String }}]
+{{- if .UnitString.Name.Valid }}
+Name={{ .UnitString.Name.String }}
 {{- end }}
 {{- if .Hotkey.Valid }}
 Hotkey={{ .Hotkey.String }}
@@ -38,7 +38,8 @@ Casterupgradetip={{ .Casterupgradetip.String }}
 {{- if .Dependencyor.Valid }}
 DependencyOr={{ .Dependencyor.String }}
 {{- end }}
-
 {{ end }}
+{{- end }}
+{{- end }}
 {{- end }}`
 }

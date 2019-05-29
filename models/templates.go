@@ -1,5 +1,10 @@
 package models
 
+type RowCountTemplate struct {
+	RowCount int
+	Unit []*SLKUnit
+}
+
 type UnitBalanceTemplate struct {
 	RowCount    int
 	UnitBalance []*UnitBalance

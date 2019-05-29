@@ -7,12 +7,25 @@ import (
 	"gopkg.in/volatiletech/null.v6"
 	"log"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
 	"sync"
 	"text/template"
 )
+
+/*************************
+
+	   VARIABLES
+
+*************************/
+
+var xReg = regexp.MustCompile(`^X([0-9]+)$`)
+var yReg = regexp.MustCompile(`^Y([0-9]+)$`)
+var kReg = regexp.MustCompile(`^K.*`)
+var unitIdReg = regexp.MustCompile(`^\[(\w+)]`)
+var keyNameReg = regexp.MustCompile(`^(.+)=`)
 
 /*************************
 
@@ -27,40 +40,18 @@ type SlkInformation struct {
 	headerEndIndex int
 }
 
-type SlkSaveInformation struct {
-	CampaignUnitFuncs []*models.UnitFunc
-	NeutralUnitFuncs  []*models.UnitFunc
-	HumanUnitFuncs    []*models.UnitFunc
-	NightElfUnitFuncs []*models.UnitFunc
-	OrcUnitFuncs      []*models.UnitFunc
-	UndeadUnitFuncs   []*models.UnitFunc
-
-	CampaignUnitStrings []*models.UnitString
-	NeutralUnitStrings  []*models.UnitString
-	HumanUnitStrings    []*models.UnitString
-	NightElfUnitStrings []*models.UnitString
-	OrcUnitStrings      []*models.UnitString
-	UndeadUnitStrings   []*models.UnitString
-
-	UnitAbilities []*models.UnitAbilities
-	UnitBalance   []*models.UnitBalance
-	UnitData      []*models.UnitData
-	UnitUI        []*models.UnitUI
-	UnitWeapons   []*models.UnitWeapons
-}
-
 /*************************
 
 	   SLK PARSERS
 
 *************************/
 
-func WriteToFiles(slkSaveInfo *SlkSaveInformation) {
-	WriteToFilesAndSaveToFolder(slkSaveInfo, "out", true)
+func WriteToFiles(unitList []*models.SLKUnit) {
+	WriteToFilesAndSaveToFolder(unitList, "out", true)
 }
 
-func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder string, sortBeforeSave bool) {
-	if slkSaveInfo == nil {
+func WriteToFilesAndSaveToFolder(unitList []*models.SLKUnit, outputFolder string, sortBeforeSave bool) {
+	if len(unitList) < 1 {
 		return
 	}
 
@@ -73,166 +64,9 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 	if sortBeforeSave {
 		log.Println("Sorting units according to unit ID...")
 
-		var sortWaitGroup sync.WaitGroup
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.CampaignUnitFuncs, func(i, j int) bool {
-				return slkSaveInfo.CampaignUnitFuncs[i].UnitId < slkSaveInfo.CampaignUnitFuncs[j].UnitId
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.NightElfUnitFuncs, func(i, j int) bool {
-				return slkSaveInfo.NightElfUnitFuncs[i].UnitId < slkSaveInfo.NightElfUnitFuncs[j].UnitId
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.OrcUnitFuncs, func(i, j int) bool {
-				return slkSaveInfo.OrcUnitFuncs[i].UnitId < slkSaveInfo.OrcUnitFuncs[j].UnitId
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.UndeadUnitFuncs, func(i, j int) bool {
-				return slkSaveInfo.UndeadUnitFuncs[i].UnitId < slkSaveInfo.UndeadUnitFuncs[j].UnitId
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.NeutralUnitFuncs, func(i, j int) bool {
-				return slkSaveInfo.NeutralUnitFuncs[i].UnitId < slkSaveInfo.NeutralUnitFuncs[j].UnitId
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.HumanUnitFuncs, func(i, j int) bool {
-				return slkSaveInfo.HumanUnitFuncs[i].UnitId < slkSaveInfo.HumanUnitFuncs[j].UnitId
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.UnitAbilities, func(i, j int) bool {
-				return slkSaveInfo.UnitAbilities[i].UnitAbilID.String < slkSaveInfo.UnitAbilities[j].UnitAbilID.String
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.UnitData, func(i, j int) bool {
-				return slkSaveInfo.UnitData[i].UnitID.String < slkSaveInfo.UnitData[j].UnitID.String
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.UnitUI, func(i, j int) bool {
-				return slkSaveInfo.UnitUI[i].UnitUIID.String < slkSaveInfo.UnitUI[j].UnitUIID.String
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.UnitWeapons, func(i, j int) bool {
-				return slkSaveInfo.UnitWeapons[i].UnitWeapID.String < slkSaveInfo.UnitWeapons[j].UnitWeapID.String
-			})
-		}()
-
-		sortWaitGroup.Add(1)
-		go func() {
-			defer sortWaitGroup.Done()
-
-			sort.Slice(slkSaveInfo.UnitBalance, func(i, j int) bool {
-				return slkSaveInfo.UnitBalance[i].UnitBalanceID.String < slkSaveInfo.UnitBalance[j].UnitBalanceID.String
-			})
-		}()
-
-		sortWaitGroup.Wait()
-	}
-
-	for _, campaignUnitFunc := range slkSaveInfo.CampaignUnitFuncs {
-		if campaignUnitFunc.Missileart1.Valid || campaignUnitFunc.Missileart2.Valid {
-			missileArt1 := "_"
-			if campaignUnitFunc.Missileart1.Valid {
-				missileArt1 = campaignUnitFunc.Missileart1.String
-			}
-
-			missileArt := missileArt1
-			if campaignUnitFunc.Missileart2.Valid {
-				missileArt += "," + campaignUnitFunc.Missileart2.String
-			}
-
-			campaignUnitFunc.Missileart.SetValid(missileArt)
-		}
-
-		if campaignUnitFunc.Missilearc1.Valid || campaignUnitFunc.Missilearc2.Valid {
-			missilearc1 := "_"
-			if campaignUnitFunc.Missilearc1.Valid {
-				missilearc1 = campaignUnitFunc.Missilearc1.String
-			}
-
-			missilearc := missilearc1
-			if campaignUnitFunc.Missilearc2.Valid {
-				missilearc += "," + campaignUnitFunc.Missilearc2.String
-			}
-
-			campaignUnitFunc.Missilearc.SetValid(missilearc)
-		}
-
-		if campaignUnitFunc.Missilespeed1.Valid || campaignUnitFunc.Missilespeed2.Valid {
-			missilespeed1 := "_"
-			if campaignUnitFunc.Missilespeed1.Valid {
-				missilespeed1 = campaignUnitFunc.Missilespeed1.String
-			}
-
-			missilespeed := missilespeed1
-			if campaignUnitFunc.Missilespeed2.Valid {
-				missilespeed += "," + campaignUnitFunc.Missilespeed2.String
-			}
-
-			campaignUnitFunc.Missilespeed.SetValid(missilespeed)
-		}
-
-		if campaignUnitFunc.Missilehoming1.Valid || campaignUnitFunc.Missilehoming2.Valid {
-			missilehoming1 := "_"
-			if campaignUnitFunc.Missilehoming1.Valid {
-				missilehoming1 = campaignUnitFunc.Missilehoming1.String
-			}
-
-			missilehoming := missilehoming1
-			if campaignUnitFunc.Missilehoming2.Valid {
-				missilehoming += "," + campaignUnitFunc.Missilehoming2.String
-			}
-
-			campaignUnitFunc.Missilehoming.SetValid(missilehoming)
-		}
+		sort.Slice(unitList, func(i, j int) bool {
+			return unitList[i].UnitID.String < unitList[j].UnitID.String
+		})
 	}
 
 	var writeToFileWaitGroup sync.WaitGroup
@@ -247,14 +81,19 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 			return
 		}
 
-		campaignUnitFuncTemplate := template.New("UnitFunc")
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				return isCampaign == "1"
+			},
+		}
+		campaignUnitFuncTemplate := template.New("UnitFunc").Funcs(customFuncMap)
 		campaignUnitFuncTemplate, err = campaignUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		err = campaignUnitFuncTemplate.ExecuteTemplate(campaignUnitFuncFile, "UnitFunc", slkSaveInfo.CampaignUnitFuncs)
+		err = campaignUnitFuncTemplate.ExecuteTemplate(campaignUnitFuncFile, "UnitFunc", unitList)
 		if err != nil {
 			log.Println(err)
 			return
@@ -272,154 +111,336 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 			return
 		}
 
-		campaignUnitStringsTemplate := template.New("UnitStrings")
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				return isCampaign == "1"
+			},
+		}
+		campaignUnitStringsTemplate := template.New("UnitStrings").Funcs(customFuncMap)
 		campaignUnitStringsTemplate, err = campaignUnitStringsTemplate.Parse(templates.GetUnitStringsTemplate())
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		err = campaignUnitStringsTemplate.ExecuteTemplate(campaignUnitStringsFile, "UnitStrings", slkSaveInfo.CampaignUnitStrings)
+		err = campaignUnitStringsTemplate.ExecuteTemplate(campaignUnitStringsFile, "UnitStrings", unitList)
 		if err != nil {
 			log.Println(err)
 			return
 		}
 	}()
 
-	if len(slkSaveInfo.HumanUnitFuncs) > 0 {
-		log.Println("Writing to HumanUnitFunc...")
-		writeToFileWaitGroup.Add(1)
+	log.Println("Writing to HumanUnitFunc...")
+	writeToFileWaitGroup.Add(1)
 
-		go func() {
-			defer writeToFileWaitGroup.Done()
-			humanUnitFuncFile, err := os.Create(outputFolder + "/HumanUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-				return
-			}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		humanUnitFuncFile, err := os.Create(outputFolder + "/HumanUnitFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			humanUnitFuncTemplate := template.New("UnitFunc")
-			humanUnitFuncTemplate, err = humanUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-			if err != nil {
-				log.Println(err)
-				return
-			}
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "human"
+			},
+		}
+		humanUnitFuncTemplate := template.New("UnitFunc").Funcs(customFuncMap)
+		humanUnitFuncTemplate, err = humanUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			err = humanUnitFuncTemplate.ExecuteTemplate(humanUnitFuncFile, "UnitFunc", slkSaveInfo.HumanUnitFuncs)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-		}()
-	}
+		err = humanUnitFuncTemplate.ExecuteTemplate(humanUnitFuncFile, "UnitFunc", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
-	if len(slkSaveInfo.NightElfUnitFuncs) > 0 {
-		log.Println("Writing to NightElfUnitFunc...")
-		writeToFileWaitGroup.Add(1)
+	log.Println("Writing to HumanUnitStrings...")
+	writeToFileWaitGroup.Add(1)
 
-		go func() {
-			defer writeToFileWaitGroup.Done()
-			nightElfUnitFuncFile, err := os.Create(outputFolder + "/NightElfUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-				return
-			}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		humanUnitStringsFile, err := os.Create(outputFolder + "/HumanUnitStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			nightElfUnitFuncTemplate := template.New("UnitFunc")
-			nightElfUnitFuncTemplate, err = nightElfUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-			if err != nil {
-				log.Println(err)
-				return
-			}
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "human"
+			},
+		}
+		humanUnitStringsTemplate := template.New("UnitStrings").Funcs(customFuncMap)
+		humanUnitStringsTemplate, err = humanUnitStringsTemplate.Parse(templates.GetUnitStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			err = nightElfUnitFuncTemplate.ExecuteTemplate(nightElfUnitFuncFile, "UnitFunc", slkSaveInfo.NightElfUnitFuncs)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-		}()
-	}
+		err = humanUnitStringsTemplate.ExecuteTemplate(humanUnitStringsFile, "UnitStrings", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
-	if len(slkSaveInfo.OrcUnitFuncs) > 0 {
-		log.Println("Writing to OrcUnitFunc...")
-		writeToFileWaitGroup.Add(1)
+	log.Println("Writing to NightElfUnitFunc...")
+	writeToFileWaitGroup.Add(1)
 
-		go func() {
-			defer writeToFileWaitGroup.Done()
-			orcUnitFuncFile, err := os.Create(outputFolder + "/OrcUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-				return
-			}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		nightElfUnitFuncFile, err := os.Create(outputFolder + "/NightElfUnitFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			orcUnitFuncTemplate := template.New("UnitFunc")
-			orcUnitFuncTemplate, err = orcUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-			if err != nil {
-				log.Println(err)
-				return
-			}
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "nightelf"
+			},
+		}
+		nightElfUnitFuncTemplate := template.New("UnitFunc").Funcs(customFuncMap)
+		nightElfUnitFuncTemplate, err = nightElfUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			err = orcUnitFuncTemplate.ExecuteTemplate(orcUnitFuncFile, "UnitFunc", slkSaveInfo.OrcUnitFuncs)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-		}()
-	}
+		err = nightElfUnitFuncTemplate.ExecuteTemplate(nightElfUnitFuncFile, "UnitFunc", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
-	if len(slkSaveInfo.UndeadUnitFuncs) > 0 {
-		log.Println("Writing to UndeadUnitFunc...")
-		writeToFileWaitGroup.Add(1)
+	log.Println("Writing to NightElfUnitStrings...")
+	writeToFileWaitGroup.Add(1)
 
-		go func() {
-			defer writeToFileWaitGroup.Done()
-			undeadUnitFuncFile, err := os.Create(outputFolder + "/UndeadUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-				return
-			}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		nightElfUnitStringsFile, err := os.Create(outputFolder + "/NightElfUnitStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			undeadUnitFuncTemplate := template.New("UnitFunc")
-			undeadUnitFuncTemplate, err = undeadUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-			if err != nil {
-				log.Println(err)
-				return
-			}
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "nightelf"
+			},
+		}
+		nightElfUnitStringsTemplate := template.New("UnitStrings").Funcs(customFuncMap)
+		nightElfUnitStringsTemplate, err = nightElfUnitStringsTemplate.Parse(templates.GetUnitStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			err = undeadUnitFuncTemplate.ExecuteTemplate(undeadUnitFuncFile, "UnitFunc", slkSaveInfo.UndeadUnitFuncs)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-		}()
-	}
+		err = nightElfUnitStringsTemplate.ExecuteTemplate(nightElfUnitStringsFile, "UnitStrings", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
-	if len(slkSaveInfo.NeutralUnitFuncs) > 0 {
-		log.Println("Writing to NeutralUnitFunc...")
-		writeToFileWaitGroup.Add(1)
+	log.Println("Writing to OrcUnitFunc...")
+	writeToFileWaitGroup.Add(1)
 
-		go func() {
-			defer writeToFileWaitGroup.Done()
-			neutralUnitFuncFile, err := os.Create(outputFolder + "/NeutralUnitFunc.txt")
-			if err != nil {
-				log.Println(err)
-				return
-			}
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		orcUnitFuncFile, err := os.Create(outputFolder + "/OrcUnitFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			neutralUnitFuncTemplate := template.New("UnitFunc")
-			neutralUnitFuncTemplate, err = neutralUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
-			if err != nil {
-				log.Println(err)
-				return
-			}
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "orc"
+			},
+		}
+		orcUnitFuncTemplate := template.New("UnitFunc").Funcs(customFuncMap)
+		orcUnitFuncTemplate, err = orcUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-			err = neutralUnitFuncTemplate.ExecuteTemplate(neutralUnitFuncFile, "UnitFunc", slkSaveInfo.NeutralUnitFuncs)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-		}()
-	}
+		err = orcUnitFuncTemplate.ExecuteTemplate(orcUnitFuncFile, "UnitFunc", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to OrcUnitStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		orcUnitStringsFile, err := os.Create(outputFolder + "/OrcUnitStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "orc"
+			},
+		}
+		orcUnitStringsTemplate := template.New("UnitStrings").Funcs(customFuncMap)
+		orcUnitStringsTemplate, err = orcUnitStringsTemplate.Parse(templates.GetUnitStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = orcUnitStringsTemplate.ExecuteTemplate(orcUnitStringsFile, "UnitStrings", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to UndeadUnitFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		undeadUnitFuncFile, err := os.Create(outputFolder + "/UndeadUnitFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "undead"
+			},
+		}
+		undeadUnitFuncTemplate := template.New("UnitFunc").Funcs(customFuncMap)
+		undeadUnitFuncTemplate, err = undeadUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = undeadUnitFuncTemplate.ExecuteTemplate(undeadUnitFuncFile, "UnitFunc", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to UndeadUnitStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		undeadUnitStringsFile, err := os.Create(outputFolder + "/UndeadUnitStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				return isCampaign != "1" && strings.ToLower(trimmedRace) == "undead"
+			},
+		}
+		undeadUnitStringsTemplate := template.New("UnitStrings").Funcs(customFuncMap)
+		undeadUnitStringsTemplate, err = undeadUnitStringsTemplate.Parse(templates.GetUnitStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = undeadUnitStringsTemplate.ExecuteTemplate(undeadUnitStringsFile, "UnitStrings", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to NeutralUnitFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		neutralUnitFuncFile, err := os.Create(outputFolder + "/NeutralUnitFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return isCampaign != "1" && lowercaseRace != "human" && lowercaseRace != "nightelf" && lowercaseRace != "orc" && lowercaseRace != "undead"
+			},
+		}
+		neutralUnitFuncTemplate := template.New("UnitFunc").Funcs(customFuncMap)
+		neutralUnitFuncTemplate, err = neutralUnitFuncTemplate.Parse(templates.GetUnitFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = neutralUnitFuncTemplate.ExecuteTemplate(neutralUnitFuncFile, "UnitFunc", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to NeutralUnitStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		neutralUnitStringsFile, err := os.Create(outputFolder + "/NeutralUnitStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"campaignAndRaceCheck": func(race string, isCampaign string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return isCampaign != "1" && lowercaseRace != "human" && lowercaseRace != "nightelf" && lowercaseRace != "orc" && lowercaseRace != "undead"
+			},
+		}
+		neutralUnitStringsTemplate := template.New("UnitStrings").Funcs(customFuncMap)
+		neutralUnitStringsTemplate, err = neutralUnitStringsTemplate.Parse(templates.GetUnitStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = neutralUnitStringsTemplate.ExecuteTemplate(neutralUnitStringsFile, "UnitStrings", unitList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
 
 	log.Println("Writing to UnitAbilities.slk...")
 	writeToFileWaitGroup.Add(1)
@@ -439,7 +460,7 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 			return
 		}
 
-		err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", models.UnitAbilitiesTemplate{RowCount: len(slkSaveInfo.UnitAbilities) + 1, UnitAbilities: slkSaveInfo.UnitAbilities})
+		err = unitAbilitiesTemplate.ExecuteTemplate(unitAbilitiesFile, "UnitAbilities", models.RowCountTemplate{RowCount: len(unitList) + 1, Unit: unitList})
 		if err != nil {
 			log.Println(err)
 			return
@@ -464,7 +485,7 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 			return
 		}
 
-		err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", models.UnitDataTemplate{RowCount: len(slkSaveInfo.UnitData) + 1, UnitData: slkSaveInfo.UnitData})
+		err = unitDataTemplate.ExecuteTemplate(unitDataFile, "UnitData", models.RowCountTemplate{RowCount: len(unitList) + 1, Unit: unitList})
 		if err != nil {
 			log.Println(err)
 			return
@@ -489,7 +510,7 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 			return
 		}
 
-		err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", models.UnitBalanceTemplate{RowCount: len(slkSaveInfo.UnitBalance) + 1, UnitBalance: slkSaveInfo.UnitBalance})
+		err = unitBalanceTemplate.ExecuteTemplate(unitBalanceFile, "UnitBalance", models.RowCountTemplate{RowCount: len(unitList) + 1, Unit: unitList})
 		if err != nil {
 			log.Println(err)
 			return
@@ -514,7 +535,7 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 			return
 		}
 
-		err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", models.UnitUITemplate{RowCount: len(slkSaveInfo.UnitUI) + 1, UnitUI: slkSaveInfo.UnitUI})
+		err = unitUITemplate.ExecuteTemplate(unitUIFile, "UnitUI", models.RowCountTemplate{RowCount: len(unitList) + 1, Unit: unitList})
 		if err != nil {
 			log.Println(err)
 			return
@@ -539,7 +560,7 @@ func WriteToFilesAndSaveToFolder(slkSaveInfo *SlkSaveInformation, outputFolder s
 			return
 		}
 
-		err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", models.UnitWeaponsTemplate{RowCount: len(slkSaveInfo.UnitWeapons) + 1, UnitWeapons: slkSaveInfo.UnitWeapons})
+		err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", models.RowCountTemplate{RowCount: len(unitList) + 1, Unit: unitList})
 		if err != nil {
 			log.Println(err)
 			return
@@ -570,17 +591,31 @@ func GenericSlkReader(input []byte) (*SlkInformation, error) {
 	headerLineIndex := 2
 	isNotAtEndOfHeader := true
 	for isNotAtEndOfHeader {
-		headerLineSubmatch := SLKHeadRegex.FindStringSubmatch(split[headerLineIndex])
-		if len(headerLineSubmatch[2]) > 0 && headerLineSubmatch[2] != "1" {
+		headerSplit := strings.Split(split[headerLineIndex], ";")
+		var x *string
+		var y *string
+		var k *string
+
+		for _, s := range headerSplit {
+			if xReg.MatchString(s) {
+				newX := s[1:]
+				x = &newX
+			} else if kReg.MatchString(s) {
+				newK := s[1:]
+				k = &newK
+			} else if yReg.MatchString(s) {
+				newY := s[1:]
+				y = &newY
+			}
+		}
+
+		if y != nil && *y != "1" {
 			isNotAtEndOfHeader = false
 		} else {
-			if len(headerLineSubmatch) > 1 {
-				val := headerLineSubmatch[3]
-				if val == "comment(s)" {
-					headerMap[headerLineSubmatch[1]] = "comment"
-				} else {
-					headerMap[headerLineSubmatch[1]] = val
-				}
+			if *k == "comment(s)" {
+				headerMap[*x] = "comment"
+			} else {
+				headerMap[*x] = *k
 			}
 
 			headerLineIndex++
@@ -595,277 +630,190 @@ func GenericSlkReader(input []byte) (*SlkInformation, error) {
 	return slkInformation, nil
 }
 
-func SLKToUnitUI(input []byte) map[string]*models.UnitUI {
-	unitUIMap := make(map[string]*models.UnitUI)
-	var currentUnitUI *models.UnitUI
-	slkInformation, err := GenericSlkReader(input)
+/**
+ * A function that populates a map of SLKUnit structures with data from any SLK file like the UnitData.slk, UnitBalance.slk and UnitUI.slk files.
+ * If you want to add file data from a TXT file like CampaignUnitFunc.txt you need to run PopulateUnitMapWithTxtFileData.
+ * To populate a map with values from multiple files you need to call this function several times like in the code example below
+ *
+ * func populateMapWithDataFromMultipleFiles() error {
+ *   unitDataBytes, err := ioutil.ReadFile("./UnitData.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   unitBalanceBytes, err := ioutil.ReadFile("./UnitBalance.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   var unitMap = make(map[string]*models.SLKUnit)
+ *   parser.PopulateUnitMapWithSlkFileData(unitDataBytes, unitMap)
+ *   parser.PopulateUnitMapWithSlkFileData(unitBalanceBytes, unitMap)
+ *
+ *   // You can also add data from txt files like seen below
+ *   campaignUnitFuncBytes, err := ioutil.ReadFile("./CampaignUnitFunc.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   // Note that this is not the same function as used above!
+ *   parser.PopulateUnitMapWithTxtFileData(campaignUnitFuncBytes, unitMap)
+ *
+ *   return nil
+ * }
+ *
+ */
+func PopulateUnitMapWithSlkFileData(inputFileData []byte, unitMap map[string]*models.SLKUnit) {
+	var currentUnitId *string
+	slkInformation, err := GenericSlkReader(inputFileData)
 	if err != nil {
 		log.Println(err)
-
-		return nil
+		return
 	}
 
 	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
 	for _, bodyLine := range bodyLines {
-		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
-		if bodyLineSubmatch != nil {
-			if len(bodyLineSubmatch[2]) > 0 {
-				if currentUnitUI != nil && currentUnitUI.UnitUIID.Valid {
-					unitUIMap[currentUnitUI.UnitUIID.String] = currentUnitUI
-				}
+		var x *string
+		var y *string
+		var k *string
 
-				currentUnitUI = new(models.UnitUI)
+		bodySplit := strings.Split(bodyLine, ";")
+		for _, s := range bodySplit {
+			if xReg.MatchString(s) {
+				newX := s[1:]
+				x = &newX
+			} else if kReg.MatchString(s) {
+				newK := s[1:]
+				k = &newK
+			} else if yReg.MatchString(s) {
+				newY := s[1:]
+				y = &newY
+			}
+		}
+
+		if x != nil && k != nil {
+			if y != nil { // y != nil means we've reached the beginning of a new unit
+				trimmedId := strings.Replace(*k, "\"", "", -1)
+				currentUnitId = &trimmedId
+
+				// Check if unitMap does not already have this key
+				if _, ok := unitMap[trimmedId]; !ok {
+					newUnit := new(models.SLKUnit)
+					newUnit.UnitUI = new(models.UnitUI)
+					newUnit.UnitData = new(models.UnitData)
+					newUnit.UnitBalance = new(models.UnitBalance)
+					newUnit.UnitWeapons = new(models.UnitWeapons)
+					newUnit.UnitAbilities = new(models.UnitAbilities)
+					newUnit.UnitFunc = new(models.UnitFunc)
+					newUnit.UnitString = new(models.UnitString)
+
+					unitMap[trimmedId] = newUnit
+				}
 			}
 
-			nullString := new(null.String)
-			nullString.SetValid(bodyLineSubmatch[3])
+			if currentUnitId != nil {
+				nullString := new(null.String)
+				nullString.SetValid(*k)
 
-			err = reflectUpdateValueOnFieldNullStruct(currentUnitUI, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
-			if err != nil {
-				log.Println(err)
+				if unit, ok := unitMap[*currentUnitId]; ok {
+					if _, headerMapOk := slkInformation.headerMap[*x]; headerMapOk {
+						err = reflectUpdateValueOnFieldNullStruct(unit, *nullString, strings.Title(slkInformation.headerMap[*x]))
+						if err != nil {
+							log.Println(err)
+						}
+					}
+				}
 			}
 		}
 	}
-
-	if currentUnitUI != nil && currentUnitUI.UnitUIID.Valid {
-		unitUIMap[currentUnitUI.UnitUIID.String] = currentUnitUI
-	}
-
-	return unitUIMap
 }
 
-func SlkToUnitData(input []byte) map[string]*models.UnitData {
-	unitDataMap := make(map[string]*models.UnitData)
-	var currentUnitData *models.UnitData
-	slkInformation, err := GenericSlkReader(input)
-	if err != nil {
-		log.Println(err)
+/**
+ * A function that populates a map of SLKUnit structures with data from any TXT file like the CampaignUnitFunc.txt, CampaignUnitStrings.txt and HumanUnitFunc.txt files.
+ * If you want to add file data from an SLK file like UnitData.slk you need to run PopulateUnitMapWithSlkFileData.
+ * To populate a map with values from multiple files you need to call this function several times like in the code example below
+ *
+ * func populateMapWithDataFromMultipleFiles() error {
+ *   campaignUnitFuncBytes, err := ioutil.ReadFile("./CampaignUnitFunc.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   campaignUnitStringsBytes, err := ioutil.ReadFile("./CampaignUnitStrings.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   var unitMap = make(map[string]*models.SLKUnit)
+ *   parser.PopulateUnitMapWithTxtFileData(campaignUnitFuncBytes, unitMap)
+ *   parser.PopulateUnitMapWithTxtFileData(campaignUnitStringsBytes, unitMap)
+ *
+ *   // You can also add data from slk files like seen below
+ *   unitDataBytes, err := ioutil.ReadFile("./UnitData.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   // Note that this is not the same function as used above!
+ *   parser.PopulateUnitMapWithSlkFileData(unitDataBytes, unitMap)
+ *
+ *   return nil
+ * }
+ *
+ */
+func PopulateUnitMapWithTxtFileData(inputFileData []byte, unitMap map[string]*models.SLKUnit) {
+	var currentUnitId *string
 
-		return nil
-	}
-
-	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
-	for _, bodyLine := range bodyLines {
-		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
-		if bodyLineSubmatch != nil {
-			if len(bodyLineSubmatch[2]) > 0 {
-				if currentUnitData != nil && currentUnitData.UnitID.Valid {
-					unitDataMap[currentUnitData.UnitID.String] = currentUnitData
-				}
-
-				currentUnitData = new(models.UnitData)
-			}
-
-			nullString := new(null.String)
-			nullString.SetValid(bodyLineSubmatch[3])
-
-			err = reflectUpdateValueOnFieldNullStruct(currentUnitData, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
-			if err != nil {
-				log.Println(err)
-			}
-		}
-	}
-
-	if currentUnitData != nil && currentUnitData.UnitID.Valid {
-		unitDataMap[currentUnitData.UnitID.String] = currentUnitData
-	}
-
-	return unitDataMap
-}
-
-func SlkToUnitAbilities(input []byte) map[string]*models.UnitAbilities {
-	unitAbilitiesMap := make(map[string]*models.UnitAbilities)
-	var currentUnitAbilities *models.UnitAbilities
-	slkInformation, err := GenericSlkReader(input)
-	if err != nil {
-		log.Println(err)
-
-		return nil
-	}
-
-	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
-	for _, bodyLine := range bodyLines {
-		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
-		if bodyLineSubmatch != nil {
-			if len(bodyLineSubmatch[2]) > 0 {
-				if currentUnitAbilities != nil && currentUnitAbilities.UnitAbilID.Valid {
-					unitAbilitiesMap[currentUnitAbilities.UnitAbilID.String] = currentUnitAbilities
-				}
-
-				currentUnitAbilities = new(models.UnitAbilities)
-			}
-
-			nullString := new(null.String)
-			nullString.SetValid(bodyLineSubmatch[3])
-
-			err = reflectUpdateValueOnFieldNullStruct(currentUnitAbilities, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
-			if err != nil {
-				log.Println(err)
-			}
-		}
-	}
-
-	if currentUnitAbilities != nil && currentUnitAbilities.UnitAbilID.Valid {
-		unitAbilitiesMap[currentUnitAbilities.UnitAbilID.String] = currentUnitAbilities
-	}
-
-	return unitAbilitiesMap
-}
-
-func SLKToUnitWeapons(input []byte) map[string]*models.UnitWeapons {
-	unitWeaponsMap := make(map[string]*models.UnitWeapons)
-	var currentUnitWeapons *models.UnitWeapons
-	slkInformation, err := GenericSlkReader(input)
-	if err != nil {
-		log.Println(err)
-
-		return nil
-	}
-
-	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
-	for _, bodyLine := range bodyLines {
-		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
-		if bodyLineSubmatch != nil {
-			if len(bodyLineSubmatch[2]) > 0 {
-				if currentUnitWeapons != nil && currentUnitWeapons.UnitWeapID.Valid {
-					unitWeaponsMap[currentUnitWeapons.UnitWeapID.String] = currentUnitWeapons
-				}
-
-				currentUnitWeapons = new(models.UnitWeapons)
-			}
-
-			nullString := new(null.String)
-			nullString.SetValid(bodyLineSubmatch[3])
-
-			err = reflectUpdateValueOnFieldNullStruct(currentUnitWeapons, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
-			if err != nil {
-				log.Println(err)
-			}
-		}
-	}
-
-	if currentUnitWeapons != nil && currentUnitWeapons.UnitWeapID.Valid {
-		unitWeaponsMap[currentUnitWeapons.UnitWeapID.String] = currentUnitWeapons
-	}
-
-	return unitWeaponsMap
-}
-
-func SLKToUnitBalance(input []byte) map[string]*models.UnitBalance {
-	unitBalanceMap := make(map[string]*models.UnitBalance)
-	var currentUnitBalance *models.UnitBalance
-	slkInformation, err := GenericSlkReader(input)
-	if err != nil {
-		log.Println(err)
-
-		return nil
-	}
-
-	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
-	for _, bodyLine := range bodyLines {
-		bodyLineSubmatch := SLKRegex.FindStringSubmatch(bodyLine)
-		if bodyLineSubmatch != nil && bodyLineSubmatch[1] != "6" {
-			if len(bodyLineSubmatch[2]) > 0 {
-				if currentUnitBalance != nil && currentUnitBalance.UnitBalanceID.Valid {
-					unitBalanceMap[currentUnitBalance.UnitBalanceID.String] = currentUnitBalance
-				}
-
-				currentUnitBalance = new(models.UnitBalance)
-			}
-
-			nullString := new(null.String)
-			nullString.SetValid(bodyLineSubmatch[3])
-
-			err = reflectUpdateValueOnFieldNullStruct(currentUnitBalance, *nullString, strings.Title(slkInformation.headerMap[bodyLineSubmatch[1]]))
-			if err != nil {
-				log.Println(err)
-			}
-		}
-	}
-
-	if currentUnitBalance != nil && currentUnitBalance.UnitBalanceID.Valid {
-		unitBalanceMap[currentUnitBalance.UnitBalanceID.String] = currentUnitBalance
-	}
-
-	return unitBalanceMap
-}
-
-/*************************
-
-	   TXT PARSERS
-
-*************************/
-
-func TxtToUnitFunc(input []byte) map[string]*models.UnitFunc {
-	unitFuncMap := make(map[string]*models.UnitFunc)
-	var currentUnitFunc *models.UnitFunc
-
-	str := string(input)
+	str := string(inputFileData)
 	split := strings.Split(str, "\n")
 
 	for _, line := range split {
-		if TXTHeadRegex.MatchString(line) {
-			if currentUnitFunc != nil {
-				unitFuncMap[currentUnitFunc.UnitId] = currentUnitFunc
+		var unitId *string
+		var keyName *string
+		var value *string
+
+		if keyNameReg.MatchString(line) {
+			lineSubmatch := keyNameReg.FindStringSubmatch(line)
+			keyName = &lineSubmatch[1]
+
+			newValue := line[len(*keyName) + 1:]
+			value = &newValue
+		} else if unitIdReg.MatchString(line) {
+			lineSubmatch := unitIdReg.FindStringSubmatch(line)
+			unitId = &lineSubmatch[1]
+		}
+
+		if unitId != nil {
+			currentUnitId = unitId
+
+			// Check if unitMap does not already have this key
+			if _, ok := unitMap[*unitId]; ok {
+				unitMap[*unitId].UnitFuncId.SetValid(*unitId)
+				unitMap[*unitId].UnitStringId.SetValid(*unitId)
+			} else {
+				newUnit := new(models.SLKUnit)
+				newUnit.UnitUI = new(models.UnitUI)
+				newUnit.UnitData = new(models.UnitData)
+				newUnit.UnitBalance = new(models.UnitBalance)
+				newUnit.UnitWeapons = new(models.UnitWeapons)
+				newUnit.UnitAbilities = new(models.UnitAbilities)
+				newUnit.UnitFunc = new(models.UnitFunc)
+				newUnit.UnitString = new(models.UnitString)
+
+				unitMap[*unitId] = newUnit
 			}
+		}
 
-			currentUnitFunc = new(models.UnitFunc)
-			lineSubmatch := TXTHeadRegex.FindStringSubmatch(line)
-			currentUnitFunc.UnitId = lineSubmatch[1]
-		} else {
-			lineSubmatch := TXTRegex.FindStringSubmatch(line)
-			if lineSubmatch != nil {
-				nullString := new(null.String)
-				nullString.SetValid(lineSubmatch[2])
+		if currentUnitId != nil && keyName != nil && value != nil {
+			nullString := new(null.String)
+			nullString.SetValid(*value)
 
-				err := reflectUpdateValueOnFieldNullStruct(currentUnitFunc, *nullString, strings.Title(strings.ToLower(lineSubmatch[1])))
+			if _, ok := unitMap[*currentUnitId]; ok {
+				err := reflectUpdateValueOnFieldNullStruct(unitMap[*currentUnitId], *nullString, strings.Title(strings.ToLower(*keyName)))
 				if err != nil {
 					log.Println(err)
 				}
 			}
 		}
 	}
-
-	if currentUnitFunc != nil {
-		unitFuncMap[currentUnitFunc.UnitId] = currentUnitFunc
-	}
-
-	return unitFuncMap
-}
-
-func TxtToUnitStrings(input []byte) map[string]*models.UnitString {
-	unitStringsMap := make(map[string]*models.UnitString)
-	var currentUnitString *models.UnitString
-
-	str := string(input)
-	split := strings.Split(str, "\n")
-
-	for _, line := range split {
-		if TXTHeadRegex.MatchString(line) {
-			if currentUnitString != nil {
-				unitStringsMap[currentUnitString.UnitId] = currentUnitString
-			}
-
-			currentUnitString = new(models.UnitString)
-			lineSubmatch := TXTHeadRegex.FindStringSubmatch(line)
-			currentUnitString.UnitId = lineSubmatch[1]
-		} else {
-			lineSubmatch := TXTRegex.FindStringSubmatch(line)
-			if lineSubmatch != nil {
-				nullString := new(null.String)
-				nullString.SetValid(lineSubmatch[2])
-
-				err := reflectUpdateValueOnFieldNullStruct(currentUnitString, *nullString, strings.Title(strings.ToLower(lineSubmatch[1])))
-				if err != nil {
-					log.Println(err)
-				}
-			}
-		}
-	}
-
-	if currentUnitString != nil {
-		unitStringsMap[currentUnitString.UnitId] = currentUnitString
-	}
-
-	return unitStringsMap
 }

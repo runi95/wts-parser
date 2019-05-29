@@ -546,9 +546,11 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 	if w3uData.Usnd.Valid {
 		unitUI.UnitSound.SetValid("\"" + w3uData.Usnd.String + "\"")
 	}
+	/*
 	if w3uData.Unam.Valid {
 		unitUI.Name.SetValid("\"" + w3uData.Unam.String + "\"")
 	}
+	*/
 
 	unitBalance.UnitBalanceID.SetValid("\"" + w3uData.CustomUnitId + "\"")
 	// unitBalance.SortBalance.SetValid("\"a1\"") // TODO: Set this value correctly!
@@ -971,7 +973,7 @@ func (w3uData *W3uData) TransformToSLKUnit(SLKUnit *SLKUnit) {
 }
 
 func (w3uData *W3uData) TransformToUnitFunc(unitFunc *UnitFunc) {
-	unitFunc.UnitId = w3uData.CustomUnitId
+	unitFunc.UnitFuncId.SetValid(w3uData.CustomUnitId)
 
 	if w3uData.Uma1.Valid || w3uData.Uma2.Valid {
 		if w3uData.Uma1.Valid && w3uData.Uma2.Valid {
@@ -1153,7 +1155,7 @@ func (w3uData *W3uData) TransformToUnitFunc(unitFunc *UnitFunc) {
 }
 
 func (w3uData *W3uData) TransformToUnitString(unitString *UnitString) {
-	unitString.UnitId = w3uData.CustomUnitId
+	unitString.UnitStringId.SetValid(w3uData.CustomUnitId)
 
 	if w3uData.Unam.Valid {
 		unitString.Name.SetValid(w3uData.Unam.String)

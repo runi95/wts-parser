@@ -20,12 +20,9 @@ var stringRegex = regexp.MustCompile(`STRING [0-9]*[^}]*}`) // Regex to find eac
 var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`)  // Regex to find the content container of each string object
 var contentStartRegex = regexp.MustCompile(`^[\r]*[\n]`)
 var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
-var SLKRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K(-?[0-9.]+|"[\w-.,()\\]+")`)
-var SLKHeadRegex = regexp.MustCompile(`C;X([0-9]+)(?:;Y([0-9]+))?;K"([\w-()]+)"`)
 var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
 var TXTHeadRegex = regexp.MustCompile(`^\[(\w+)]`)
 var TXTRegex = regexp.MustCompile(`([A-Z]\w+)=([^\r\n]*)`)
-var TrigstrRegex = regexp.MustCompile(`TRIGSTR_([0-9]+)`)
 var NewLineRegex = regexp.MustCompile(`\r?\n`)
 
 /*************************
@@ -482,6 +479,18 @@ func WtsToTxtUnitStringsWithBaseTxt(baseUnitStringMap map[string]*models.UnitStr
 *************************/
 
 func reflectUpdateValueOnFieldNullStruct(iface interface{}, fieldValue interface{}, fieldName string) error {
+	if iface == nil {
+		return fmt.Errorf("iface cannot be nil")
+	}
+
+	if fieldValue == nil {
+		return fmt.Errorf("fieldValue cannot be nil")
+	}
+
+	if fieldName == "" {
+		return fmt.Errorf("fieldName cannot be empty")
+	}
+
 	fieldName = strings.Replace(fieldName, "\"", "", -1)
 	valueIface := reflect.ValueOf(iface)
 

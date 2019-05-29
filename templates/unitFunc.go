@@ -1,7 +1,7 @@
 package templates
 
 func GetUnitFuncTemplate() string {
-	return `{{- define "UnitFunc" }}{{- range . }}[{{ .UnitId }}]
+	return `{{- define "UnitFunc" }}{{- range . }}{{- if .UnitFuncId.Valid }}{{- if campaignAndRaceCheck .Race.String .Campaign.String }}[{{ .UnitFuncId.String }}]
 {{- if .Art.Valid }}
 Art={{ .Art.String }}
 {{- end }}
@@ -98,7 +98,8 @@ Sellitems={{ .Sellitems.String }}
 {{- if .Randomsoundlabel.Valid }}
 Randomsoundlabel={{ .Randomsoundlabel.String }}
 {{- end }}
-
 {{ end }}
+{{- end }}
+{{- end }}
 {{- end }}`
 }

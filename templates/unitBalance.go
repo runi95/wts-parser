@@ -63,65 +63,176 @@ C;X58;K"repulseGroup"
 C;X59;K"repulsePrio"
 C;X60;K"collision"
 C;X61;K"InBeta"
-{{- range $index, $element := .UnitBalance }}
-C;X1;Y{{ inc $index }};K{{ .UnitBalanceID.String }}
+{{- range $index, $element := .Unit }}{{- if .UnitBalanceID.Valid }}
+C;X1;Y{{ inc $index }};K{{ .UnitBalanceID.String }} 
+{{- if .Level.Valid }}
 C;X5;K{{ .Level.String }}
-C;X6;KFALSE
+{{- end }}
+C;X6;KFALSE 
+{{- if .Type.Valid }}
 C;X7;K{{ .Type.String }}
+{{- end }} 
+{{- if .Goldcost.Valid }}
 C;X8;K{{ .Goldcost.String }}
+{{- end }} 
+{{- if .Lumbercost.Valid }}
 C;X9;K{{ .Lumbercost.String }}
+{{- end }} 
+{{- if .GoldRep.Valid }}
 C;X10;K{{ .GoldRep.String }}
+{{- end }} 
+{{- if .LumberRep.Valid }}
 C;X11;K{{ .LumberRep.String }}
+{{- end }} 
+{{- if .Fmade.Valid }}
 C;X12;K{{ .Fmade.String }}
+{{- end }} 
+{{- if .Fused.Valid }}
 C;X13;K{{ .Fused.String }}
+{{- end }} 
+{{- if .Bountydice.Valid }}
 C;X14;K{{ .Bountydice.String }}
+{{- end }} 
+{{- if .Bountysides.Valid }}
 C;X15;K{{ .Bountysides.String }}
+{{- end }} 
+{{- if .Bountyplus.Valid }}
 C;X16;K{{ .Bountyplus.String }}
+{{- end }} 
+{{- if .Lumberbountydice.Valid }}
 C;X17;K{{ .Lumberbountydice.String }}
+{{- end }} 
+{{- if .Lumberbountysides.Valid }}
 C;X18;K{{ .Lumberbountysides.String }}
+{{- end }} 
+{{- if .Lumberbountyplus.Valid }}
 C;X19;K{{ .Lumberbountyplus.String }}
+{{- end }} 
+{{- if .StockMax.Valid }}
 C;X20;K{{ .StockMax.String }}
+{{- end }} 
+{{- if .StockRegen.Valid }}
 C;X21;K{{ .StockRegen.String }}
+{{- end }} 
+{{- if .StockStart.Valid }}
 C;X22;K{{ .StockStart.String }}
+{{- end }} 
+{{- if .HP.Valid }}
 C;X23;K{{ .HP.String }}
+{{- end }} 
+{{- if .RealHP.Valid }}
 C;X24;K{{ .RealHP.String }}
+{{- end }} 
+{{- if .RegenHP.Valid }}
 C;X25;K{{ .RegenHP.String }}
+{{- end }} 
+{{- if .RegenType.Valid }}
 C;X26;K{{ .RegenType.String }}
+{{- end }} 
+{{- if .ManaN.Valid }}
 C;X27;K{{ .ManaN.String }}
+{{- end }} 
+{{- if .RealM.Valid }}
 C;X28;K{{ .RealM.String }}
+{{- end }} 
+{{- if .Mana0.Valid }}
 C;X29;K{{ .Mana0.String }}
+{{- end }} 
+{{- if .RegenMana.Valid }}
 C;X30;K{{ .RegenMana.String }}
+{{- end }} 
+{{- if .Def.Valid }}
 C;X31;K{{ .Def.String }}
+{{- end }} 
+{{- if .DefUp.Valid }}
 C;X32;K{{ .DefUp.String }}
+{{- end }} 
+{{- if .Realdef.Valid }}
 C;X33;K{{ .Realdef.String }}
+{{- end }} 
+{{- if .DefType.Valid }}
 C;X34;K{{ .DefType.String }}
+{{- end }} 
+{{- if .Spd.Valid }}
 C;X35;K{{ .Spd.String }}
+{{- end }} 
+{{- if .MinSpd.Valid }}
 C;X36;K{{ .MinSpd.String }}
+{{- end }} 
+{{- if .MaxSpd.Valid }}
 C;X37;K{{ .MaxSpd.String }}
+{{- end }} 
+{{- if .Bldtm.Valid }}
 C;X38;K{{ .Bldtm.String }}
+{{- end }} 
+{{- if .Reptm.Valid }}
 C;X39;K{{ .Reptm.String }}
+{{- end }} 
+{{- if .Sight.Valid }}
 C;X40;K{{ .Sight.String }}
+{{- end }} 
+{{- if .Nsight.Valid }}
 C;X41;K{{ .Nsight.String }}
+{{- end }} 
+{{- if .STR.Valid }}
 C;X42;K{{ .STR.String }}
+{{- end }} 
+{{- if .INT.Valid }}
 C;X43;K{{ .INT.String }}
+{{- end }} 
+{{- if .AGI.Valid }}
 C;X44;K{{ .AGI.String }}
+{{- end }} 
+{{- if .STRplus.Valid }}
 C;X45;K{{ .STRplus.String }}
+{{- end }} 
+{{- if .INTplus.Valid }}
 C;X46;K{{ .INTplus.String }}
+{{- end }} 
+{{- if .AGIplus.Valid }}
 C;X47;K{{ .AGIplus.String }}
+{{- end }} 
+{{- if .AbilTest.Valid }}
 C;X48;K{{ .AbilTest.String }}
+{{- end }} 
+{{- if .Primary.Valid }}
 C;X49;K{{ .Primary.String }}
+{{- end }} 
+{{- if .Upgrades.Valid }}
 C;X50;K{{ .Upgrades.String }}
+{{- end }} 
+{{- if .Tilesets.Valid }}
 C;X51;K{{ .Tilesets.String }}
+{{- end }} 
+{{- if .Nbrandom.Valid }}
 C;X52;K{{ .Nbrandom.String }}
+{{- end }} 
+{{- if .Isbldg.Valid }}
 C;X53;K{{ .Isbldg.String }}
+{{- end }} 
+{{- if .PreventPlace.Valid }}
 C;X54;K{{ .PreventPlace.String }}
+{{- end }} 
+{{- if .RequirePlace.Valid }}
 C;X55;K{{ .RequirePlace.String }}
+{{- end }} 
+{{- if .Repulse.Valid }}
 C;X56;K{{ .Repulse.String }}
+{{- end }} 
+{{- if .RepulseParam.Valid }}
 C;X57;K{{ .RepulseParam.String }}
+{{- end }} 
+{{- if .RepulseGroup.Valid }}
 C;X58;K{{ .RepulseGroup.String }}
+{{- end }} 
+{{- if .RepulsePrio.Valid }}
 C;X59;K{{ .RepulsePrio.String }}
+{{- end }} 
+{{- if .Collision.Valid }}
 C;X60;K{{ .Collision.String }}
 {{- end }}
+{{- end }}
+{{- end }}
 E
-{{ end }}`
+{{- end }}`
 }

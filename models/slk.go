@@ -43,7 +43,7 @@ type UnitUI struct {
 	FileVerFlags     null.String
 	UnitSound        null.String
 	TilesetSpecific  null.String
-	Name             null.String
+	// Name             null.String
 	UnitClass        null.String
 	Special          null.String
 	Campaign         null.String
@@ -244,9 +244,11 @@ type UnitAbilities struct {
 }
 
 type SLKUnit struct {
-	UnitUI           *UnitUI
-	UnitData         *UnitData
-	UnitBalance      *UnitBalance
-	UnitWeapons      *UnitWeapons
-	UnitAbilities    *UnitAbilities
+	*UnitUI
+	*UnitData
+	*UnitBalance
+	*UnitWeapons
+	*UnitAbilities
+	*UnitFunc
+	*UnitString
 }

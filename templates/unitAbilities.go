@@ -10,12 +10,19 @@ C;X4;K"auto"
 C;X5;K"abilList"
 C;X6;K"heroAbilList"
 C;X7;K"InBeta"
-{{- range $index, $element := .UnitAbilities }}
-C;X1;Y{{ inc $index }};K{{ .UnitAbilID.String }}
+{{- range $index, $element := .Unit }}{{- if .UnitAbilID.Valid }}
+C;X1;Y{{ inc $index }};K{{ .UnitAbilID.String }} 
+{{- if .Auto.Valid }}
 C;X4;K{{ .Auto.String }}
+{{- end }} 
+{{- if .AbilList.Valid }}
 C;X5;K{{ .AbilList.String }}
+{{- end }} 
+{{- if .HeroAbilList.Valid }}
 C;X6;K{{ .HeroAbilList.String }}
 {{- end }}
+{{- end }}
+{{- end }}
 E
-{{ end }}`
+{{- end }}`
 }
