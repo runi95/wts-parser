@@ -597,14 +597,15 @@ func GenericSlkReader(input []byte) (*SlkInformation, error) {
 		var k *string
 
 		for _, s := range headerSplit {
-			if xReg.MatchString(s) {
-				newX := s[1:]
+			cleanString := strings.Replace(strings.Replace(s, "\r", "", -1), "\n", "", -1)
+			if xReg.MatchString(cleanString) {
+				newX := cleanString[1:]
 				x = &newX
-			} else if kReg.MatchString(s) {
-				newK := s[1:]
+			} else if kReg.MatchString(cleanString) {
+				newK := cleanString[1:]
 				k = &newK
-			} else if yReg.MatchString(s) {
-				newY := s[1:]
+			} else if yReg.MatchString(cleanString) {
+				newY := cleanString[1:]
 				y = &newY
 			}
 		}
@@ -677,7 +678,8 @@ func PopulateUnitMapWithSlkFileData(inputFileData []byte, unitMap map[string]*mo
 		var y *string
 		var k *string
 
-		bodySplit := strings.Split(bodyLine, ";")
+		cleanBodyLine := strings.Replace(strings.Replace(bodyLine, "\r", "", -1), "\n", "", -1)
+		bodySplit := strings.Split(cleanBodyLine, ";")
 		for _, s := range bodySplit {
 			if xReg.MatchString(s) {
 				newX := s[1:]
@@ -716,8 +718,8 @@ func PopulateUnitMapWithSlkFileData(inputFileData []byte, unitMap map[string]*mo
 				nullString.SetValid(*k)
 
 				if unit, ok := unitMap[*currentUnitId]; ok {
-					if _, headerMapOk := slkInformation.headerMap[*x]; headerMapOk {
-						err = reflectUpdateValueOnFieldNullStruct(unit, *nullString, strings.Title(slkInformation.headerMap[*x]))
+					if header, headerMapOk := slkInformation.headerMap[*x]; headerMapOk {
+						err = reflectUpdateValueOnFieldNullStruct(unit, *nullString, strings.Title(header))
 						if err != nil {
 							log.Println(err)
 						}
@@ -771,15 +773,16 @@ func PopulateUnitMapWithTxtFileData(inputFileData []byte, unitMap map[string]*mo
 		var unitId *string
 		var keyName *string
 		var value *string
+		cleanLine := strings.Replace(strings.Replace(line, "\r", "", -1), "\n", "", -1)
 
-		if keyNameReg.MatchString(line) {
-			lineSubmatch := keyNameReg.FindStringSubmatch(line)
+		if keyNameReg.MatchString(cleanLine) {
+			lineSubmatch := keyNameReg.FindStringSubmatch(cleanLine)
 			keyName = &lineSubmatch[1]
 
-			newValue := line[len(*keyName) + 1:]
+			newValue := cleanLine[len(*keyName) + 1:]
 			value = &newValue
-		} else if unitIdReg.MatchString(line) {
-			lineSubmatch := unitIdReg.FindStringSubmatch(line)
+		} else if unitIdReg.MatchString(cleanLine) {
+			lineSubmatch := unitIdReg.FindStringSubmatch(cleanLine)
 			unitId = &lineSubmatch[1]
 		}
 
