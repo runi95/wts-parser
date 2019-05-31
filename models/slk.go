@@ -87,14 +87,14 @@ type UnitUI struct {
 	ShadowOnWater    null.String
 	SelCircOnWater   null.String
 	OccH             null.String
-	InBeta           null.String
+	// InBeta           null.String
 }
 
 type UnitWeapons struct {
 	UnitWeapID   null.String
 	SortWeap     null.String
-	Sort2        null.String
-	Comment      null.String
+	// Sort2        null.String
+	// Comment      null.String
 	WeapsOn      null.String
 	Acquire      null.String 
 	MinRange     null.String 
@@ -174,7 +174,7 @@ type UnitBalance struct {
 	UnitBalanceID     null.String
 	SortBalance       null.String
 	Sort2             null.String
-	Comment           null.String
+	// Comment           null.String
 	Level             null.String
 	Type              null.String
 	Goldcost          null.String
@@ -230,17 +230,17 @@ type UnitBalance struct {
 	RepulseGroup      null.String
 	RepulsePrio       null.String
 	Collision         null.String
-	InBeta            null.String
+	// InBeta            null.String
 }
 
 type UnitAbilities struct {
 	UnitAbilID   null.String
 	SortAbil     null.String
-	Comment      null.String
+	// Comment      null.String
 	Auto         null.String
 	AbilList     null.String
 	HeroAbilList null.String
-	InBeta       null.String
+	// InBeta       null.String
 }
 
 type SLKUnit struct {
