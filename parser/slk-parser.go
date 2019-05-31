@@ -802,6 +802,8 @@ func PopulateUnitMapWithTxtFileData(inputFileData []byte, unitMap map[string]*mo
 				newUnit.UnitAbilities = new(models.UnitAbilities)
 				newUnit.UnitFunc = new(models.UnitFunc)
 				newUnit.UnitString = new(models.UnitString)
+				newUnit.UnitFuncId.SetValid(*unitId)
+				newUnit.UnitStringId.SetValid(*unitId)
 
 				unitMap[*unitId] = newUnit
 			}
@@ -813,6 +815,184 @@ func PopulateUnitMapWithTxtFileData(inputFileData []byte, unitMap map[string]*mo
 
 			if _, ok := unitMap[*currentUnitId]; ok {
 				err := reflectUpdateValueOnFieldNullStruct(unitMap[*currentUnitId], *nullString, strings.Title(strings.ToLower(*keyName)))
+				if err != nil {
+					log.Println(err)
+				}
+			}
+		}
+	}
+}
+
+/**
+ * A function that populates a map of SLKItem structures with data from the ItemData.slk file.
+ * If you want to add file data from a TXT file like ItemFunc.txt you need to run PopulateItemMapWithTxtFileData.
+ * You can take a look at the example below on how to use the function
+ *
+ * func populateMapWithDataFromMultipleFiles() error {
+ *   itemDataBytes, err := ioutil.ReadFile("./ItemData.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   var itemMap = make(map[string]*models.SLKItem)
+ *   parser.PopulateItemMapWithSlkFileData(itemDataBytes, itemMap)
+ *
+ *   // You can also add data from txt files like seen below
+ *   itemFuncBytes, err := ioutil.ReadFile("./ItemFunc.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   // Note that this is not the same function as used above!
+ *   parser.PopulateItemMapWithTxtFileData(itemFuncBytes, itemMap)
+ *
+ *   return nil
+ * }
+ *
+ */
+func PopulateItemMapWithSlkFileData(inputFileData []byte, itemMap map[string]*models.SLKItem) {
+	var currentItemId *string
+	slkInformation, err := GenericSlkReader(inputFileData)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		var x *string
+		var y *string
+		var k *string
+
+		cleanBodyLine := strings.Replace(strings.Replace(bodyLine, "\r", "", -1), "\n", "", -1)
+		bodySplit := strings.Split(cleanBodyLine, ";")
+		for _, s := range bodySplit {
+			if xReg.MatchString(s) {
+				newX := s[1:]
+				x = &newX
+			} else if kReg.MatchString(s) {
+				newK := s[1:]
+				k = &newK
+			} else if yReg.MatchString(s) {
+				newY := s[1:]
+				y = &newY
+			}
+		}
+
+		if x != nil && k != nil {
+			if y != nil { // y != nil means we've reached the beginning of a new unit
+				trimmedId := strings.Replace(*k, "\"", "", -1)
+				currentItemId = &trimmedId
+
+				// Check if itemMap does not already have this key
+				if _, ok := itemMap[trimmedId]; !ok {
+					newItem := new(models.SLKItem)
+					newItem.ItemData = new(models.ItemData)
+					newItem.ItemFunc = new(models.ItemFunc)
+					newItem.ItemString = new(models.ItemString)
+
+					itemMap[trimmedId] = newItem
+				}
+			}
+
+			if currentItemId != nil {
+				nullString := new(null.String)
+				nullString.SetValid(*k)
+
+				if unit, ok := itemMap[*currentItemId]; ok {
+					if header, headerMapOk := slkInformation.headerMap[*x]; headerMapOk {
+						err = reflectUpdateValueOnFieldNullStruct(unit, *nullString, strings.Title(header))
+						if err != nil {
+							log.Println(err)
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * A function that populates a map of SLKItem structures with data from any TXT file like the ItemFunc.txt and ItemStrings.txt files.
+ * If you want to add file data from an SLK file like ItemData.slk you need to run PopulateItemMapWithSlkFileData.
+ * To populate a map with values from multiple files you need to call this function several times like in the code example below
+ *
+ * func populateMapWithDataFromMultipleFiles() error {
+ *   itemFuncBytes, err := ioutil.ReadFile("./ItemFunc.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   itemStringBytes, err := ioutil.ReadFile("./ItemStrings.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   var itemMap = make(map[string]*models.SLKItem)
+ *   parser.PopulateItemMapWithTxtFileData(itemFuncBytes, itemMap)
+ *   parser.PopulateItemMapWithTxtFileData(itemStringBytes, itemMap)
+ *
+ *   // You can also add data from slk files like seen below
+ *   itemDataBytes, err := ioutil.ReadFile("./ItemData.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   // Note that this is not the same function as used above!
+ *   parser.PopulateItemMapWithSlkFileData(itemDataBytes, itemMap)
+ *
+ *   return nil
+ * }
+ *
+ */
+func PopulateItemMapWithTxtFileData(inputFileData []byte, itemMap map[string]*models.SLKItem) {
+	var currentItemId *string
+
+	str := string(inputFileData)
+	split := strings.Split(str, "\n")
+
+	for _, line := range split {
+		var itemId *string
+		var keyName *string
+		var value *string
+		cleanLine := strings.Replace(strings.Replace(line, "\r", "", -1), "\n", "", -1)
+
+		if keyNameReg.MatchString(cleanLine) {
+			lineSubmatch := keyNameReg.FindStringSubmatch(cleanLine)
+			keyName = &lineSubmatch[1]
+
+			newValue := cleanLine[len(*keyName) + 1:]
+			value = &newValue
+		} else if unitIdReg.MatchString(cleanLine) {
+			lineSubmatch := unitIdReg.FindStringSubmatch(cleanLine)
+			itemId = &lineSubmatch[1]
+		}
+
+		if itemId != nil {
+			currentItemId = itemId
+
+			// Check if itemMap does not already have this key
+			if _, ok := itemMap[*itemId]; ok {
+				itemMap[*itemId].ItemFuncId.SetValid(*itemId)
+				itemMap[*itemId].ItemStringId.SetValid(*itemId)
+			} else {
+				newItem := new(models.SLKItem)
+				newItem.ItemData = new(models.ItemData)
+				newItem.ItemFunc = new(models.ItemFunc)
+				newItem.ItemString = new(models.ItemString)
+				newItem.ItemFuncId.SetValid(*itemId)
+				newItem.ItemStringId.SetValid(*itemId)
+
+				itemMap[*itemId] = newItem
+			}
+		}
+
+		if currentItemId != nil && keyName != nil && value != nil {
+			nullString := new(null.String)
+			nullString.SetValid(*value)
+
+			if _, ok := itemMap[*currentItemId]; ok {
+				err := reflectUpdateValueOnFieldNullStruct(itemMap[*currentItemId], *nullString, strings.Title(strings.ToLower(*keyName)))
 				if err != nil {
 					log.Println(err)
 				}
