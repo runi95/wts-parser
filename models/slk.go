@@ -292,8 +292,8 @@ type ItemData struct {
 
 type ItemFunc struct {
 	ItemFuncId   null.String
-	DependencyOr null.String
-	XPFactor     null.String
+	Dependencyor null.String
+	Xpfactor     null.String
 	Art          null.String
 	Buttonpos    null.String
 	ButtonposX   null.String
@@ -308,6 +308,7 @@ type ItemString struct {
 	Tip          null.String
 	Ubertip      null.String
 	Description  null.String
+	Editorsuffix null.String
 }
 
 type SLKItem struct {
