@@ -980,6 +980,7 @@ func PopulateItemMapWithTxtFileData(inputFileData []byte, itemMap map[string]*mo
 				newItem.ItemData = new(models.ItemData)
 				newItem.ItemFunc = new(models.ItemFunc)
 				newItem.ItemString = new(models.ItemString)
+				newItem.ItemId.SetValid(*itemId)
 				newItem.ItemFuncId.SetValid(*itemId)
 				newItem.ItemStringId.SetValid(*itemId)
 

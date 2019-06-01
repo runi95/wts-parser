@@ -254,6 +254,7 @@ type SLKUnit struct {
 }
 
 type ItemData struct {
+	ItemId     null.String
 	Comment    null.String
 	Scriptname null.String
 	Version    null.String
