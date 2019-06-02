@@ -20,9 +20,6 @@ var stringRegex = regexp.MustCompile(`STRING [0-9]*[^}]*}`) // Regex to find eac
 var contentContainerRegex = regexp.MustCompile(`{[^}]*}$`)  // Regex to find the content container of each string object
 var contentStartRegex = regexp.MustCompile(`^[\r]*[\n]`)
 var contextEndRegex = regexp.MustCompile(`[\r]*[\n]$`)
-var SLKMetaRegex = regexp.MustCompile(`B;X([0-9]+);(?:Y([0-9]+);)D([-"\w]*)`)
-var TXTHeadRegex = regexp.MustCompile(`^\[(\w+)]`)
-var TXTRegex = regexp.MustCompile(`([A-Z]\w+)=([^\r\n]*)`)
 var NewLineRegex = regexp.MustCompile(`\r?\n`)
 
 /*************************

@@ -570,24 +570,71 @@ func WriteToFilesAndSaveToFolder(unitList []*models.SLKUnit, outputFolder string
 	writeToFileWaitGroup.Wait()
 }
 
+/*
+bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		var x *string
+		var y *string
+		var k *string
+
+		cleanBodyLine := strings.Replace(strings.Replace(bodyLine, "\r", "", -1), "\n", "", -1)
+		bodySplit := strings.Split(cleanBodyLine, ";")
+		for _, s := range bodySplit {
+			if xReg.MatchString(s) {
+				newX := s[1:]
+				x = &newX
+			} else if kReg.MatchString(s) {
+				newK := s[1:]
+				k = &newK
+			} else if yReg.MatchString(s) {
+				newY := s[1:]
+				y = &newY
+			}
+		}
+
+		if x != nil && k != nil {
+			if y != nil { // y != nil means we've reached the beginning of a new unit
+				trimmedId := strings.Replace(*k, "\"", "", -1)
+				currentUnitId = &trimmedId
+
+				// Check if unitMap does not already have this key
+				if _, ok := unitMap[trimmedId]; !ok {
+					// New unit
+				}
+			}
+
+			if currentUnitId != nil {
+				// Do stuff
+			}
+		}
+	}
+*/
+
 func GenericSlkReader(input []byte) (*SlkInformation, error) {
 	slkInformation := new(SlkInformation)
 	str := string(input)
 	split := strings.Split(str, "\n")
+	metaSplit := strings.Split(split[1], ";")
 
-	meta := split[1]
-	metaSubmatch := SLKMetaRegex.FindStringSubmatch(meta)
-	if !(len(metaSubmatch) > 0) {
-		return nil, fmt.Errorf("meta submatch is empty")
+	var metaY *string
+	for _, s := range metaSplit {
+		cleanString := strings.Replace(strings.Replace(s, "\r", "", -1), "\n", "", -1)
+		if yReg.MatchString(cleanString) {
+			newY := cleanString[1:]
+			metaY = &newY
+		}
 	}
 
-	columnSize, err := strconv.Atoi(metaSubmatch[1])
+	if metaY == nil {
+		return nil, fmt.Errorf("meta match is nil")
+	}
+
+	columnSize, err := strconv.Atoi(*metaY)
 	if err != nil {
 		return nil, err
 	}
 
 	headerMap := make(map[string]string)
-
 	headerLineIndex := 2
 	isNotAtEndOfHeader := true
 	for isNotAtEndOfHeader {
