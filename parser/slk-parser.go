@@ -826,7 +826,7 @@ func PopulateUnitMapWithTxtFileData(inputFileData []byte, unitMap map[string]*mo
 			lineSubmatch := keyNameReg.FindStringSubmatch(cleanLine)
 			keyName = &lineSubmatch[1]
 
-			newValue := cleanLine[len(*keyName) + 1:]
+			newValue := cleanLine[len(*keyName)+1:]
 			value = &newValue
 		} else if unitIdReg.MatchString(cleanLine) {
 			lineSubmatch := unitIdReg.FindStringSubmatch(cleanLine)
@@ -927,7 +927,7 @@ func PopulateItemMapWithSlkFileData(inputFileData []byte, itemMap map[string]*mo
 		}
 
 		if x != nil && k != nil {
-			if y != nil { // y != nil means we've reached the beginning of a new unit
+			if y != nil { // y != nil means we've reached the beginning of a new item
 				trimmedId := strings.Replace(*k, "\"", "", -1)
 				currentItemId = &trimmedId
 
@@ -1008,7 +1008,7 @@ func PopulateItemMapWithTxtFileData(inputFileData []byte, itemMap map[string]*mo
 			lineSubmatch := keyNameReg.FindStringSubmatch(cleanLine)
 			keyName = &lineSubmatch[1]
 
-			newValue := cleanLine[len(*keyName) + 1:]
+			newValue := cleanLine[len(*keyName)+1:]
 			value = &newValue
 		} else if unitIdReg.MatchString(cleanLine) {
 			lineSubmatch := unitIdReg.FindStringSubmatch(cleanLine)
@@ -1043,6 +1043,81 @@ func PopulateItemMapWithTxtFileData(inputFileData []byte, itemMap map[string]*mo
 				err := reflectUpdateValueOnFieldNullStruct(itemMap[*currentItemId], *nullString, strings.Title(strings.ToLower(*keyName)))
 				if err != nil {
 					log.Println(err)
+				}
+			}
+		}
+	}
+}
+
+/**
+ * A function that populates a map of AbilityMetaData structures with data from the AbilityMetaData.slk file.
+ * You can take a look at the example below on how to use the function
+ *
+ * func populateMapWithDataFromMultipleFiles() error {
+ *   abilityMetaDataBytes, err := ioutil.ReadFile("./AbilityMetaData.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   var abilityMetaDataMap = make(map[string]*models.AbilityMetaData)
+ *   parser.PopulateAbilityMetaDataMapWithSlkFileData(abilityMetaDataBytes, abilityMetaDataMap)
+ *
+ *   return nil
+ * }
+ *
+ */
+func PopulateAbilityMetaDataMapWithSlkFileData(inputFileData []byte, abilityMetaDataMap map[string]*models.AbilityMetaData) {
+	var currentId *string
+	slkInformation, err := GenericSlkReader(inputFileData)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		var x *string
+		var y *string
+		var k *string
+
+		cleanBodyLine := strings.Replace(strings.Replace(bodyLine, "\r", "", -1), "\n", "", -1)
+		bodySplit := strings.Split(cleanBodyLine, ";")
+		for _, s := range bodySplit {
+			if xReg.MatchString(s) {
+				newX := s[1:]
+				x = &newX
+			} else if kReg.MatchString(s) {
+				newK := s[1:]
+				k = &newK
+			} else if yReg.MatchString(s) {
+				newY := s[1:]
+				y = &newY
+			}
+		}
+
+		if x != nil && k != nil {
+			if y != nil { // y != nil means we've reached the beginning of a new ability meta data
+				trimmedId := strings.Replace(*k, "\"", "", -1)
+				currentId = &trimmedId
+
+				// Check if abilityMetaDataMap does not already have this key
+				if _, ok := abilityMetaDataMap[trimmedId]; !ok {
+					newAbilityMetaData := new(models.AbilityMetaData)
+					abilityMetaDataMap[trimmedId] = newAbilityMetaData
+				}
+			}
+
+			if currentId != nil {
+				nullString := new(null.String)
+				nullString.SetValid(*k)
+
+				if unit, ok := abilityMetaDataMap[*currentId]; ok {
+					if header, headerMapOk := slkInformation.headerMap[*x]; headerMapOk {
+						err = reflectUpdateValueOnFieldNullStruct(unit, *nullString, strings.Title(header))
+						if err != nil {
+							log.Println(err)
+						}
+					}
 				}
 			}
 		}

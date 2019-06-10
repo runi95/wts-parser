@@ -317,3 +317,32 @@ type SLKItem struct {
 	*ItemFunc
 	*ItemString
 }
+
+type AbilityMetaData struct {
+	ID          null.String
+	Field       null.String
+	Slk         null.String
+	Index       null.String
+	Repeat      null.String
+	Data        null.String
+	Category    null.String
+	DisplayName null.String
+	Sort        null.String
+	Type        null.String
+	ChangeFlags null.String
+	ImportType  null.String
+	StringExt   null.String
+	CaseSens    null.String
+	CanBeEmpty  null.String
+	MinVal      null.String
+	MaxVal      null.String
+	ForceNonNeg null.String
+	UseUnit     null.String
+	UseHero     null.String
+	UseItem     null.String
+	UseCreep    null.String
+	UseSpecific null.String
+	NotSpecific null.String
+	Version     null.String
+	Section     null.String
+}
