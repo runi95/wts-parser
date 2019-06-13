@@ -91,6 +91,8 @@ type AbilityFunc struct {
 	Buttonpos         null.String
 	Buffart           null.String
 	Unbuttonpos       null.String
+	UnbuttonposX      null.String
+	UnbuttonposY      null.String
 	Researchbuttonpos null.String
 	Specialart        null.String
 	Effectsound       null.String
