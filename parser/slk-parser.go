@@ -24,6 +24,7 @@ import (
 var xReg = regexp.MustCompile(`^X([0-9]+)$`)
 var yReg = regexp.MustCompile(`^Y([0-9]+)$`)
 var kReg = regexp.MustCompile(`^K.*`)
+var abilityDataLevelDependentReg = regexp.MustCompile(`^"?[A-Za-z]+([0-9]+)"?$`)
 var unitIdReg = regexp.MustCompile(`^\[(\w+)]`)
 var keyNameReg = regexp.MustCompile(`^(.+)=`)
 
@@ -1118,6 +1119,191 @@ func PopulateAbilityMetaDataMapWithSlkFileData(inputFileData []byte, abilityMeta
 							log.Println(err)
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * A function that populates a map of SLKAbility structures with data from the AbilityData.slk file.
+ * You can take a look at the example below on how to use the function
+ *
+ * func populateMapWithDataFromMultipleFiles() error {
+ *   abilityDataBytes, err := ioutil.ReadFile("./AbilityData.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   var abilityDataMap = make(map[string]*models.Ability)
+ *   parser.PopulateAbilityMapWithSlkFileData(abilityDataBytes, abilityMap)
+ *
+ *   return nil
+ * }
+ *
+ */
+func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[string]*models.SLKAbility) {
+	var currentId *string
+	slkInformation, err := GenericSlkReader(inputFileData)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		var x *string
+		var y *string
+		var k *string
+
+		cleanBodyLine := strings.Replace(strings.Replace(bodyLine, "\r", "", -1), "\n", "", -1)
+		bodySplit := strings.Split(cleanBodyLine, ";")
+		for _, s := range bodySplit {
+			if xReg.MatchString(s) {
+				newX := s[1:]
+				x = &newX
+			} else if kReg.MatchString(s) {
+				newK := s[1:]
+				k = &newK
+			} else if yReg.MatchString(s) {
+				newY := s[1:]
+				y = &newY
+			}
+		}
+
+		if x != nil && k != nil {
+			if y != nil { // y != nil means we've reached the beginning of a new ability data
+				trimmedId := strings.Replace(*k, "\"", "", -1)
+				currentId = &trimmedId
+
+				// Check if abilityMap does not already have this key
+				if _, ok := abilityMap[trimmedId]; !ok {
+					newAbility := new(models.SLKAbility)
+					newAbility.AbilityData = new(models.AbilityData)
+					newAbility.AbilityFunc = new(models.AbilityFunc)
+					newAbility.AbilityString = new(models.AbilityString)
+					abilityMap[trimmedId] = newAbility
+				}
+			}
+
+			if currentId != nil {
+				nullString := new(null.String)
+				nullString.SetValid(*k)
+
+				if ability, ok := abilityMap[*currentId]; ok {
+					if header, headerMapOk := slkInformation.headerMap[*x]; headerMapOk {
+						trimmedHeader := strings.Replace(header, "\"", "", -1)
+						if match := abilityDataLevelDependentReg.FindStringSubmatch(trimmedHeader); match != nil {
+							index, err := strconv.Atoi(match[1])
+							if err != nil {
+								log.Println(err)
+							}
+
+							if index > len(ability.LevelDependentData) {
+								ability.LevelDependentData = append(ability.LevelDependentData, new(models.LevelDependentData))
+							}
+
+							err = reflectUpdateValueOnFieldNullStruct(ability.LevelDependentData[index-1], *nullString, strings.Title(trimmedHeader[:len(trimmedHeader)-len(match[1])]))
+							if err != nil {
+								log.Println(err)
+							}
+						} else {
+							err = reflectUpdateValueOnFieldNullStruct(ability, *nullString, strings.Title(header))
+							if err != nil {
+								log.Println(err)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * A function that populates a map of SLKAbility structures with data from any TXT file like the AbilityFunc.txt and AbilityStrings.txt files.
+ * If you want to add file data from an SLK file like AbilityData.slk you need to run PopulateAbilityMapWithSlkFileData.
+ * To populate a map with values from multiple files you need to call this function several times like in the code example below
+ *
+ * func populateMapWithDataFromMultipleFiles() error {
+ *   abilityFuncBytes, err := ioutil.ReadFile("./AbilityFunc.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   abilityStringBytes, err := ioutil.ReadFile("./AbilityStrings.txt")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   var abilityMap = make(map[string]*models.SLKAbility)
+ *   parser.PopulateAbilityMapWithTxtFileData(abilityFuncBytes, abilityMap)
+ *   parser.PopulateAbilityMapWithTxtFileData(abilityStringBytes, abilityMap)
+ *
+ *   // You can also add data from slk files like seen below
+ *   abilityDataBytes, err := ioutil.ReadFile("./AbilityData.slk")
+ *   if err != nil {
+ *     return err
+ *   }
+ *
+ *   // Note that this is not the same function as used above!
+ *   parser.PopulateAbilityMapWithSlkFileData(abilityDataBytes, abilityMap)
+ *
+ *   return nil
+ * }
+ *
+ */
+func PopulateAbilityMapWithTxtFileData(inputFileData []byte, abilityMap map[string]*models.SLKAbility) {
+	var currentAbilityId *string
+
+	str := string(inputFileData)
+	split := strings.Split(str, "\n")
+
+	for _, line := range split {
+		var abilityId *string
+		var keyName *string
+		var value *string
+		cleanLine := strings.Replace(strings.Replace(line, "\r", "", -1), "\n", "", -1)
+
+		if keyNameReg.MatchString(cleanLine) {
+			lineSubmatch := keyNameReg.FindStringSubmatch(cleanLine)
+			keyName = &lineSubmatch[1]
+
+			newValue := cleanLine[len(*keyName)+1:]
+			value = &newValue
+		} else if unitIdReg.MatchString(cleanLine) {
+			lineSubmatch := unitIdReg.FindStringSubmatch(cleanLine)
+			abilityId = &lineSubmatch[1]
+		}
+
+		if abilityId != nil {
+			currentAbilityId = abilityId
+
+			// Check if abilityMap does not already have this key
+			if _, ok := abilityMap[*abilityId]; ok {
+				abilityMap[*abilityId].AbilityFuncId.SetValid(*abilityId)
+				abilityMap[*abilityId].AbilityStringId.SetValid(*abilityId)
+			} else {
+				newAbility := new(models.SLKAbility)
+				newAbility.AbilityData = new(models.AbilityData)
+				newAbility.AbilityFunc = new(models.AbilityFunc)
+				newAbility.AbilityString = new(models.AbilityString)
+				newAbility.Alias.SetValid(*abilityId)
+				newAbility.AbilityFuncId.SetValid(*abilityId)
+				newAbility.AbilityStringId.SetValid(*abilityId)
+
+				abilityMap[*abilityId] = newAbility
+			}
+		}
+
+		if currentAbilityId != nil && keyName != nil && value != nil {
+			nullString := new(null.String)
+			nullString.SetValid(*value)
+
+			if _, ok := abilityMap[*currentAbilityId]; ok {
+				err := reflectUpdateValueOnFieldNullStruct(abilityMap[*currentAbilityId], *nullString, strings.Title(strings.ToLower(*keyName)))
+				if err != nil {
+					log.Println(err)
 				}
 			}
 		}

@@ -346,3 +346,51 @@ type AbilityMetaData struct {
 	Version     null.String
 	Section     null.String
 }
+
+type AbilityData struct {
+	Alias              null.String
+	Code               null.String
+	Comments           null.String
+	Version            null.String
+	UseInEditor        null.String
+	Hero               null.String
+	Item               null.String
+	Sort               null.String
+	Race               null.String
+	CheckDep           null.String
+	Levels             null.String
+	ReqLevel           null.String
+	LevelSkip          null.String
+	Priority           null.String
+	LevelDependentData []*LevelDependentData
+	InBeta             null.String
+}
+
+type LevelDependentData struct {
+	Targs   null.String
+	Cast    null.String
+	Dur     null.String
+	HeroDur null.String
+	Cool    null.String
+	Cost    null.String
+	Area    null.String
+	Rng     null.String
+	DataA   null.String
+	DataB   null.String
+	DataC   null.String
+	DataD   null.String
+	DataE   null.String
+	DataF   null.String
+	DataG   null.String
+	DataH   null.String
+	DataI   null.String
+	UnitID  null.String
+	BuffID  null.String
+	EfctID  null.String
+}
+
+type SLKAbility struct {
+	*AbilityData
+	*AbilityFunc
+	*AbilityString
+}

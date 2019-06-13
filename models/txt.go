@@ -82,3 +82,54 @@ type UnitStrings struct {
 	OrcUnitStrings      []*UnitString
 	UndeadUnitStrings   []*UnitString
 }
+
+type AbilityFunc struct {
+	AbilityFuncId     null.String
+	Art               null.String
+	Unart             null.String
+	Researchart       null.String
+	Buttonpos         null.String
+	Buffart           null.String
+	Unbuttonpos       null.String
+	Researchbuttonpos null.String
+	Specialart        null.String
+	Effectsound       null.String
+	Effectsoundlooped null.String
+	Effectart         null.String
+	Casterart         null.String
+	Targetart         null.String
+	Missilearc        null.String
+	Missileart        null.String
+	Missilespeed      null.String
+	Missilehoming     null.String
+	Requires          null.String
+	Requiresamount    null.String
+	Order             null.String
+	Unorder           null.String
+	Orderon           null.String
+	Orderoff          null.String
+	Animnames         null.String
+	Targetattach      null.String
+	Casterattach      null.String
+	Lightningeffect   null.String
+	Spelldetail       null.String
+}
+
+type AbilityString struct {
+	AbilityStringId null.String
+	Name            null.String
+	Editorsuffix    null.String
+	Tip             null.String
+	Ubertip         null.String
+	Untip           null.String
+	Unubertip       null.String
+	Bufftip         null.String
+	Buffubertip     null.String
+	Hotkey          null.String
+	Unhotkey        null.String
+	Researchhotkey  null.String
+	Researchtip     null.String
+	Researchubertip null.String
+	Globalmessage   null.String
+	Globalsound     null.String
+}
