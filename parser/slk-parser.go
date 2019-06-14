@@ -1199,18 +1199,25 @@ func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[stri
 								log.Println(err)
 							}
 
-							if index > len(ability.LevelDependentData) {
-								ability.LevelDependentData = append(ability.LevelDependentData, new(models.LevelDependentData))
-							}
-
-							err = reflectUpdateValueOnFieldNullStruct(ability.LevelDependentData[index-1], *nullString, strings.Title(trimmedHeader[:len(trimmedHeader)-len(match[1])]))
-							if err != nil {
-								log.Println(err)
+							if len(ability.LevelDependentData) > index {
+								err = reflectUpdateValueOnFieldNullStruct(ability.LevelDependentData[index-1], *nullString, strings.Title(trimmedHeader[:len(trimmedHeader)-len(match[1])]))
+								if err != nil {
+									log.Println(err)
+								}
 							}
 						} else {
 							err = reflectUpdateValueOnFieldNullStruct(ability, *nullString, strings.Title(header))
 							if err != nil {
 								log.Println(err)
+							}
+
+							if strings.Title(header) == "\"Levels\"" {
+								levels, err := strconv.Atoi(ability.Levels.String)
+								if err == nil {
+									for i := 0; i < levels; i++ {
+										ability.LevelDependentData = append(ability.LevelDependentData, new(models.LevelDependentData))
+									}
+								}
 							}
 						}
 					}
