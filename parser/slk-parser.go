@@ -1144,6 +1144,7 @@ func PopulateAbilityMetaDataMapWithSlkFileData(inputFileData []byte, abilityMeta
  */
 func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[string]*models.SLKAbility) {
 	var currentId *string
+	var currentLevelDependentData []*models.LevelDependentData
 	slkInformation, err := GenericSlkReader(inputFileData)
 	if err != nil {
 		log.Println(err)
@@ -1173,6 +1174,22 @@ func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[stri
 
 		if x != nil && k != nil {
 			if y != nil { // y != nil means we've reached the beginning of a new ability data
+				if currentId != nil {
+					levels, err := strconv.Atoi(abilityMap[*currentId].Levels.String)
+					if err == nil {
+						newLevelDependentDataList := make([]*models.LevelDependentData, levels)
+						for i := 0; i < levels; i++ {
+							if len(currentLevelDependentData) > i {
+								newLevelDependentDataList[i] = currentLevelDependentData[i]
+							} else {
+								newLevelDependentDataList[i] = new(models.LevelDependentData)
+							}
+						}
+
+						abilityMap[*currentId].LevelDependentData = newLevelDependentDataList
+					}
+				}
+
 				trimmedId := strings.Replace(*k, "\"", "", -1)
 				currentId = &trimmedId
 
@@ -1199,25 +1216,20 @@ func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[stri
 								log.Println(err)
 							}
 
-							if len(ability.LevelDependentData) > index {
-								err = reflectUpdateValueOnFieldNullStruct(ability.LevelDependentData[index-1], *nullString, strings.Title(trimmedHeader[:len(trimmedHeader)-len(match[1])]))
-								if err != nil {
-									log.Println(err)
+							if index > len(currentLevelDependentData) {
+								for i := len(currentLevelDependentData); i < index; i++ {
+									currentLevelDependentData = append(currentLevelDependentData, new(models.LevelDependentData))
 								}
+							}
+
+							err = reflectUpdateValueOnFieldNullStruct(currentLevelDependentData[index-1], *nullString, strings.Title(trimmedHeader[:len(trimmedHeader)-len(match[1])]))
+							if err != nil {
+								log.Println(err)
 							}
 						} else {
 							err = reflectUpdateValueOnFieldNullStruct(ability, *nullString, strings.Title(header))
 							if err != nil {
 								log.Println(err)
-							}
-
-							if strings.Title(header) == "\"Levels\"" {
-								levels, err := strconv.Atoi(ability.Levels.String)
-								if err == nil {
-									for i := 0; i < levels; i++ {
-										ability.LevelDependentData = append(ability.LevelDependentData, new(models.LevelDependentData))
-									}
-								}
 							}
 						}
 					}
