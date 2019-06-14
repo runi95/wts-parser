@@ -1284,15 +1284,7 @@ func PopulateAbilityMapWithTxtFileData(inputFileData []byte, abilityMap map[stri
 				abilityMap[*abilityId].AbilityFuncId.SetValid(*abilityId)
 				abilityMap[*abilityId].AbilityStringId.SetValid(*abilityId)
 			} else {
-				newAbility := new(models.SLKAbility)
-				newAbility.AbilityData = new(models.AbilityData)
-				newAbility.AbilityFunc = new(models.AbilityFunc)
-				newAbility.AbilityString = new(models.AbilityString)
-				newAbility.Alias.SetValid(*abilityId)
-				newAbility.AbilityFuncId.SetValid(*abilityId)
-				newAbility.AbilityStringId.SetValid(*abilityId)
-
-				abilityMap[*abilityId] = newAbility
+				currentAbilityId = nil
 			}
 		}
 
