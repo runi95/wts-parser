@@ -291,27 +291,6 @@ type ItemData struct {
 	InBeta     null.String
 }
 
-type ItemFunc struct {
-	ItemFuncId   null.String
-	Dependencyor null.String
-	Xpfactor     null.String
-	Art          null.String
-	Buttonpos    null.String
-	ButtonposX   null.String
-	ButtonposY   null.String
-	Requires     null.String
-}
-
-type ItemString struct {
-	ItemStringId null.String
-	Name         null.String
-	Hotkey       null.String
-	Tip          null.String
-	Ubertip      null.String
-	Description  null.String
-	Editorsuffix null.String
-}
-
 type SLKItem struct {
 	*ItemData
 	*ItemFunc
@@ -348,22 +327,101 @@ type AbilityMetaData struct {
 }
 
 type AbilityData struct {
-	Alias              null.String
-	Code               null.String
-	Comments           null.String
-	Version            null.String
-	UseInEditor        null.String
-	Hero               null.String
-	Item               null.String
-	Sort               null.String
-	Race               null.String
-	CheckDep           null.String
-	Levels             null.String
-	ReqLevel           null.String
-	LevelSkip          null.String
-	Priority           null.String
-	LevelDependentData []*LevelDependentData
-	InBeta             null.String
+	Alias       null.String
+	Code        null.String
+	Comments    null.String
+	Version     null.String
+	UseInEditor null.String
+	Hero        null.String
+	Item        null.String
+	Sort        null.String
+	Race        null.String
+	CheckDep    null.String
+	Levels      null.String
+	ReqLevel    null.String
+	LevelSkip   null.String
+	Priority    null.String
+	Targs1      null.String
+	Cast1       null.String
+	Dur1        null.String
+	HeroDur1    null.String
+	Cool1       null.String
+	Cost1       null.String
+	Area1       null.String
+	Rng1        null.String
+	DataA1      null.String
+	DataB1      null.String
+	DataC1      null.String
+	DataD1      null.String
+	DataE1      null.String
+	DataF1      null.String
+	DataG1      null.String
+	DataH1      null.String
+	DataI1      null.String
+	UnitID1     null.String
+	BuffID1     null.String
+	EfctID1     null.String
+	Targs2      null.String
+	Cast2       null.String
+	Dur2        null.String
+	HeroDur2    null.String
+	Cool2       null.String
+	Cost2       null.String
+	Area2       null.String
+	Rng2        null.String
+	DataA2      null.String
+	DataB2      null.String
+	DataC2      null.String
+	DataD2      null.String
+	DataE2      null.String
+	DataF2      null.String
+	DataG2      null.String
+	DataH2      null.String
+	DataI2      null.String
+	UnitID2     null.String
+	BuffID2     null.String
+	EfctID2     null.String
+	Targs3      null.String
+	Cast3       null.String
+	Dur3        null.String
+	HeroDur3    null.String
+	Cool3       null.String
+	Cost3       null.String
+	Area3       null.String
+	Rng3        null.String
+	DataA3      null.String
+	DataB3      null.String
+	DataC3      null.String
+	DataD3      null.String
+	DataE3      null.String
+	DataF3      null.String
+	DataG3      null.String
+	DataH3      null.String
+	DataI3      null.String
+	UnitID3     null.String
+	BuffID3     null.String
+	EfctID3     null.String
+	Targs4      null.String
+	Cast4       null.String
+	Dur4        null.String
+	HeroDur4    null.String
+	Cool4       null.String
+	Cost4       null.String
+	Area4       null.String
+	Rng4        null.String
+	DataA4      null.String
+	DataB4      null.String
+	DataC4      null.String
+	DataD4      null.String
+	DataE4      null.String
+	DataF4      null.String
+	DataG4      null.String
+	DataH4      null.String
+	DataI4      null.String
+	UnitID4     null.String
+	BuffID4     null.String
+	EfctID4     null.String
+	InBeta      null.String
 }
 
 type LevelDependentData struct {

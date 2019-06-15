@@ -47,12 +47,12 @@ type SlkInformation struct {
 
 *************************/
 
-func WriteToFiles(unitList []*models.SLKUnit) {
-	WriteToFilesAndSaveToFolder(unitList, "out", true)
+func WriteToFiles(unitList []*models.SLKUnit, itemList []*models.SLKItem, abilityList []*models.SLKAbility) {
+	WriteToFilesAndSaveToFolder(unitList, itemList, abilityList, "out", true)
 }
 
-func WriteToFilesAndSaveToFolder(unitList []*models.SLKUnit, outputFolder string, sortBeforeSave bool) {
-	if len(unitList) < 1 {
+func WriteToFilesAndSaveToFolder(unitList []*models.SLKUnit, itemList []*models.SLKItem, abilityList []*models.SLKAbility, outputFolder string, sortBeforeSave bool) {
+	if len(unitList) < 1 && len(itemList) < 1 && len(abilityList) < 1 {
 		return
 	}
 
@@ -63,10 +63,18 @@ func WriteToFilesAndSaveToFolder(unitList []*models.SLKUnit, outputFolder string
 	}
 
 	if sortBeforeSave {
-		log.Println("Sorting units according to unit ID...")
+		log.Println("Sorting units, items and abilities according to their id's...")
 
 		sort.Slice(unitList, func(i, j int) bool {
 			return unitList[i].UnitID.String < unitList[j].UnitID.String
+		})
+
+		sort.Slice(itemList, func(i, j int) bool {
+			return itemList[i].ItemID.String < itemList[j].ItemID.String
+		})
+
+		sort.Slice(abilityList, func(i, j int) bool {
+			return abilityList[i].Code.String < abilityList[j].Code.String
 		})
 	}
 
@@ -562,6 +570,432 @@ func WriteToFilesAndSaveToFolder(unitList []*models.SLKUnit, outputFolder string
 		}
 
 		err = unitWeaponsTemplate.ExecuteTemplate(unitWeaponsFile, "UnitWeapons", models.RowCountTemplate{RowCount: len(unitList) + 1, Unit: unitList})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to ItemData.slk...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		itemDataFile, err := os.Create(outputFolder + "/ItemData.slk")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		itemDataTemplate := template.New("ItemData").Funcs(funcMap)
+		itemDataTemplate, err = itemDataTemplate.Parse(templates.GetItemDataTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = itemDataTemplate.ExecuteTemplate(itemDataFile, "ItemData", models.RowCountTemplateItem{RowCount: len(itemList) + 1, Item: itemList})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to ItemFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		itemFuncFile, err := os.Create(outputFolder + "/ItemFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		itemFuncTemplate := template.New("ItemFunc")
+		itemFuncTemplate, err = itemFuncTemplate.Parse(templates.GetItemFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = itemFuncTemplate.ExecuteTemplate(itemFuncFile, "ItemFunc", itemList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to ItemStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		itemStringsFile, err := os.Create(outputFolder + "/ItemStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		itemStringsTemplate := template.New("ItemStrings")
+		itemStringsTemplate, err = itemStringsTemplate.Parse(templates.GetItemStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = itemStringsTemplate.ExecuteTemplate(itemStringsFile, "ItemStrings", itemList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to AbilityData.slk...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		abilityDataFile, err := os.Create(outputFolder + "/AbilityData.slk")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		abilityFuncMap := template.FuncMap{
+			"inc": func(i int) int {
+				return i + 2
+			},
+		}
+
+		abilityDataTemplate := template.New("AbilityData").Funcs(abilityFuncMap)
+		abilityDataTemplate, err = abilityDataTemplate.Parse(templates.GetAbilityDataTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = abilityDataTemplate.ExecuteTemplate(abilityDataFile, "AbilityData", models.RowCountTemplateAbility{RowCount: len(abilityList) + 1, Ability: abilityList})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to HumanAbilityFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		humanAbilityFuncFile, err := os.Create(outputFolder + "/HumanAbilityFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "human"
+			},
+		}
+		humanAbilityFuncTemplate := template.New("AbilityFunc").Funcs(customFuncMap)
+		humanAbilityFuncTemplate, err = humanAbilityFuncTemplate.Parse(templates.GetAbilityFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = humanAbilityFuncTemplate.ExecuteTemplate(humanAbilityFuncFile, "AbilityFunc", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to HumanAbilityStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		humanAbilityStringsFile, err := os.Create(outputFolder + "/HumanAbilityStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "human"
+			},
+		}
+		humanAbilityStringsTemplate := template.New("AbilityStrings").Funcs(customFuncMap)
+		humanAbilityStringsTemplate, err = humanAbilityStringsTemplate.Parse(templates.GetAbilityStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = humanAbilityStringsTemplate.ExecuteTemplate(humanAbilityStringsFile, "AbilityStrings", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to OrcAbilityFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		orcAbilityFuncFile, err := os.Create(outputFolder + "/OrcAbilityFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "orc"
+			},
+		}
+		orcAbilityFuncTemplate := template.New("AbilityFunc").Funcs(customFuncMap)
+		orcAbilityFuncTemplate, err = orcAbilityFuncTemplate.Parse(templates.GetAbilityFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = orcAbilityFuncTemplate.ExecuteTemplate(orcAbilityFuncFile, "AbilityFunc", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to OrcAbilityStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		orcAbilityStringsFile, err := os.Create(outputFolder + "/OrcAbilityStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "orc"
+			},
+		}
+		orcAbilityStringsTemplate := template.New("AbilityStrings").Funcs(customFuncMap)
+		orcAbilityStringsTemplate, err = orcAbilityStringsTemplate.Parse(templates.GetAbilityStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = orcAbilityStringsTemplate.ExecuteTemplate(orcAbilityStringsFile, "AbilityStrings", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to NeutralAbilityFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		neutralAbilityFuncFile, err := os.Create(outputFolder + "/NeutralAbilityFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace != "human" && lowercaseRace != "orc" && lowercaseRace != "nightelf" && lowercaseRace != "undead"
+			},
+		}
+		neutralAbilityFuncTemplate := template.New("AbilityFunc").Funcs(customFuncMap)
+		neutralAbilityFuncTemplate, err = neutralAbilityFuncTemplate.Parse(templates.GetAbilityFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = neutralAbilityFuncTemplate.ExecuteTemplate(neutralAbilityFuncFile, "AbilityFunc", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to NeutralAbilityStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		neutralAbilityStringsFile, err := os.Create(outputFolder + "/NeutralAbilityStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace != "human" && lowercaseRace != "orc" && lowercaseRace != "nightelf" && lowercaseRace != "undead"
+			},
+		}
+		neutralAbilityStringsTemplate := template.New("AbilityStrings").Funcs(customFuncMap)
+		neutralAbilityStringsTemplate, err = neutralAbilityStringsTemplate.Parse(templates.GetAbilityStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = neutralAbilityStringsTemplate.ExecuteTemplate(neutralAbilityStringsFile, "AbilityStrings", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to NightElfAbilityFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		nightElfAbilityFuncFile, err := os.Create(outputFolder + "/NightElfAbilityFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "nightelf"
+			},
+		}
+		nightElfAbilityFuncTemplate := template.New("AbilityFunc").Funcs(customFuncMap)
+		nightElfAbilityFuncTemplate, err = nightElfAbilityFuncTemplate.Parse(templates.GetAbilityFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = nightElfAbilityFuncTemplate.ExecuteTemplate(nightElfAbilityFuncFile, "AbilityFunc", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to NightElfAbilityStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		nightElfAbilityStringsFile, err := os.Create(outputFolder + "/NightElfAbilityStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "nightelf"
+			},
+		}
+		nightElfAbilityStringsTemplate := template.New("AbilityStrings").Funcs(customFuncMap)
+		nightElfAbilityStringsTemplate, err = nightElfAbilityStringsTemplate.Parse(templates.GetAbilityStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = nightElfAbilityStringsTemplate.ExecuteTemplate(nightElfAbilityStringsFile, "AbilityStrings", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to UndeadAbilityFunc...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		undeadAbilityFuncFile, err := os.Create(outputFolder + "/UndeadAbilityFunc.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "undead"
+			},
+		}
+		undeadAbilityFuncTemplate := template.New("AbilityFunc").Funcs(customFuncMap)
+		undeadAbilityFuncTemplate, err = undeadAbilityFuncTemplate.Parse(templates.GetAbilityFuncTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = undeadAbilityFuncTemplate.ExecuteTemplate(undeadAbilityFuncFile, "AbilityFunc", abilityList)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}()
+
+	log.Println("Writing to UndeadAbilityStrings...")
+	writeToFileWaitGroup.Add(1)
+
+	go func() {
+		defer writeToFileWaitGroup.Done()
+		undeadAbilityStringsFile, err := os.Create(outputFolder + "/UndeadAbilityStrings.txt")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		customFuncMap := template.FuncMap{
+			"raceCheck": func(race string) bool {
+				trimmedRace := strings.Replace(race, "\"", "", -1)
+				lowercaseRace := strings.ToLower(trimmedRace)
+				return lowercaseRace == "nightelf"
+			},
+		}
+		undeadAbilityStringsTemplate := template.New("AbilityStrings").Funcs(customFuncMap)
+		undeadAbilityStringsTemplate, err = undeadAbilityStringsTemplate.Parse(templates.GetAbilityStringsTemplate())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = undeadAbilityStringsTemplate.ExecuteTemplate(undeadAbilityStringsFile, "AbilityStrings", abilityList)
 		if err != nil {
 			log.Println(err)
 			return
@@ -1143,6 +1577,69 @@ func PopulateAbilityMetaDataMapWithSlkFileData(inputFileData []byte, abilityMeta
  *
  */
 func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[string]*models.SLKAbility) {
+	var currentAbilityId *string
+	slkInformation, err := GenericSlkReader(inputFileData)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	bodyLines := slkInformation.split[slkInformation.headerEndIndex:]
+	for _, bodyLine := range bodyLines {
+		var x *string
+		var y *string
+		var k *string
+
+		cleanBodyLine := strings.Replace(strings.Replace(bodyLine, "\r", "", -1), "\n", "", -1)
+		bodySplit := strings.Split(cleanBodyLine, ";")
+		for _, s := range bodySplit {
+			if xReg.MatchString(s) {
+				newX := s[1:]
+				x = &newX
+			} else if kReg.MatchString(s) {
+				newK := s[1:]
+				k = &newK
+			} else if yReg.MatchString(s) {
+				newY := s[1:]
+				y = &newY
+			}
+		}
+
+		if x != nil && k != nil {
+			if y != nil { // y != nil means we've reached the beginning of a new ability
+				trimmedId := strings.Replace(*k, "\"", "", -1)
+				currentAbilityId = &trimmedId
+
+				// Check if itemMap does not already have this key
+				if _, ok := abilityMap[trimmedId]; !ok {
+					newAbility := new(models.SLKAbility)
+					newAbility.AbilityData = new(models.AbilityData)
+					newAbility.AbilityFunc = new(models.AbilityFunc)
+					newAbility.AbilityString = new(models.AbilityString)
+
+					abilityMap[trimmedId] = newAbility
+				}
+			}
+
+			if currentAbilityId != nil {
+				nullString := new(null.String)
+				nullString.SetValid(*k)
+
+				if unit, ok := abilityMap[*currentAbilityId]; ok {
+					if header, headerMapOk := slkInformation.headerMap[*x]; headerMapOk {
+						err = reflectUpdateValueOnFieldNullStruct(unit, *nullString, strings.Title(header))
+						if err != nil {
+							log.Println(err)
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/*
+func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[string]*models.SLKAbility) {
 	var currentId *string
 	var currentLevelDependentData []*models.LevelDependentData
 	slkInformation, err := GenericSlkReader(inputFileData)
@@ -1239,6 +1736,7 @@ func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[stri
 		}
 	}
 }
+*/
 
 /**
  * A function that populates a map of SLKAbility structures with data from any TXT file like the AbilityFunc.txt and AbilityStrings.txt files.

@@ -2,7 +2,17 @@ package models
 
 type RowCountTemplate struct {
 	RowCount int
-	Unit []*SLKUnit
+	Unit     []*SLKUnit
+}
+
+type RowCountTemplateItem struct {
+	RowCount int
+	Item     []*SLKItem
+}
+
+type RowCountTemplateAbility struct {
+	RowCount int
+	Ability  []*SLKAbility
 }
 
 type UnitBalanceTemplate struct {

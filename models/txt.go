@@ -83,6 +83,27 @@ type UnitStrings struct {
 	UndeadUnitStrings   []*UnitString
 }
 
+type ItemFunc struct {
+	ItemFuncId   null.String
+	Dependencyor null.String
+	Xpfactor     null.String
+	Art          null.String
+	Buttonpos    null.String
+	ButtonposX   null.String
+	ButtonposY   null.String
+	Requires     null.String
+}
+
+type ItemString struct {
+	ItemStringId null.String
+	Name         null.String
+	Hotkey       null.String
+	Tip          null.String
+	Ubertip      null.String
+	Description  null.String
+	Editorsuffix null.String
+}
+
 type AbilityFunc struct {
 	AbilityFuncId     null.String
 	Art               null.String
