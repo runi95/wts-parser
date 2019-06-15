@@ -1187,6 +1187,7 @@ func PopulateAbilityMapWithSlkFileData(inputFileData []byte, abilityMap map[stri
 						}
 
 						abilityMap[*currentId].LevelDependentData = newLevelDependentDataList
+						currentLevelDependentData = []*models.LevelDependentData{}
 					}
 				}
 
