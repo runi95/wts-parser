@@ -1092,7 +1092,7 @@ func GenericSlkReader(input []byte) (*SlkInformation, error) {
 			}
 		}
 
-		if y != nil && *y != "1" {
+		if split[headerLineIndex] == "E" || (y != nil && *y != "1") {
 			isNotAtEndOfHeader = false
 		} else {
 			if *k == "comment(s)" {
